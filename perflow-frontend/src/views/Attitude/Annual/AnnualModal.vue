@@ -37,6 +37,10 @@ const formatDate = (date, time) => {
 };
 
 const handleApply = async () => {
+  if (!annualType.value) { // 연차 유형 미선택 시 에러 처리
+    alert("연차 구분을 선택해 주세요.");
+    return;
+  }
   try {
     // 1. 입력값 가져오기
     const requestData = {
@@ -127,6 +131,7 @@ const handleAnnualTypeSelect = (selectedLabel) => {
               <ButtonDropDown
                   :options="annualTypeOptions"
                   default-option="연차 구분"
+                  v-model="annualType"
                   width="200px"
                   height="40px"
                   @select="handleAnnualTypeSelect"
