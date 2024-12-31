@@ -258,6 +258,7 @@ onMounted(() => {
           />
           <ButtonDropDown
               :options="statusOptions"
+              v-model="annualType"
               default-option="전체"
               width="150px"
               height="40px"
