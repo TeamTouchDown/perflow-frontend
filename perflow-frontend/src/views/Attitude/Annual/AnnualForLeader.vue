@@ -111,7 +111,7 @@ const searchCriteria = ref({
   annualType: "",
   fromDate: "",
   toDate: "",
-  status: ""
+/*  status: ""*/
 });
 
 const statusOptions = [
@@ -131,7 +131,7 @@ const fetchAnnualData = async () => {
 
     // 데이터 변환 및 저장
     allDocs.value = response.data
-        .filter(item => ["CONFIRMED", "REJECTED", "PENDING"].includes(item.status)) // 필요 상태만 포함
+        .filter(item => item.status === "PENDING") // 필요 상태만 포함
         .map(item => ({
           annualId: item.annualId,                        // 고유 ID
           annualTypeLabel: annualTypeMap[item.annualType], // 한글 연차 종류
@@ -156,28 +156,18 @@ const fetchAnnualData = async () => {
 const applyFilter = (resetPage = true) => {
   console.log("현재 검색 조건:", searchCriteria.value);
 
-  let filtered = [...allDocs.value]; // 배열 복사 (원본 데이터 보존)
-  if (searchCriteria.value.annualType) {
-    filtered = filtered.filter(item => item.annualType === searchCriteria.value.annualType);
-  }
+  let filtered = [...allDocs.value];
 
-  if (searchCriteria.value.fromDate && searchCriteria.value.toDate) {
-    filtered = filtered.filter(item =>
-        dayjs(item.annualStart).isSameOrAfter(dayjs(searchCriteria.value.fromDate)) &&
-        dayjs(item.annualEnd).isSameOrBefore(dayjs(searchCriteria.value.toDate))
-    );
-  } else if (searchCriteria.value.fromDate) {
+  // 날짜 필터링 추가
+  if (searchCriteria.value.fromDate) {
     filtered = filtered.filter(item =>
         dayjs(item.annualStart).isSameOrAfter(dayjs(searchCriteria.value.fromDate))
     );
-  } else if (searchCriteria.value.toDate) {
+  }
+  if (searchCriteria.value.toDate) {
     filtered = filtered.filter(item =>
         dayjs(item.annualEnd).isSameOrBefore(dayjs(searchCriteria.value.toDate))
     );
-  }
-
-  if (searchCriteria.value.status) {
-    filtered = filtered.filter(item => item.annualStatus === searchCriteria.value.status);
   }
 
   filteredDocs.value = filtered;
@@ -188,6 +178,8 @@ const applyFilter = (resetPage = true) => {
     currentPage.value = 1;
   }
 };
+
+
 
 // 페이징 처리
 const paginatedDocs = computed(() => {
@@ -208,14 +200,14 @@ const handlePageChange = (page) => {
 };
 
 // 상태 드롭다운 변경 시
-const handleStatusSelect = (selectedLabel) => {
+/*const handleStatusSelect = (selectedLabel) => {
   console.log("선택된 상태:", selectedLabel);
   const selectedStatus = statusOptions.find(
       option => option.label === selectedLabel)?.id || "";
   console.log("적용된 상태 ID:", searchCriteria.value.status);
   searchCriteria.value.status = selectedStatus;
   applyFilter(true);
-};
+};*/
 
 // ------------------------------------
 // 모달 제어용 상태 및 함수
@@ -259,13 +251,13 @@ onMounted(() => {
               placeholder="연차 종료일"
               type="date"
           />
-          <ButtonDropDown
+<!--          <ButtonDropDown
               :options="statusOptions"
               default-option="전체"
               width="150px"
               height="40px"
               @select="handleStatusSelect"
-          />
+          />-->
         </div>
 
 
