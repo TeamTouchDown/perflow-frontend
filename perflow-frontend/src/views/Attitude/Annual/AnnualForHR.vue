@@ -49,12 +49,13 @@ const handleUpdateSuccess = () => {
  * 테이블 컬럼 정의
  * ---------------------------- */
 const columns = [
-  { label: "휴가 종류", field: "vacationType" }, // 한글 연차 종류
+  { label: "연차 종류", field: "annualTypeLabel" }, // 한글 연차 종류
   {label: "신청자",field:"empName"},
-  { label: "신청일", field: "enrollVacation" },       // 신청일
-  { label: "시작일", field: "vacationStart" },        // 시작일
-  { label: "종료일", field: "vacationEnd" },          // 종료일
-  { label: "상태", field: "vacationStatus" },    // 상태
+  { label: "결재자 이름", field: "approverName" },
+  { label: "신청일", field: "enrollAnnual" },       // 신청일
+  { label: "시작일", field: "annualStart" },        // 시작일
+  { label: "종료일", field: "annualEnd" },          // 종료일
+  { label: "상태", field: "annualStatusLabel" },    // 상태
 ];
 
 // 열 너비 설정
@@ -62,10 +63,9 @@ const columnWidths = ["150px", "120px", "120px", "120px", "100px"];
 
 // 매핑 테이블 (영문 -> 한글 변환)
 const annualTypeMap = {
-  MATERNITY: "출산 휴가",
-  SPOUSEMATERNITY: "배우자 출산 휴가",
-  FAMILYCARE: "가족 돌봄 휴가",
-  MENSTRUAL: "생리 휴가",
+  FULLDAY: "종일 연차",
+  MORNINGHALF: "오전 반차",
+  AFTERNOONHALF: "오후 반차",
 };
 const annualStatusMap = {
   CONFIRMED: "승인",
@@ -104,35 +104,30 @@ const searchCriteria = ref({
 const fetchAnnualData = async () => {
   try {
     store.showLoading();
-    const response = await api.get("hr/vacation/all");
+    const response = await api.get("hr/annual/all");
     console.log("API 응답 데이터:", response.data);
     store.hideLoading();
 
     // 데이터 변환 및 저장
-    // 데이터 변환 및 저장
     allDocs.value = response.data
-        .filter(item => ["CONFIRMED", "REJECTED", "PENDING"].includes(item.vacationStatus)) // 필요 상태만 포함
+        .filter(item => ["CONFIRMED", "REJECTED", "PENDING"].includes(item.status)) // 필요 상태만 포함
         .map(item => ({
-          vacationId: item.vacationId,                         // 고유 ID (vacationId로 변경)
-          empId: item.empId,                                   // empId 추가
-          empName: item.empName,                               // empName 추가
-          approveSbjId: item.approveSbjId,                     // approveSbjId 추가
-          approverName: item.approverName,                     // approverName 추가
-          enrollVacation: item.enrollVacation.split("T")[0],   // 신청일
-          vacationStart: item.vacationStart.split("T")[0],     // 시작일
-          vacationEnd: item.vacationEnd.split("T")[0],         // 종료일
-          vacationType: annualTypeMap[item.vacationType],                     // 휴가 종류 (vacationType으로 변경)
-          vacationStatus: annualStatusMap[item.vacationStatus],                 // 상태 (vacationStatus로 변경)
-          vacationRejectReason: item.vacationRejectReason,     // 반려 사유 (vacationRejectReason으로 변경)
-          status: item.status,                                 // 상태 (status로 변경)
-          startDate: item.startDate.split("T")[0],             // 시작일 (startDate로 변경)
+          annualId: item.annualId,                         // 고유 ID
+          annualTypeLabel: annualTypeMap[item.annualType], // 한글 연차 종류
+          enrollAnnual: item.enrollAnnual.split("T")[0],   // 신청일
+          annualStart: item.annualStart.split("T")[0],     // 시작일
+          annualEnd: item.annualEnd.split("T")[0],         // 종료일
+          annualStatusLabel: annualStatusMap[item.status], // 상태 (한글 매핑)
+          annualType: item.annualType,                     // 필터링 용도
+          annualStatus: item.status,                        // 필터링 용도
+          empName: item.empName,
+          approverName: item.empName
         }));
-
 
     // 필터 초기화 및 페이징 적용
     applyFilter(true);
   } catch (error) {
-    console.error("휴가 데이터 조회 실패:", error);
+    console.error("연차 데이터 조회 실패:", error);
     allDocs.value = [];
   }
 };
@@ -196,7 +191,7 @@ const applyFilter = (resetPage = true) => {
 watch(
     () => searchCriteria.value.status,
     (newVal, oldVal) => {
-      console.log("휴가 상태 변경:", oldVal, "→", newVal);
+      console.log("연차 상태 변경:", oldVal, "→", newVal);
       applyFilter(true);
     }
 );
@@ -243,7 +238,7 @@ onMounted(() => {
   <div id="header-div">
     <div id="header-top" class="flex-between">
 
-      <p id="title">인사팀 휴가 내역 조회</p>
+      <p id="title">인사팀 연차 내역 조회</p>
     </div>
 
 
@@ -253,12 +248,12 @@ onMounted(() => {
         <div class="conditions">
           <SearchGroupBar
               v-model="searchCriteria.fromDate"
-              placeholder="휴가 시작일"
+              placeholder="연차 시작일"
               type="date"
           />
           <SearchGroupBar
               v-model="searchCriteria.toDate"
-              placeholder="휴가 종료일"
+              placeholder="연차 종료일"
               type="date"
           />
           <ButtonDropDown
