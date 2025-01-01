@@ -1,0 +1,120 @@
+<script setup>
+import { useStore } from "@/store/store.js";
+import { ref, onMounted } from "vue";
+import OrgTreeNode from "@/components/approval/OrgTreeNode.vue";
+
+const store = useStore();
+
+// 최상위 부서
+const topDepts = ref([]);
+
+const emps = ref([]); // 선택된 부서의 사원 목록
+
+// 최상위 부서 로드
+const loadTopDepts = async () => {
+
+  await store.fetchOrg(); // 모든 부서 정보 가져오기
+  topDepts.value = store.allDepartment.filter(
+      (dept) => !dept.managedDeptId // 상위 부서만 필터링
+  );
+};
+
+// 선택된 부서와 하위 부서의 모든 사원 로드
+const loadEmpsByDept = async (deptId) => {
+  await store.selectDept(deptId);
+  emps.value = store.currentEmployees;
+}
+
+onMounted(() => {
+  loadTopDepts();
+})
+
+</script>
+
+<template>
+  <div class="org-tree">
+    <!-- 부서 목록 -->
+    <div class="tree-container">
+      <ul>
+        <OrgTreeNode
+            v-for="dept in topDepts"
+            :key="dept.deptId"
+            :dept="dept"
+            @onSelectDept="loadEmpsByDept"
+        />
+      </ul>
+    </div>
+    <!-- 사원 목록 -->
+    <div class="emp-container">
+      <div class="emp-list">
+        <ul>
+          <li v-for="emp in emps" :key="emp.empId">
+            {{ emp.name }} {{ emp.position }}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</template>
+
+<style scoped>
+
+.org-tree {
+  display: flex;  /* 부서, 사원 목록을 한 행에 배치 */
+}
+
+.tree-container {
+  width: 200px;
+  height: 270px;
+  border: 1px solid #d9d9d9;
+  border-right: none; /* 사원 목록과 겹치는 테두리 삭제 */
+  border-radius: 10px 0 0 10px;
+  overflow: auto; /* 스크롤 활성화 */
+  padding: 20px;
+}
+
+.emp-container {
+  width: 150px;
+  height: 270px;
+  border: 1px solid #d9d9d9;
+  border-radius: 0 10px 10px 0;
+  overflow-y: auto; /* 스크롤 활성화 */
+  padding: 20px;
+}
+
+/* 부서, 사원 이름 스타일 */
+ul {
+  list-style-type: none; /* 기본 리스트 스타일 제거 */
+  margin: 0; /* 기본 여백 제거 */
+}
+
+li {
+  list-style-type: none;
+}
+
+.emp-list ul {
+  padding: 0px;
+}
+
+.tree-container ul {
+  padding: 0px;
+}
+
+/* 스클로 바 스타일 */
+.tree-container::-webkit-scrollbar,
+.emp-container::-webkit-scrollbar {
+  width: 5px; /* 스크롤 바 너비 */
+}
+
+.tree-container::-webkit-scrollbar-track,
+.emp-container::-webkit-scrollbar-track {
+  border: 10px;
+}
+
+.tree-container::-webkit-scrollbar-thumb,
+.emp-container::-webkit-scrollbar-thumb {
+  background: #D9D9D9;
+  border-radius: 10px;
+}
+</style>

@@ -9,6 +9,7 @@ import draggable from "vuedraggable";
 import {createNewDocument} from "@/config/approval.js";
 import router from "@/router/router.js";
 import ButtonDropDown2 from "@/components/common/ButtonDropDown2.vue";
+import OrgTree from "@/components/approval/OrgTree.vue";
 
 const selectedApprovalEmployees = ref([]); // 체크된 사원 목록
 const selectedShareEmployees = ref([]); // 체크된 사원 목록
@@ -18,6 +19,11 @@ const approvalData = ref([]);  // approvalShareBox 에 전달할 데이터
 
 const shareList = ref([]);  // 공유 목록
 const shareData = ref([]);  // 모달에서 선택한, approvalShareBox 에 전달할 데이터
+
+// 테스트용
+const isTestApprovalModalOpen = ref(false);
+const openTestApprovalModal = () => (isTestApprovalModalOpen.value = true);
+const closeTestApprovalModal = () => (isTestApprovalModalOpen.vale = false);
 
 // 서식 드롭다운
 const dropdownOptions = [
@@ -270,6 +276,32 @@ const goTo = (url) => {
         fontSize="15px"
         @selectId="handleDropdownSelect"
       />
+
+      <!-- 테스트 -->
+      <ApprovalShareBox
+          title="테스트"
+          :placeholder="approvalData.length ? '' : '결재선이 없습니다.'"
+          :data="approvalData.map((item) => ({
+          ...item,
+          type: item.displayType  // 한글 값만 표시
+          }))"
+          @onSettingsClick="openTestApprovalModal"
+      />
+
+      <ModalBasic
+          :isOpen="isTestApprovalModalOpen"
+          title="결재선 설정 테스트"
+          width="1000px"
+          height="500px"
+          :button1="{ label: '닫기', color: 'gray', onClick: closeApprovalModal }"
+          :button2="{ label: '저장하기', color: 'orange', onClick: saveApprovalSettings }"
+          @close="closeTestApprovalModal"
+      >
+        <template #default>
+          <OrgTree />
+        </template>
+      </ModalBasic>
+        <!---->
 
       <ApprovalShareBox
           title="결재선"
