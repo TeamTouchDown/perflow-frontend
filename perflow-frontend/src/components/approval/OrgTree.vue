@@ -35,10 +35,27 @@ const loadEmpsByDept = async (deptId) => {
   );
 }
 
+// 결재 방식 버튼 클릭 시 결재 목록 리스트에 사원 추가
 const handleApproval = (type) => {
 
   if (selectedEmps.value.length === 0) {
     alert("사원을 선택해주세요.");
+    return;
+  }
+
+  // 병렬, 병렬 합의 처리
+  if ((type === "병렬" || type == "병렬합의") && selectedEmps.value.length < 2) {
+    alert("최소 2명 이상을 선택해주세요.");
+    return;
+  }
+
+  // 중복 체크
+  const duplicates = selectedEmps.value.filter(empId =>
+      selectedApprovalList.value.some(item => item.empId === empId)
+  );
+
+  if (duplicates.length > 0) {
+    alert("이미 결재 목록에 추가한 사원이 있습니다.");
     return;
   }
 
