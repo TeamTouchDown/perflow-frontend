@@ -150,15 +150,20 @@ onMounted(() => {
         <span class="header-name">이름</span>
         <span class="header-position">직위</span>
       </div>
-      <div class="type-list">
-        <ul>
-          <li v-for="item in selectedApprovalList" :key="item.empId">
-            <span class="type-type">{{ item.type }}</span>
-            <span class="type-name">{{ item.name }}</span>
-            <span class="type-position">{{ item.position }}</span>
+      <draggable
+          v-model="selectedApprovalList"
+          class="type-list"
+          @end="updateOrder"
+      >
+        <template #item="{ element }">
+          <li>
+            <span class="type-order">{{ element.order }}</span>
+            <span class="type-type">{{ element.type }}</span>
+            <span class="type-name">{{ element.name }}</span>
+            <span class="type-position">{{ element.position }}</span>
           </li>
-        </ul>
-      </div>
+        </template>
+      </draggable>
     </div>
   </div>
 
