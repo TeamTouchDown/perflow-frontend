@@ -144,7 +144,7 @@ const closeModal = () => {
       <div class="modal-container">
         <!-- 폼 영역 -->
         <p class="info-text">
-          수정을 원하는 부분만 작성 후 <strong>"수정"</strong> 버튼을 눌러주세요.
+          수정 작성 후 <strong>"수정"</strong> 버튼을 눌러주세요.
         </p>
         <div class="modal-body">
           <div class="form-container">
