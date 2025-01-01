@@ -1,7 +1,7 @@
 <script setup>
 import SearchGroupBar from "@/components/common/SearchGroupBar.vue";
 import ButtonBasic from "@/components/common/ButtonBasic.vue";
-import {computed, onMounted, ref} from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import api from "@/config/axios.js";
 import PagingBar from "@/components/common/PagingBar.vue";
 import ButtonDropDown from "@/components/common/ButtonDropDown.vue";
@@ -11,15 +11,18 @@ import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import AnnualModal from "@/views/Attitude/Annual/AnnualModal.vue";
 import AnnualUpdateModal from "@/views/Attitude/Annual/AnnualUpdateModal.vue";
 import TableCheck from "@/components/common/TableCheck.vue";
-import {useStore} from "@/store/store.js";
+import { useStore } from "@/store/store.js";
 
 const store = useStore();
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
+
 const today = dayjs(); // 현재 날짜와 시간
 console.log(today.format("YYYY-MM-DD"));
 
-
+/* ----------------------------
+ * 연차 데이터 수정 모달 관련
+ * ---------------------------- */
 const showUpdateModal = ref(false);
 const selectedAnnual = ref(null);
 
@@ -27,28 +30,21 @@ const onRowSelected = (selectedRows) => {
   if (selectedRows.length > 1) {
     // 2개 이상 선택 시 경고
     alert("수정할 하나의 연차만 골라주세요.");
-
-    // 강제로 1개만 선택되도록 selectedRows 재설정
     const updatedSelection = [selectedRows[0]];
-
-    // 선택 항목 초기화 후 첫 번째 항목만 남김
     selectedAnnual.value = updatedSelection[0];
 
     // 테이블 상태 강제 반영 (선택 값 재설정)
     setTimeout(() => {
       selectedRows.splice(1); // 첫 번째 이후의 선택 항목 제거
-    }, 0); // 다음 렌더링 주기에 적용
+    }, 0);
   } else if (selectedRows.length === 1) {
-    // 정상적으로 1개 선택한 경우
     selectedAnnual.value = selectedRows[0];
   } else {
-    // 아무것도 선택되지 않은 경우 초기화
     selectedAnnual.value = null;
   }
 };
 
 const openUpdateModal = () => {
-  // 체크된 항목이 없다면 경고 처리
   if (!selectedAnnual.value) {
     alert("수정할 연차를 체크박스로 선택해 주세요.");
     return;
@@ -65,21 +61,22 @@ const resetSelection = () => {
 };
 
 showUpdateModal.value = false;
-resetSelection(); // 모달 닫을 때 선택 초기화
+resetSelection();
 
 const handleUpdateSuccess = () => {
   showUpdateModal.value = false; // 모달 닫기
   fetchAnnualData();             // 연차 데이터 재조회
 };
 
-
-// 테이블 컬럼 설정
+/* ----------------------------
+ * 테이블 컬럼 정의
+ * ---------------------------- */
 const columns = [
-  {label: "연차 종류", field: "annualTypeLabel"}, // 한글 연차 종류
-  {label: "신청일", field: "enrollAnnual"},       // 신청일
-  {label: "시작일", field: "annualStart"},        // 시작일
-  {label: "종료일", field: "annualEnd"},          // 종료일
-  {label: "상태", field: "annualStatusLabel"},    // 상태
+  { label: "연차 종류", field: "annualTypeLabel" }, // 한글 연차 종류
+  { label: "신청일", field: "enrollAnnual" },       // 신청일
+  { label: "시작일", field: "annualStart" },        // 시작일
+  { label: "종료일", field: "annualEnd" },          // 종료일
+  { label: "상태", field: "annualStatusLabel" },    // 상태
 ];
 
 // 열 너비 설정
@@ -91,16 +88,26 @@ const annualTypeMap = {
   MORNINGHALF: "오전 반차",
   AFTERNOONHALF: "오후 반차",
 };
-
 const annualStatusMap = {
   CONFIRMED: "승인",
   REJECTED: "반려",
   PENDING: "대기",
 };
 
-// 상태 변수
-const allDocs = ref([]); // 전체 데이터
+// (참고) 상태(필터) 옵션
+const statusOptions = [
+  { label: "전체", value: "" },
+  { label: "대기", value: "PENDING" },
+  { label: "승인", value: "CONFIRMED" },
+  { label: "반려", value: "REJECTED" },
+];
+
+/* ----------------------------
+ * 데이터 상태 및 검색/필터 로직
+ * ---------------------------- */
+const allDocs = ref([]);      // 전체 데이터
 const filteredDocs = ref([]); // 필터링된 데이터
+
 const totalPages = ref(1);
 const totalItems = ref(0);
 const currentPage = ref(1);
@@ -111,17 +118,10 @@ const searchCriteria = ref({
   annualType: "",
   fromDate: "",
   toDate: "",
-  status: ""
+  status: "" // 여기와 v-model이 연결됨
 });
 
-const statusOptions = [
-  {label: "전체", id: ""}, // 기본값: 전체 (필터 해제)
-  {label: "대기", id: "PENDING"},
-  {label: "승인", id: "CONFIRMED"},
-  {label: "반려", id: "REJECTED"}
-];
-
-// API 데이터 호출 (전체 조회)
+// API로 연차 데이터 가져오기
 const fetchAnnualData = async () => {
   try {
     store.showLoading();
@@ -133,7 +133,7 @@ const fetchAnnualData = async () => {
     allDocs.value = response.data
         .filter(item => ["CONFIRMED", "REJECTED", "PENDING"].includes(item.status)) // 필요 상태만 포함
         .map(item => ({
-          annualId: item.annualId,                        // 고유 ID
+          annualId: item.annualId,                         // 고유 ID
           annualTypeLabel: annualTypeMap[item.annualType], // 한글 연차 종류
           enrollAnnual: item.enrollAnnual.split("T")[0],   // 신청일
           annualStart: item.annualStart.split("T")[0],     // 시작일
@@ -152,72 +152,92 @@ const fetchAnnualData = async () => {
   }
 };
 
-// 필터 적용 및 데이터 갱신
+// 필터 로직
 const applyFilter = (resetPage = true) => {
   console.log("현재 검색 조건:", searchCriteria.value);
 
-  let filtered = [...allDocs.value]; // 배열 복사 (원본 데이터 보존)
+  let filtered = [...allDocs.value];
+
+  // 연차 유형 필터(예: FULLDAY, MORNINGHALF...) -> 필요하다면 사용
   if (searchCriteria.value.annualType) {
-    filtered = filtered.filter(item => item.annualType === searchCriteria.value.annualType);
+    filtered = filtered.filter(
+        item => item.annualType === searchCriteria.value.annualType
+    );
   }
 
+  // 날짜 범위 필터
   if (searchCriteria.value.fromDate && searchCriteria.value.toDate) {
-    filtered = filtered.filter(item =>
-        dayjs(item.annualStart).isSameOrAfter(dayjs(searchCriteria.value.fromDate)) &&
-        dayjs(item.annualEnd).isSameOrBefore(dayjs(searchCriteria.value.toDate))
+    filtered = filtered.filter(
+        item =>
+            dayjs(item.annualStart).isSameOrAfter(dayjs(searchCriteria.value.fromDate)) &&
+            dayjs(item.annualEnd).isSameOrBefore(dayjs(searchCriteria.value.toDate))
     );
   } else if (searchCriteria.value.fromDate) {
-    filtered = filtered.filter(item =>
-        dayjs(item.annualStart).isSameOrAfter(dayjs(searchCriteria.value.fromDate))
+    filtered = filtered.filter(
+        item =>
+            dayjs(item.annualStart).isSameOrAfter(dayjs(searchCriteria.value.fromDate))
     );
   } else if (searchCriteria.value.toDate) {
-    filtered = filtered.filter(item =>
-        dayjs(item.annualEnd).isSameOrBefore(dayjs(searchCriteria.value.toDate))
+    filtered = filtered.filter(
+        item =>
+            dayjs(item.annualEnd).isSameOrBefore(dayjs(searchCriteria.value.toDate))
     );
   }
 
+  // 상태 필터(빈 문자열("") 제외)
   if (searchCriteria.value.status) {
-    filtered = filtered.filter(item => item.annualStatus === searchCriteria.value.status);
+    console.log("상태 필터 조건:", searchCriteria.value.status);
+    filtered = filtered.filter(item => {
+      const actualStatus = String(item.annualStatus).toUpperCase().trim();
+      const selectedStatus = String(searchCriteria.value.status).toUpperCase().trim();
+      return actualStatus === selectedStatus;
+    });
   }
 
+  console.log("상태 필터 적용 후 데이터:", filtered);
+
+  // 필터링 결과 적용
   filteredDocs.value = filtered;
   totalItems.value = filtered.length;
   totalPages.value = Math.ceil(totalItems.value / pageSize);
 
+  // 페이지 리셋
   if (resetPage) {
     currentPage.value = 1;
   }
 };
 
-// 페이징 처리
+// searchCriteria.status가 변경될 때마다 필터 재적용
+watch(
+    () => searchCriteria.value.status,
+    (newVal, oldVal) => {
+      console.log("연차 상태 변경:", oldVal, "→", newVal);
+      applyFilter(true);
+    }
+);
+
+/* ----------------------------
+ * 페이징 처리
+ * ---------------------------- */
 const paginatedDocs = computed(() => {
   const start = (currentPage.value - 1) * pageSize;
   const end = start + pageSize;
   return filteredDocs.value.slice(start, end);
 });
 
-// 검색 처리
 const handleSearch = () => {
   applyFilter();
 };
 
-// 페이지 변경 시 호출
 const handlePageChange = (page) => {
   currentPage.value = page;
   applyFilter(false);
 };
 
-// 상태 드롭다운 변경 시
-const handleStatusSelect = (selectedLabel) => {
-  const selectedStatus = statusOptions.find(option => option.label === selectedLabel)?.id || "";
-  searchCriteria.value.status = selectedStatus;
-  applyFilter(true);
-};
-
-// ------------------------------------
-// 모달 제어용 상태 및 함수
-// ------------------------------------
-const showModal = ref(false); // 모달 열림 여부
+/* ----------------------------
+ * 신규 연차 신청 모달 관련
+ * ---------------------------- */
+const showModal = ref(false);
 
 const openModal = () => {
   showModal.value = true;
@@ -227,13 +247,13 @@ const closeModal = () => {
   showModal.value = false;
 };
 
-// 초기 로드
+/* ----------------------------
+ * 컴포넌트 마운트 시 데이터 로딩
+ * ---------------------------- */
 onMounted(() => {
   fetchAnnualData();
 });
-
 </script>
-
 <template>
   <div id="header-div">
     <div id="header-top" class="flex-between">
@@ -258,12 +278,12 @@ onMounted(() => {
           />
           <ButtonDropDown
               :options="statusOptions"
-              v-model="annualType"
+              v-model="searchCriteria.status"
               default-option="전체"
               width="150px"
               height="40px"
-              @select="handleStatusSelect"
           />
+
         </div>
 
 
