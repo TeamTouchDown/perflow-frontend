@@ -19,6 +19,16 @@ const approvalTypes = ref(["동의", "합의", "참조", "병렬", "병렬합의
 const selectedApprovalList = ref([]); // 결재 방식과 함께 추가된 사원
 const selectedDeleteList = ref([]); // 결재 목록에서 삭제할 사원
 
+// emit
+const emit = defineEmits(["updateApprovalList", "closeModal"]);
+
+// 부모로 데이터 전달
+const saveSelection = () => {
+  console.log("[OrgTree] 선택된 데이터: ", selectedApprovalList.value);
+  emit("updateApprovalList", [...selectedApprovalList.value]);
+  emit("closeModal");
+}
+
 // 최상위 부서 로드
 const loadTopDepts = async () => {
 
@@ -188,6 +198,10 @@ onMounted(() => {
     <!-- 삭제 버튼 -->
     <div class="delete-container">
       <button class="delete-button" @click="deleteSelectedItems">삭제하기</button>
+    </div>
+    <!-- 저장 버튼 -->
+    <div class="save-container">
+      <button class="save-button" @click="saveSelection">결재선 저장</button>
     </div>
   </div>
 

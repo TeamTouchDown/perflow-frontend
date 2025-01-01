@@ -17,13 +17,18 @@ const selectedShareEmployees = ref([]); // 체크된 사원 목록
 const approvalList = ref([]); // 결재 목록
 const approvalData = ref([]);  // approvalShareBox 에 전달할 데이터
 
+// OrgTree 에서 데이터 업데이트
+const updateApprovalList = (newList) => {
+  approvalData.value = newList;
+};
+
 const shareList = ref([]);  // 공유 목록
 const shareData = ref([]);  // 모달에서 선택한, approvalShareBox 에 전달할 데이터
 
 // 테스트용
 const isTestApprovalModalOpen = ref(false);
 const openTestApprovalModal = () => (isTestApprovalModalOpen.value = true);
-const closeTestApprovalModal = () => (isTestApprovalModalOpen.vale = false);
+const closeTestApprovalModal = () => (isTestApprovalModalOpen.value = false);
 
 // 서식 드롭다운
 const dropdownOptions = [
@@ -57,6 +62,12 @@ const saveApprovalSettings = () => {
   console.log("결재선 설정 저장: approvalData: ", approvalData.value);
   closeApprovalModal();
 };
+
+const saveTestApprovalSettings = () => {
+  approvalData.value = [...approvalList.value];
+  console.log("결재선 설정 저장: approvalData: ", approvalData.value);
+  closeTestApprovalModal();
+}
 
 const saveShareSettings = () => {
   shareData.value = [...shareList.value]; // 선택된 공유 데이터
@@ -293,12 +304,17 @@ const goTo = (url) => {
           title="결재선 설정 테스트"
           width="1000px"
           height="500px"
-          :button1="{ label: '닫기', color: 'gray', onClick: closeApprovalModal }"
-          :button2="{ label: '저장하기', color: 'orange', onClick: saveApprovalSettings }"
+          :button1="{ label: '닫기', color: 'gray', onClick: closeTestApprovalModal }"
+          :button2="{ label: '저장하기', color: 'orange', onClick: saveTestApprovalSettings }"
           @close="closeTestApprovalModal"
       >
         <template #default>
-          <OrgTree />
+          <div class="modal-layout">
+            <OrgTree
+                @updateApprovalList="updateApprovalList"
+                @closeModal="closeTestApprovalModal"
+            />
+          </div>
         </template>
       </ModalBasic>
         <!---->
