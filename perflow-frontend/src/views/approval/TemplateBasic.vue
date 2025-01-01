@@ -17,9 +17,53 @@ const selectedShareEmployees = ref([]); // 체크된 사원 목록
 const approvalList = ref([]); // 결재 목록
 const approvalData = ref([]);  // approvalShareBox 에 전달할 데이터
 
-// OrgTree 에서 데이터 업데이트
 const updateApprovalList = (newList) => {
-  approvalData.value = newList;
+
+  const typeMapping = {
+    동의: "SEQ",
+    참조: "CC",
+    합의: "AGR",
+    병렬: "PLL",
+    병렬합의: "PLLAGR"
+  };
+
+  let currentOrder = 1; // 현재 결재 순서
+  let isPllGroup = false; // 병렬 그룹 여부
+
+  approvalData.value = newList.map((item, index, array) => {
+
+    console.log("현재 항목 타입: ", item.type);
+
+    const isParallel = item.type === "병렬" || item.type === "병렬합의";
+
+    if (isParallel) {
+      // 병렬 그룹 시작
+      isPllGroup = true;
+    }
+
+    // 병렬 그룹이 끝난 뒤 currentOrder 증가
+    if (!isParallel && isPllGroup) {
+      isPllGroup = false; // 병렬 그룹 종료
+      currentOrder++; // 병렬 그룹 종료 후 증가
+    }
+
+    // 병렬 그룹이면 같은 currentOrder, 아니면 증가
+    const lineOrder = isParallel ? currentOrder : currentOrder++;
+
+    return {
+      ...item,
+      displayType: item.type, // 한글 값으로 표시
+      approveType: typeMapping[item.type],
+      approveLineOrder: lineOrder,
+    };
+  });
+
+  // 병렬 그룹이 끝난 후 마지막 currentOrder 증가 처리
+  if (isPllGroup) {
+    currentOrder++;
+  }
+
+  console.log("updateApprovalList - 업데이트 된 approvalData: ", approvalData.value);
 };
 
 const shareList = ref([]);  // 공유 목록
@@ -126,6 +170,7 @@ const deleteShareSelectedRows = () => {
   selectedShareRows.value.clear(); // 선택 목록 초기화
 };
 
+
 // 버튼 클릭 시 결재 순서에 추가
 const addToApprovalList = (type) => {
   console.log("addToApprovalList 메소드 호출");
@@ -175,10 +220,10 @@ const docData = () => {
     fields: {
       CONTENT: content.value, // 기본 서식의 필드 데이터
     },
-    approveLines: approvalList.value.map((line, index) => ({
+    approveLines: approvalData.value.map((line, index) => ({
       groupId: null,
       approveType: line.approveType,
-      approveLineOrder: index + 1,
+      approveLineOrder: line.approveLineOrder,
       pllGroupId: null,
       approveTemplateTypes: 'MANUAL',
       approveSbjs: [
@@ -318,120 +363,6 @@ const goTo = (url) => {
         </template>
       </ModalBasic>
         <!---->
-
-      <ApprovalShareBox
-          title="결재선"
-          :placeholder="approvalData.length ? '' : '결재선이 없습니다.'"
-          :data="approvalData.map((item) => ({
-          ...item,
-          type: item.displayType  // 한글 값만 표시
-          }))"
-          @onSettingsClick="openApprovalModal"
-      />
-
-      <!-- 모달 창 -->
-      <ModalBasic
-          :isOpen="isApprovalModalOpen"
-          title="결재선 설정"
-          width="1000px"
-          :button1="{ label: '닫기', color: 'gray', onClick: closeApprovalModal }"
-          :button2="{ label: '저장하기', color: 'orange', onClick: saveApprovalSettings }"
-          @close="closeApprovalModal"
-      >
-        <template #default>
-          <div class="modal-layout">
-            <!-- 조직도 트리 -->
-            <div class="modal-box left">
-              <OrganizationTree
-                  context="approval"
-                  @update:selectedApprovalEmployees="updateApprovalSelectedEmployees"
-              />
-            </div>
-
-            <!-- 결재 버튼 그룹 -->
-            <div class="modal-box center">
-              <div class="approval-button-group">
-                <ButtonBasic
-                    label="동의"
-                    color="white"
-                    size="medium"
-                    @click="addToApprovalList('동의')"
-                />
-                <ButtonBasic
-                    label="참조"
-                    color="white"
-                    size="medium"
-                    @click="addToApprovalList('참조')"
-                />
-                <ButtonBasic
-                    label="합의"
-                    color="white"
-                    size="medium"
-                    @click="addToApprovalList('합의')"
-                />
-                <ButtonBasic
-                    label="병렬"
-                    color="white"
-                    size="medium"
-                    @click="addToApprovalList('병렬')"
-                />
-                <ButtonBasic
-                    label="병렬합의"
-                    color="white"
-                    size="medium"
-                    @click="addToApprovalList('병렬합의')"
-                />
-              </div>
-            </div>
-
-            <!-- 결재 목록 -->
-            <div class="modal-box right">
-              <div class="table-container">
-                <table class="approval-table">
-                  <!-- 테이블 헤더 -->
-                  <thead>
-                  <tr>
-                    <th>순서</th>
-                    <th>결재 종류</th>
-                    <th>이름</th>
-                    <th>직위</th>
-                  </tr>
-                  </thead>
-
-                  <!-- 드래그 가능한 테이블 바디 -->
-                  <draggable
-                      v-model="approvalList"
-                      tag="tbody"
-                      item-key="name"
-                  >
-                    <template #item="{ element, index }">
-                      <tr
-                          @click="toggleApproveRowSelection(index)"
-                          :class="{ 'selected-row': selectedApproveRows.has(index) }"
-                      >
-                        <td>{{ index + 1 }}</td>
-                        <td>{{ element.type }}</td>
-                        <td>{{ element.name }}</td>
-                        <td>{{ element.position }}</td>
-                      </tr>
-                    </template>
-                  </draggable>
-                </table>
-              </div>
-
-              <div class="button-container">
-                <ButtonBasic
-                    label="삭제"
-                    color="white"
-                    size="small"
-                    @click="deleteApproveSelectedRows"
-                />
-                </div>
-              </div>
-
-          </div>
-        </template>
-      </ModalBasic>
 
       <!-- 공유 -->
       <ApprovalShareBox
