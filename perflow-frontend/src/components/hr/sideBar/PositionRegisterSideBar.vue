@@ -57,7 +57,7 @@ function closeSidebar() {
     <p id="title">{{props.title}}</p>
   </div>
   <div id="modify-contents">
-    <ModifyInputFeild title="이름" @update-value="updateName"/>
+    <ModifyInputFeild title="직위명" @update-value="updateName"/>
     <ModifyInputFeild title="직위등급" @update-value="updateLevel"/>
     <SubmitButton @submit="registerPosition" text="등록하기"/>
   </div>
