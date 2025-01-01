@@ -2,14 +2,17 @@
 import { useStore } from "@/store/store.js";
 import { ref, onMounted } from "vue";
 import OrgTreeNode from "@/components/approval/OrgTreeNode.vue";
+import {useAuthStore} from "@/store/authStore.js";
 
 const store = useStore();
+const authStore = useAuthStore();
 
 // 부서
 const topDepts = ref([]);
 // 사원
 const emps = ref([]); // 선택된 부서의 사원 목록
 const selectedEmps = ref([]); // 선택된 사원 목록
+const loggedInEmpId = authStore.empId;  // 현재 로그인 한 사원 id
 // 결재 방식
 const approvalTypes = ref(["동의", "합의", "참조", "병렬", "병렬합의"]);
 const selectedApprovalList = ref([]); // 결재 방식과 함께 추가된 사원
@@ -27,16 +30,34 @@ const loadTopDepts = async () => {
 // 선택된 부서와 하위 부서의 모든 사원 로드
 const loadEmpsByDept = async (deptId) => {
   await store.selectDept(deptId);
-  emps.value = store.currentEmployees;
+  emps.value = store.currentEmployees.filter(
+      (emp) => emp.empId !== loggedInEmpId  // 현재 로그인 한 사용자는 제외
+  );
 }
 
 const handleApproval = (type) => {
+
   if (selectedEmps.value.length === 0) {
     alert("사원을 선택해주세요.");
     return;
   }
-  console.log(`클릭한 버튼 : ${type}, 선택된 사원: ${selectedEmps.value}`);
-}
+
+  // 선택된 사원을 결재 방식과 함께 추가하기
+  selectedEmps.value.forEach((empId) => {
+    const employee = emps.value.find((emp) => emp.empId === empId);
+    if (employee) {
+      selectedApprovalList.value.push({
+        empId: employee.empId,
+        name: employee.name,
+        position: employee.position,
+        type: type,
+      });
+    }
+  });
+
+  // 체크박스 초기화
+  selectedEmps.value = [];
+};
 
 onMounted(() => {
   loadTopDepts();
@@ -87,6 +108,15 @@ onMounted(() => {
         </button>
       </div>
     </div>
+
+    <!-- 선택된 사원 리스트 -->
+    <div class="approval-list-container">
+      <ul>
+        <li v-for="item in selectedApprovalList" :key="item.empId">
+          {{ item.type }} {{ item.name }} {{ item.position }}
+        </li>
+      </ul>
+    </div>
   </div>
 
 </template>
@@ -126,7 +156,15 @@ onMounted(() => {
   padding: 20px;
 }
 
-/* 부서, 사원 이름 스타일 */
+.approval-list-container {
+  width: 200px;
+  height: 270px;
+  border: 1px solid #d9d9d9;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+/* ul, li 스타일 */
 ul {
   list-style-type: none; /* 기본 리스트 스타일 제거 */
   margin: 0; /* 기본 여백 제거 */
@@ -141,6 +179,10 @@ li {
 }
 
 .tree-container ul {
+  padding: 0px;
+}
+
+.approval-list-container ul {
   padding: 0px;
 }
 
