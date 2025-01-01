@@ -5,10 +5,15 @@ import OrgTreeNode from "@/components/approval/OrgTreeNode.vue";
 
 const store = useStore();
 
-// 최상위 부서
+// 부서
 const topDepts = ref([]);
-
+// 사원
 const emps = ref([]); // 선택된 부서의 사원 목록
+const selectedEmps = ref([]); // 선택된 사원 목록
+// 결재 방식
+const approvalTypes = ref(["동의", "합의", "참조", "병렬", "병렬합의"]);
+const selectedApprovalList = ref([]); // 결재 방식과 함께 추가된 사원
+
 
 // 최상위 부서 로드
 const loadTopDepts = async () => {
@@ -25,6 +30,14 @@ const loadEmpsByDept = async (deptId) => {
   emps.value = store.currentEmployees;
 }
 
+const handleApproval = (type) => {
+  if (selectedEmps.value.length === 0) {
+    alert("사원을 선택해주세요.");
+    return;
+  }
+  console.log(`클릭한 버튼 : ${type}, 선택된 사원: ${selectedEmps.value}`);
+}
+
 onMounted(() => {
   loadTopDepts();
 })
@@ -33,6 +46,7 @@ onMounted(() => {
 
 <template>
   <div class="org-tree">
+
     <!-- 부서 목록 -->
     <div class="tree-container">
       <ul>
@@ -44,14 +58,33 @@ onMounted(() => {
         />
       </ul>
     </div>
+
     <!-- 사원 목록 -->
     <div class="emp-container">
       <div class="emp-list">
         <ul>
           <li v-for="emp in emps" :key="emp.empId">
+            <input
+              type="checkbox"
+              :value="emp.empId"
+              v-model="selectedEmps"
+            />
             {{ emp.name }} {{ emp.position }}
           </li>
         </ul>
+      </div>
+    </div>
+
+    <!-- 결재 방식 버튼 -->
+    <div class="button-container">
+      <div class="button-group">
+        <button
+          v-for="type in approvalTypes"
+          :key="type"
+          @click="handleApproval(type)"
+        >
+          {{ type }}
+        </button>
       </div>
     </div>
   </div>
@@ -83,6 +116,16 @@ onMounted(() => {
   padding: 20px;
 }
 
+.button-container {
+  display: flex;
+  flex-direction: column; /* 버튼을 세로로 배치 */
+  justify-content: center;
+  gap: 10px;
+  width: 150px; /* 부서, 사원 목록과 사이즈 맞춤 */
+  height: 270px;
+  padding: 20px;
+}
+
 /* 부서, 사원 이름 스타일 */
 ul {
   list-style-type: none; /* 기본 리스트 스타일 제거 */
@@ -99,6 +142,20 @@ li {
 
 .tree-container ul {
   padding: 0px;
+}
+
+/* 결재 방식 버튼 스타일 */
+button {
+  background-color: #fff;
+  color: #3C4651;
+  border: 1px solid #AFA9A9;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 80px;
+  padding: 5px;
+  text-align: center; /* 버튼 텍스트 가운데 정렬 */
+  margin: 5px;
 }
 
 /* 스클로 바 스타일 */
