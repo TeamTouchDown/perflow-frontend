@@ -17,7 +17,6 @@ const loggedInEmpId = authStore.empId;  // 현재 로그인 한 사원 id
 const approvalTypes = ref(["동의", "합의", "참조", "병렬", "병렬합의"]);
 const selectedApprovalList = ref([]); // 결재 방식과 함께 추가된 사원
 
-
 // 최상위 부서 로드
 const loadTopDepts = async () => {
 
@@ -87,6 +86,8 @@ onMounted(() => {
 
     <!-- 부서 목록 -->
     <div class="tree-container">
+      <div class="tree-header">
+      </div>
       <ul>
         <OrgTreeNode
             v-for="dept in topDepts"
@@ -99,6 +100,10 @@ onMounted(() => {
 
     <!-- 사원 목록 -->
     <div class="emp-container">
+      <div class="emp-header">
+        <span class="header-name">이름</span>
+        <span class="header-position">직위</span>
+      </div>
       <div class="emp-list">
         <ul>
           <li v-for="emp in emps" :key="emp.empId">
@@ -128,11 +133,18 @@ onMounted(() => {
 
     <!-- 선택된 사원 리스트 -->
     <div class="approval-list-container">
-      <ul>
-        <li v-for="item in selectedApprovalList" :key="item.empId">
-          {{ item.type }} {{ item.name }} {{ item.position }}
-        </li>
-      </ul>
+      <div class="type-header">
+        <span class="header-type">결재종류</span>
+        <span class="header-name">이름</span>
+        <span class="header-position">직위</span>
+      </div>
+      <div class="type-list">
+        <ul>
+          <li v-for="item in selectedApprovalList" :key="item.empId">
+            {{ item.type }} {{ item.name }} {{ item.position }}
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 
@@ -145,22 +157,24 @@ onMounted(() => {
 }
 
 .tree-container {
+  position: relative; /* 헤더를 컨테이너 안에 고정하기 위함 */
   width: 200px;
   height: 270px;
   border: 1px solid #d9d9d9;
   border-right: none; /* 사원 목록과 겹치는 테두리 삭제 */
   border-radius: 10px 0 0 10px;
   overflow: auto; /* 스크롤 활성화 */
-  padding: 20px;
+  padding: 50px 20px 20px 20px;
 }
 
 .emp-container {
+  position: relative; /* 헤더를 컨테이너 안에 고정하기 위함 */
   width: 150px;
   height: 270px;
   border: 1px solid #d9d9d9;
   border-radius: 0 10px 10px 0;
   overflow-y: auto; /* 스크롤 활성화 */
-  padding: 20px;
+  padding: 50px 20px 20px 20px;
 }
 
 .button-container {
@@ -174,11 +188,53 @@ onMounted(() => {
 }
 
 .approval-list-container {
+  position: relative; /* 헤더를 컨테이너 안에 고정하기 위함 */
   width: 200px;
   height: 270px;
   border: 1px solid #d9d9d9;
   border-radius: 10px;
-  padding: 20px;
+  padding: 50px 20px 20px 20px;
+}
+
+/* 컨테이너 헤더 */
+.tree-header,
+.emp-header,
+.type-header {
+  position: absolute; /* 헤더를 컨테이너 상단에 고정 */
+  top: 10px;
+  left: 0;
+  width: 100%;
+  height: 30px;
+  background-color: #F3F3F3;
+  padding: 5px;
+  display: flex;
+  gap: 20px;
+}
+
+.header-name,
+.header-position,
+.header-type {
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  color: #817F7F;
+}
+
+.emp-header .header-name {
+  margin-left: 35px;
+}
+.emp-header .header-position {
+  margin-left: 10px;
+}
+
+.type-header .header-type,
+.type-header .header-position {
+  margin-left: 15px;
+}
+
+.type-header .header-name {
+  margin-left: 5px;
 }
 
 /* ul, li 스타일 */
