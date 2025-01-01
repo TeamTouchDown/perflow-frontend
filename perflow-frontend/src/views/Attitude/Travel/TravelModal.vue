@@ -1,38 +1,37 @@
 <script setup>
-import {ref, defineProps, defineEmits, watch} from "vue";
+import { ref, defineProps, defineEmits, watch } from "vue";
 import ButtonBasic from "@/components/common/ButtonBasic.vue";
 import ModalBasic from "@/components/common/ModalBasic.vue";
 import SearchGroupBar from "@/components/common/SearchGroupBar.vue";
 import ButtonDropDown from "@/components/common/ButtonDropDown.vue";
 import api from "@/config/axios.js";
-import {useStore} from "@/store/store.js";
+import { useStore } from "@/store/store.js";
 
 const store = useStore();
+
 // 부모에서 전달된 props 정의
 defineProps({
   isOpen: Boolean // 모달 열림 여부
 });
 
 // 부모로 이벤트 전달 설정
-const emit = defineEmits(["close"]);
+const emit = defineEmits(["close", "travel-success"]);
 
 // 상태 관리
-const vacationType = ref(""); // 휴가 구분
-const applyDate = ref("");  // 휴가 신청일
-const approver = ref("");   // 결재자
-const startDate = ref("");  // 기간 시작일
-const endDate = ref("");    // 기간 종료일
-const errorMessage = ref(""); // 에러 메시지
+const travelDivision = ref(""); // 출장 구분
+const travelReason = ref("");   // 출장 사유
+const approver = ref("");       // 결재자
+const startDate = ref("");      // 기간 시작일
+const endDate = ref("");        // 기간 종료일
+const errorMessage = ref("");   // 에러 메시지
 
-// 연차 구분 옵션
-const vacationTypeOptions = [
-  {label: "출산 휴가", value: "MATERNITY"},
-  {label: "배우자 출산 휴가", value: "SPOUSEMATERNITY"},
-  {label: "생리 휴가", value: "MENSTRUAL"},
-  {label: "가족 돌봄 휴가", value: "FAMILYCARE"},
+// 출장 구분 옵션
+const travelDivisionOptions = [
+  { label: "국내 출장", value: "DOMESTIC" },
+  { label: "해외 출장", value: "OVERSEAS" },
 ];
 
-// 날짜 포맷 함수 (외부 정의)
+// 날짜 포맷 함수
 const formatDate = (date, time) => {
   // 날짜 포맷을 'YYYY-MM-DDTHH:mm:ss' 형식으로 변환
   if (!date) return "";
@@ -42,8 +41,8 @@ const formatDate = (date, time) => {
 };
 
 const handleApply = async () => {
-  if (!vacationType.value) { // 휴가 유형 미선택 시 에러 처리
-    alert("휴가 구분을 선택해 주세요.");
+  if (!travelDivision.value) { // 출장 유형 미선택 시 에러 처리
+    alert("출장 구분을 선택해 주세요.");
     return;
   }
   if (!startDate.value || !endDate.value) {
@@ -54,43 +53,55 @@ const handleApply = async () => {
     alert("종료일은 시작일보다 뒤이어야 합니다.");
     return;
   }
+  if (!approver.value) {
+    alert("결재자 사번을 입력해 주세요.");
+    return;
+  }
+  if (!travelReason.value) {
+    alert("출장 사유를 입력해 주세요.");
+    return;
+  }
   try {
     // 1. 입력값 가져오기
     const requestData = {
-      approver: approver.value, // 결재자 사번
-      vacationStart: formatDate(startDate.value, "09:00:00"), // 시작 시간 반영
-      vacationEnd: formatDate(endDate.value, "18:00:00"),     // 종료 시간 반영
-      vacationType: vacationType.value,                         // 연차 유형
+      approverId: approver.value, // 결재자 사번
+      enrollTravel: formatDate(new Date(), "09:00:00"), // 신청일 (현재 날짜)
+      travelStart: formatDate(startDate.value, "09:00:00"), // 시작 시간 반영
+      travelEnd: formatDate(endDate.value, "18:00:00"),     // 종료 시간 반영
+      travelDivision: travelDivision.value,                 // 출장 유형
+      travelReason: travelReason.value,                     // 출장 사유
     };
 
     // 요청 데이터 확인
     console.log("Request Data:", requestData);
 
     // 2. 서버 요청 (API 호출)
-    //store.showLoading();
-    const response = await api.post('/emp/vacation', requestData);
-    //store.hideLoading();
+    store.showLoading();
+    const response = await api.post('/emp/approval/travels', requestData);
+    store.hideLoading();
 
     // 3. 성공 처리
-    console.log('휴가 신청 성공:', response);
-    alert('휴가 신청이 완료되었습니다!');
+    console.log('출장 신청 성공:', response);
+    alert('출장 신청이 완료되었습니다!');
+    emit('close');
+    emit('travel-success');
   } catch (error) {
     // 4. 에러 처리
-    console.error('휴가 신청 실패:', error);
+    console.error('출장 신청 실패:', error);
+    store.hideLoading();
 
     if (error.response) {
       console.error('서버 응답 데이터:', error.response.data); // 서버 에러 메시지 출력
-      alert(`휴가 신청 실패: ${error.response.data.message || '알 수 없는 오류'}`);
+      alert(`출장 신청 실패: ${error.response.data.message || '알 수 없는 오류'}`);
     } else {
       alert('올바르지 않은 값이 입력되었습니다.');
     }
   }
 };
 
-
 const resetForm = () => {
-  vacationType.value = "";
-  applyDate.value = "";
+  travelDivision.value = "";
+  travelReason.value = "";
   approver.value = "";
   startDate.value = "";
   endDate.value = "";
@@ -98,10 +109,10 @@ const resetForm = () => {
 };
 
 
-// ButtonDropDown에서 선택된 값을 annualType에 반영
-const handleVacationTypeSelect = (selectedLabel) => {
-  const option = vacationTypeOptions.find(opt => opt.label === selectedLabel);
-  vacationType.value = option ? option.value : "";
+// ButtonDropDown에서 선택된 값을 travelDivision에 반영
+const handleTravelDivisionSelect = (selectedLabel) => {
+  const option = travelDivisionOptions.find(opt => opt.label === selectedLabel);
+  travelDivision.value = option ? option.value : "";
 };
 </script>
 
@@ -109,37 +120,46 @@ const handleVacationTypeSelect = (selectedLabel) => {
   <div v-if="isOpen" class="modal-wrapper">
     <ModalBasic
         :isOpen="isOpen"
-        title="휴가 신청하기"
+        title="출장 신청하기"
         width="800px"
-        height="450px"
+        height="550px"
         @close="emit('close')"
     >
       <!-- 전체 컨테이너 -->
       <div class="modal-container">
-        <!-- 연차 신청 폼 -->
+        <!-- 출장 신청 폼 -->
         <div class="modal-body">
           <div class="form-container">
             <div class="form-group date-range">
-              <SearchGroupBar v-model="startDate" placeholder="휴가 시작일" type="date"/>
+              <SearchGroupBar v-model="startDate" placeholder="출장 시작일" type="date"/>
               ~
-              <SearchGroupBar v-model="endDate" placeholder="휴가 종료일" type="date"/>
+              <SearchGroupBar v-model="endDate" placeholder="출장 종료일" type="date"/>
             </div>
 
-            <div class="form-group search-box">
+            <div class="form-group">
               <SearchGroupBar
                   v-model="approver"
                   placeholder="결재자 사번을 입력해주세요"
                   type="text"
               />
             </div>
+
+            <div class="form-group">
+              <SearchGroupBar
+                  v-model="travelReason"
+                  placeholder="출장 사유를 입력해주세요"
+                  type="text"
+              />
+            </div>
+
             <div class="form-group">
               <ButtonDropDown
-                  :options="vacationTypeOptions"
-                  default-option="휴가 구분"
-                  v-model="vacationType"
+                  :options="travelDivisionOptions"
+                  default-option="출장 구분"
+                  v-model="travelDivision"
                   width="200px"
                   height="40px"
-                  @select="handleVacationTypeSelect"
+                  @select="handleTravelDivisionSelect"
               />
             </div>
 
@@ -157,7 +177,6 @@ const handleVacationTypeSelect = (selectedLabel) => {
     </ModalBasic>
   </div>
 </template>
-
 
 <style scoped>
 .modal-wrapper {
@@ -177,7 +196,7 @@ const handleVacationTypeSelect = (selectedLabel) => {
 .modal-container {
   display: flex;
   flex-direction: column;
-  height: 350px; /* 모달 높이를 100%로 유지 */
+  height: 100%; /* 모달 높이를 100%로 유지 */
 }
 
 .error-message {
@@ -213,7 +232,7 @@ const handleVacationTypeSelect = (selectedLabel) => {
   flex: 2; /* 남은 공간 모두 차지 */
   overflow-y: visible; /* 내부 스크롤 활성화 */
   padding: 5px;
-  height: 400px /* 내용 여백 */
+  height: 400px; /* 내용 여백 */
 }
 
 .modal-header {
