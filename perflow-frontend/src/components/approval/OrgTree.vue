@@ -3,6 +3,7 @@ import { useStore } from "@/store/store.js";
 import { ref, onMounted } from "vue";
 import OrgTreeNode from "@/components/approval/OrgTreeNode.vue";
 import {useAuthStore} from "@/store/authStore.js";
+import draggable from "vuedraggable";
 
 const store = useStore();
 const authStore = useAuthStore();
@@ -64,6 +65,7 @@ const handleApproval = (type) => {
     if (employee) {
       selectedApprovalList.value.push({
         empId: employee.empId,
+        order: selectedApprovalList.value.length + 1,
         name: employee.name,
         position: employee.position,
         type: type,
@@ -74,6 +76,13 @@ const handleApproval = (type) => {
   // 체크박스 초기화
   selectedEmps.value = [];
 };
+
+// 드래그 하여 결재 순서 변경
+const updateOrder = () => {
+  selectedApprovalList.value.forEach((item, index) => {
+    item.order = index + 1;
+  });
+}
 
 onMounted(() => {
   loadTopDepts();
@@ -112,7 +121,8 @@ onMounted(() => {
               :value="emp.empId"
               v-model="selectedEmps"
             />
-            {{ emp.name }} {{ emp.position }}
+            <span class="emp-name">{{ emp.name }}</span>
+            <span class="emp-position">{{ emp.position }}</span>
           </li>
         </ul>
       </div>
@@ -124,9 +134,11 @@ onMounted(() => {
         <button
           v-for="type in approvalTypes"
           :key="type"
+          class="styled-button"
           @click="handleApproval(type)"
         >
-          {{ type }}
+          <span class="button-text">{{ type }}</span>
+          <img src="@/assets/icons/approval_button_arrow.png" alt="arrow" class="button-arrow" />
         </button>
       </div>
     </div>
@@ -141,7 +153,9 @@ onMounted(() => {
       <div class="type-list">
         <ul>
           <li v-for="item in selectedApprovalList" :key="item.empId">
-            {{ item.type }} {{ item.name }} {{ item.position }}
+            <span class="type-type">{{ item.type }}</span>
+            <span class="type-name">{{ item.name }}</span>
+            <span class="type-position">{{ item.position }}</span>
           </li>
         </ul>
       </div>
@@ -169,7 +183,7 @@ onMounted(() => {
 
 .emp-container {
   position: relative; /* 헤더를 컨테이너 안에 고정하기 위함 */
-  width: 150px;
+  width: 180px;
   height: 270px;
   border: 1px solid #d9d9d9;
   border-radius: 0 10px 10px 0;
@@ -181,7 +195,6 @@ onMounted(() => {
   display: flex;
   flex-direction: column; /* 버튼을 세로로 배치 */
   justify-content: center;
-  gap: 10px;
   width: 150px; /* 부서, 사원 목록과 사이즈 맞춤 */
   height: 270px;
   padding: 20px;
@@ -225,16 +238,19 @@ onMounted(() => {
   margin-left: 35px;
 }
 .emp-header .header-position {
-  margin-left: 10px;
+  margin-left: 30px;
 }
 
-.type-header .header-type,
-.type-header .header-position {
+.type-header .header-type {
   margin-left: 15px;
 }
 
 .type-header .header-name {
-  margin-left: 5px;
+  margin-left: 13px;
+}
+
+.type-header .header-position {
+  margin-left: 10px;
 }
 
 /* ul, li 스타일 */
@@ -259,16 +275,81 @@ li {
   padding: 0px;
 }
 
+/* 목록 체크박스, 이름, 직위, 결재종류 스타일 */
+.emp-list li {
+  display: flex;
+  align-items: center;  /* 체크박스와 텍스트를 수직 정렬 */
+  gap: 5px;  /* 체크박스, 텍스트 간 간격 */
+  padding: 1px 0; /* row 상하 간격 */
+}
+
+.type-list li {
+  display: flex;
+  align-items: center;
+  padding: 3px 0;
+}
+
+.emp-name,
+.emp-position {
+  white-space: nowrap;  /* 줄바꿈 x */
+  overflow: hidden; /* 텍스트가 길면 숨김 */
+  text-overflow: ellipsis;  /* 텍스트가 길면 ... 추가 */
+}
+
+.type-type,
+.type-name,
+.type-position {
+  white-space: nowrap;  /* 줄바꿈 x */
+  overflow: hidden; /* 텍스트가 길면 숨김 */
+  text-overflow: ellipsis;  /* 텍스트가 길면 ... 추가 */
+}
+
+.emp-name {
+  width: 80px;  /* 이름 칸 고정 너비 */
+  text-align: left;
+}
+
+.emp-position {
+  width: 50px;
+  text-align: left;
+}
+
+.type-type {
+  width: 60px;
+  text-align: center;
+}
+
+.type-name {
+  width: 80px;
+  text-align: center;
+}
+
+.type-position {
+  width: 40px;
+  text-align: center;
+}
+
 /* 결재 방식 버튼 스타일 */
+.styled-button {
+  display: flex; /* 버튼 텍스트와 > 를 가로 배치 */
+  align-items: center;  /* 세로 정렬 */
+  justify-content: space-between; /* 버튼 텍스트, > 를 양쪽으로 정렬 */
+}
+
+.styled-button:hover {
+  background-color: #F7F7F7; /* 마우스 올릴 때 배경색 변경 */
+}
+
 button {
   background-color: #fff;
   color: #3C4651;
   border: 1px solid #AFA9A9;
-  border-radius: 5px;
-  font-size: 16px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: bold;
   cursor: pointer;
   width: 80px;
-  padding: 5px;
+  padding: 7px;
   text-align: center; /* 버튼 텍스트 가운데 정렬 */
   margin: 5px;
 }
