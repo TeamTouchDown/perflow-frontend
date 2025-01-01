@@ -1,7 +1,7 @@
 <script setup>
 import SearchGroupBar from "@/components/common/SearchGroupBar.vue";
 import ButtonBasic from "@/components/common/ButtonBasic.vue";
-import { computed, onMounted, ref, watch } from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import api from "@/config/axios.js";
 import PagingBar from "@/components/common/PagingBar.vue";
 import ButtonDropDown from "@/components/common/ButtonDropDown.vue";
@@ -11,7 +11,7 @@ import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import AnnualModal from "@/views/Attitude/Annual/AnnualModal.vue";
 import AnnualUpdateModal from "@/views/Attitude/Annual/AnnualUpdateModal.vue";
 import TableCheck from "@/components/common/TableCheck.vue";
-import { useStore } from "@/store/store.js";
+import {useStore} from "@/store/store.js";
 import TableBasic from "@/components/common/TableBasic.vue";
 
 const store = useStore();
@@ -26,11 +26,6 @@ console.log(today.format("YYYY-MM-DD"));
  * ---------------------------- */
 const showUpdateModal = ref(false);
 const selectedAnnual = ref(null);
-
-
-
-
-
 
 
 const resetSelection = () => {
@@ -49,12 +44,13 @@ const handleUpdateSuccess = () => {
  * 테이블 컬럼 정의
  * ---------------------------- */
 const columns = [
-  { label: "휴가 종류", field: "vacationType" }, // 한글 연차 종류
-  {label: "신청자",field:"empName"},
-  { label: "신청일", field: "enrollVacation" },       // 신청일
-  { label: "시작일", field: "vacationStart" },        // 시작일
-  { label: "종료일", field: "vacationEnd" },          // 종료일
-  { label: "상태", field: "vacationStatus" },    // 상태
+  {label: "휴가 종류", field: "vacationType"}, // 한글 연차 종류
+  {label: "신청자", field: "empName"},
+  { label: "결재자 이름", field: "approverName" },
+  {label: "신청일", field: "enrollVacation"},       // 신청일
+  {label: "시작일", field: "vacationStart"},        // 시작일
+  {label: "종료일", field: "vacationEnd"},          // 종료일
+  {label: "상태", field: "vacationStatus"},    // 상태
 ];
 
 // 열 너비 설정
@@ -75,10 +71,10 @@ const annualStatusMap = {
 
 // (참고) 상태(필터) 옵션
 const statusOptions = [
-  { label: "전체", value: "" },
-  { label: "대기", value: "PENDING" },
-  { label: "승인", value: "CONFIRMED" },
-  { label: "반려", value: "REJECTED" },
+  {label: "전체", value: ""},
+  {label: "대기", value: "PENDING"},
+  {label: "승인", value: "CONFIRMED"},
+  {label: "반려", value: "REJECTED"},
 ];
 
 /* ----------------------------
@@ -314,7 +310,6 @@ onMounted(() => {
   <!-- 모달 컴포넌트 -->
 
 
-
 </template>
 
 <style scoped>
@@ -324,8 +319,9 @@ onMounted(() => {
   display: flex;
   justify-content: flex-end;
   width: auto;
-  gap:20px;
+  gap: 20px;
 }
+
 .paging-bar-wrapper {
   /* 페이징 바를 감싸는 요소 안에서 가운데 정렬 */
   flex: 1; /* 버튼과 공간을 나눠 갖기 위해 */

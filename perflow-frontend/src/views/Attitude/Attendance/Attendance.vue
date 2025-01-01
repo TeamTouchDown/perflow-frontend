@@ -53,7 +53,7 @@ const navigateToDetail = (category) => {
 <template>
   <div class="main-container">
     <div class="header-section">
-      <h1 class="main-title">근태 관리 시스템</h1>
+      <h1 class="main-title">근태 홈</h1>
       <p class="subtitle">직원들의 근태를 효율적으로 관리하는 통합 플랫폼입니다.</p>
     </div>
 

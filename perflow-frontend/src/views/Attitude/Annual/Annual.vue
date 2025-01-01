@@ -310,14 +310,6 @@ onMounted(() => {
           @row-selected="onRowSelected"
       />
 
-
-      <!-- 수정 모달 -->
-      <AnnualUpdateModal
-          :isOpen="showUpdateModal"
-          :annualData="selectedAnnual"
-          @close="closeUpdateModal"
-          @update-success="handleUpdateSuccess"
-      />
     </div>
 
     <!-- 페이징 바 + 연차 신청 버튼을 같은 라인에 배치 -->
@@ -357,6 +349,13 @@ onMounted(() => {
   <AnnualModal
       :isOpen="showModal"
       @close="closeModal"
+  />
+  <!-- 수정 모달 -->
+  <AnnualUpdateModal
+      :isOpen="showUpdateModal"
+      :annualData="selectedAnnual"
+      @close="closeUpdateModal"
+      @update-success="handleUpdateSuccess"
   />
 
 
