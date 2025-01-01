@@ -17,6 +17,7 @@ const loggedInEmpId = authStore.empId;  // 현재 로그인 한 사원 id
 // 결재 방식
 const approvalTypes = ref(["동의", "합의", "참조", "병렬", "병렬합의"]);
 const selectedApprovalList = ref([]); // 결재 방식과 함께 추가된 사원
+const selectedDeleteList = ref([]); // 결재 목록에서 삭제할 사원
 
 // 최상위 부서 로드
 const loadTopDepts = async () => {
@@ -84,6 +85,18 @@ const updateOrder = () => {
   });
 }
 
+// 결재 목록 리스트의 사원 삭제
+const deleteSelectedItems = () => {
+  selectedApprovalList.value = selectedApprovalList.value.filter(
+      (item) => !selectedDeleteList.value.includes(item.empId)
+  );
+  // 체크박스 초기화
+  selectedDeleteList.value = [];
+
+  // 순서 업데이트
+  updateOrder();
+}
+
 onMounted(() => {
   loadTopDepts();
 })
@@ -146,6 +159,7 @@ onMounted(() => {
     <!-- 선택된 사원 리스트 -->
     <div class="approval-list-container">
       <div class="type-header">
+        <span class="header-order">순서</span>
         <span class="header-type">결재종류</span>
         <span class="header-name">이름</span>
         <span class="header-position">직위</span>
@@ -161,9 +175,19 @@ onMounted(() => {
             <span class="type-type">{{ element.type }}</span>
             <span class="type-name">{{ element.name }}</span>
             <span class="type-position">{{ element.position }}</span>
+            <input
+                type="checkbox"
+                :value="element.empId"
+                v-model="selectedDeleteList"
+                class="delete-checkbox"
+            />
           </li>
         </template>
       </draggable>
+    </div>
+    <!-- 삭제 버튼 -->
+    <div class="delete-container">
+      <button class="delete-button" @click="deleteSelectedItems">삭제하기</button>
     </div>
   </div>
 
@@ -207,11 +231,12 @@ onMounted(() => {
 
 .approval-list-container {
   position: relative; /* 헤더를 컨테이너 안에 고정하기 위함 */
-  width: 200px;
+  width: 270px;
   height: 270px;
   border: 1px solid #d9d9d9;
   border-radius: 10px;
-  padding: 50px 20px 20px 20px;
+  overflow-y: auto; /* 스크롤 활성화 */
+  padding: 50px 0px 20px 20px;
 }
 
 /* 컨테이너 헤더 */
@@ -231,7 +256,8 @@ onMounted(() => {
 
 .header-name,
 .header-position,
-.header-type {
+.header-type,
+.header-order {
   align-items: center;
   justify-content: center;
   font-size: 12px;
@@ -247,15 +273,17 @@ onMounted(() => {
 }
 
 .type-header .header-type {
-  margin-left: 15px;
+  margin-left: 0px;
 }
-
 .type-header .header-name {
   margin-left: 13px;
 }
-
 .type-header .header-position {
+  margin-left: 20px;
+}
+.type-header .header-order {
   margin-left: 10px;
+  margin-right: 0px;
 }
 
 /* ul, li 스타일 */
@@ -313,7 +341,6 @@ li {
   width: 80px;  /* 이름 칸 고정 너비 */
   text-align: left;
 }
-
 .emp-position {
   width: 50px;
   text-align: left;
@@ -322,16 +349,16 @@ li {
 .type-type {
   width: 60px;
   text-align: center;
+  margin-left: 20px;
 }
-
 .type-name {
   width: 80px;
   text-align: center;
 }
-
 .type-position {
   width: 40px;
   text-align: center;
+  margin-right: 10px;
 }
 
 /* 결재 방식 버튼 스타일 */
@@ -359,19 +386,34 @@ button {
   margin: 5px;
 }
 
+/* 결재 목록 행 삭제 버튼 */
+.delete-button {
+  position: absolute; /* 리스트의 오른쪽 끝에 고정 */
+  right: 10px;
+  color: #3C4651;
+  border: 1px solid #817F7F;
+  cursor: pointer;
+}
+.delete-button:hover {
+  background-color: #F7F7F7; /* 마우스 올릴 때 배경색 변경 */
+}
+
 /* 스클로 바 스타일 */
 .tree-container::-webkit-scrollbar,
-.emp-container::-webkit-scrollbar {
+.emp-container::-webkit-scrollbar,
+.approval-list-container::-webkit-scrollbar {
   width: 5px; /* 스크롤 바 너비 */
 }
 
 .tree-container::-webkit-scrollbar-track,
-.emp-container::-webkit-scrollbar-track {
+.emp-container::-webkit-scrollbar-track,
+.approval-list-container::-webkit-scrollbar-track {
   border: 10px;
 }
 
 .tree-container::-webkit-scrollbar-thumb,
-.emp-container::-webkit-scrollbar-thumb {
+.emp-container::-webkit-scrollbar-thumb,
+.approval-list-container::-webkit-scrollbar-thumb {
   background: #D9D9D9;
   border-radius: 10px;
 }
