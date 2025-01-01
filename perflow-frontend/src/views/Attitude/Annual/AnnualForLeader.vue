@@ -8,7 +8,7 @@ import ButtonDropDown from "@/components/common/ButtonDropDown.vue";
 import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter"; // 플러그인 추가
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
-import AnnualUpdateModal from "@/views/Attitude/Annual/AnnualUpdateModal.vue";
+
 import TableCheck from "@/components/common/TableCheck.vue";
 import {useStore} from "@/store/store.js";
 
@@ -20,30 +20,44 @@ console.log(today.format("YYYY-MM-DD"));
 
 
 const showUpdateModal = ref(false);
-const selectedAnnual = ref(null);
+const selectedAnnual = ref([]);
+
+const approveAnnualLeave = async () => {
+  if (!selectedAnnual.value) {
+    alert("승인할 연차를 선택해주세요.");
+    return;
+  }
+
+  try {
+    const annualId = selectedAnnual.value.annualId;
+    const response = await api.put(`/leader/annual/${annualId}/approve`);
+    alert("연차가 승인되었습니다.");
+    await fetchAnnualData();  // 승인 후 연차 데이터 새로고침
+  } catch (error) {
+    console.error("연차 승인 실패:", error);
+    alert("연차 승인에 실패했습니다.");
+  }
+};
+const rejectAnnualLeave = async () => {
+  if (!selectedAnnual.value) {
+    alert("반려할 연차를 선택해주세요.");
+    return;
+  }
+
+  try {
+    const annualId = selectedAnnual.value.annualId;
+    const reason = "";
+    const response = await api.put(`/leader/annual/${annualId}/reject`,{reason});
+    alert("연차가 반려되었습니다.");
+    await fetchAnnualData();  // 반려 후 연차 데이터 새로고침
+  } catch (error) {
+    console.error("연차 반려 실패:", error);
+    alert("연차 반려에 실패했습니다.");
+  }
+};
 
 const onRowSelected = (selectedRows) => {
-  if (selectedRows.length > 1) {
-    // 2개 이상 선택 시 경고
-    alert("수정할 하나의 연차만 골라주세요.");
-
-    // 강제로 1개만 선택되도록 selectedRows 재설정
-    const updatedSelection = [selectedRows[0]];
-
-    // 선택 항목 초기화 후 첫 번째 항목만 남김
-    selectedAnnual.value = updatedSelection[0];
-
-    // 테이블 상태 강제 반영 (선택 값 재설정)
-    setTimeout(() => {
-      selectedRows.splice(1); // 첫 번째 이후의 선택 항목 제거
-    }, 0); // 다음 렌더링 주기에 적용
-  } else if (selectedRows.length === 1) {
-    // 정상적으로 1개 선택한 경우
-    selectedAnnual.value = selectedRows[0];
-  } else {
-    // 아무것도 선택되지 않은 경우 초기화
-    selectedAnnual.value = null;
-  }
+  selectedAnnual.value = selectedRows;  // 선택된 모든 항목을 배열로 저장
 };
 
 const openUpdateModal = () => {
@@ -227,6 +241,52 @@ onMounted(() => {
   fetchAnnualData();
 });
 
+const approveSelectedAnnualLeaves = async () => {
+  if (selectedAnnual.value.length === 0) {
+    alert("승인할 연차를 선택해주세요.");
+    return;
+  }
+
+  try {
+    const annualIds = selectedAnnual.value.map(item => item.annualId);  // 선택된 연차들의 ID 가져오기
+
+    // 전체 승인 처리
+    await Promise.all(annualIds.map(annualId =>
+        api.put(`/leader/annual/${annualId}/approve`)
+    ));
+
+    alert("선택된 연차가 모두 승인되었습니다.");
+    await fetchAnnualData();  // 승인 후 연차 데이터 새로고침
+  } catch (error) {
+    console.error("연차 승인 실패:", error);
+    alert("연차 승인에 실패했습니다.");
+  }
+};
+const rejectSelectedAnnualLeaves = async () => {
+  if (selectedAnnual.value.length === 0) {
+    alert("반려할 연차를 선택해주세요.");
+    return;
+  }
+
+  try {
+    const annualIds = selectedAnnual.value.map(item => item.annualId);  // 선택된 연차들의 ID 가져오기
+    const reason = "";  // 기본 반려 사유
+
+    // 전체 반려 처리
+    await Promise.all(annualIds.map(annualId =>
+        api.put(`/leader/annual/${annualId}/reject`, { reason })
+    ));
+
+    alert("선택된 연차가 모두 반려되었습니다.");
+    await fetchAnnualData();  // 반려 후 연차 데이터 새로고침
+  } catch (error) {
+    console.error("연차 반려 실패:", error);
+    alert("연차 반려에 실패했습니다.");
+  }
+};
+
+
+
 </script>
 
 <template>
@@ -280,18 +340,13 @@ onMounted(() => {
           :column-widths="columnWidths"
           :showCheckbox="true"
           :single-select="true"
-          :max-selection = "1"
+          :max-selection = "0"
           @row-selected="onRowSelected"
       />
 
 
       <!-- 수정 모달 -->
-      <AnnualUpdateModal
-          :isOpen="showUpdateModal"
-          :annualData="selectedAnnual"
-          @close="closeUpdateModal"
-          @update-success="handleUpdateSuccess"
-      />
+
     </div>
 
     <!-- 페이징 바 + 연차 신청 버튼을 같은 라인에 배치 -->
@@ -313,13 +368,13 @@ onMounted(() => {
             color="gray"
             size="medium"
             label="연차 반려"
-            @click="openUpdateModal"
+            @click="rejectSelectedAnnualLeaves"
         />
         <ButtonBasic
             color="orange"
             size="medium"
             label="연차 승인"
-            @click="openModal"
+            @click="approveSelectedAnnualLeaves"
         />
 
       </div>
