@@ -10,6 +10,7 @@ import {createNewDocument} from "@/config/approval.js";
 import router from "@/router/router.js";
 import ButtonDropDown2 from "@/components/common/ButtonDropDown2.vue";
 import OrgTree from "@/components/approval/OrgTree.vue";
+import OrgTreeShare from "@/components/approval/OrgTreeShare.vue";
 
 const selectedApprovalEmployees = ref([]); // 체크된 사원 목록
 const selectedShareEmployees = ref([]); // 체크된 사원 목록
@@ -71,8 +72,12 @@ const shareData = ref([]);  // 모달에서 선택한, approvalShareBox 에 전�
 
 // 테스트용
 const isTestApprovalModalOpen = ref(false);
+const isTestShareModalOpen = ref(false);
 const openTestApprovalModal = () => (isTestApprovalModalOpen.value = true);
 const closeTestApprovalModal = () => (isTestApprovalModalOpen.value = false);
+const openTestShareModal = () => (isTestShareModalOpen.value = true);
+const closeTestShareModal = () => (isTestShareModalOpen.value = false);
+
 
 // 서식 드롭다운
 const dropdownOptions = [
@@ -111,6 +116,12 @@ const saveTestApprovalSettings = () => {
   approvalData.value = [...approvalList.value];
   console.log("결재선 설정 저장: approvalData: ", approvalData.value);
   closeTestApprovalModal();
+}
+
+const saveTestShareSettings = () => {
+  shareData.value = [...shareList.value]; // 선택된 공유 데이터
+  console.log("공유 설정 저장 - shareData: ", shareData.value);
+  closeShareModal();
 }
 
 const saveShareSettings = () => {
@@ -363,6 +374,37 @@ const goTo = (url) => {
         </template>
       </ModalBasic>
         <!---->
+
+      <!-- 테스트 -->
+      <!-- 테스트 -->
+      <ApprovalShareBox
+          title="테스트"
+          :placeholder="shareData.length ? '' : '결재선이 없습니다.'"
+          :data="shareData.map((item) => ({
+          ...item,
+          type: item.displayType  // 한글 값만 표시
+          }))"
+          @onSettingsClick="openTestShareModal"
+      />
+
+      <ModalBasic
+          :isOpen="isTestShareModalOpen"
+          title="공유 설정 테스트"
+          width="800px"
+          height="500px"
+          :button1="{ label: '닫기', color: 'gray', onClick: closeTestShareModal }"
+          :button2="{ label: '저장하기', color: 'orange', onClick: saveTestShareSettings }"
+          @close="closeTestShareModal"
+      >
+        <template #default>
+          <div class="modal-layout">
+            <OrgTreeShare
+                @updateShareList="updateShareList"
+                @closeModal="closeTestShareModal"
+            />
+          </div>
+        </template>
+      </ModalBasic>
 
       <!-- 공유 -->
       <ApprovalShareBox
