@@ -130,9 +130,15 @@ const menuItem = [
 const tooltipVisible = ref(false);
 const tooltipText = "금액을 입력하거나 수정하려면 엑셀 파일을 1. 다운로드 받고 양식에 맞게 값을 입력한 후, 2. 업로드 해주세요.";
 
+const tooltipInsuranceVisible = ref(false);
+const tooltipInsuranceText = "보험료율의 기준은 소득 기준이며, 퍼센티지 그대로 입력해주세요.";
+
 // 툴팁 위치와 크기 설정
 const tooltipPosition = { bottom: "45px", left: "89.5%" };
 const tooltipWidth = "190px";
+
+const tooltipInsurancePosition = { bottom: "45px", left: "72%"};
+const tooltipInsuranceWidth = "140px"
 
 // 파일 업로드 핸들러
 const handleFileUpload = async () => {
@@ -208,10 +214,16 @@ onMounted(() => {
       <hr>
       <div class="excel">
         <div class="excel-btn">
-          <div>
+          <div @mouseenter="tooltipInsuranceVisible=true" @mouseleave="tooltipInsuranceVisible=false">
             <button class="insurance-btn" @click="openModal">
               보험료 설정
             </button>
+            <ToolTip
+                :text="tooltipInsuranceText"
+                :visible.sync="tooltipInsuranceVisible"
+                :position="tooltipInsurancePosition"
+                :width="tooltipInsuranceWidth"
+            />
             <!-- 모달 -->
             <div v-if="isModalVisible" class="modal" @click="closeModal">
               <div class="modal-content" @click.stop>
