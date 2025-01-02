@@ -13,6 +13,7 @@ import DropdownBasic from "@/components/common/DropdownBasic.vue";
 const approvalData = ref([]);
 const shareData = ref([]);
 
+// 결재선 설정 업데이트
 const updateApprovalList = (newList) => {
 
   const typeMapping = {
@@ -62,6 +63,7 @@ const updateApprovalList = (newList) => {
   console.log("updateApprovalList - 업데이트 된 approvalData: ", approvalData.value);
 };
 
+// 공유 설정 업데이트
 const updateShareList = (newList) => {
   shareData.value = newList.map((item) => ({
     type: '공유',
