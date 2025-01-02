@@ -18,6 +18,13 @@
               placeholder="작성일(끝)"
               type="date"
           />
+          <ButtonDropDown
+              :options="statusOptions"
+              v-model="searchCriteria.status"
+              default-option="전체"
+              width="150px"
+              height="40px"
+          />
         </div>
         <!-- 검색 버튼 -->
         <div class="button">
@@ -169,6 +176,12 @@ const showUpdateModal = ref(false);
 // 에러 메시지 (선택)
 const errorMessage = ref("");
 
+const overtimeTypeMap = {
+  NIGHT: "야간 근무",
+  EXTENDED: "연장 근무",
+  HOLIDAY: "휴일 근무"
+
+}
 // ----------------------------
 // [3] API 데이터 호출 (전체 조회)
 // ----------------------------
@@ -209,7 +222,7 @@ const fetchOvertimeData = async () => {
 
         return {
           overtimeId: item.overtimeId || "",
-          overtimeType: item.overtimeType || "",
+          overtimeType: overtimeTypeMap[item.overtimeType] || "",
           createUser: item.empName || "",
           createDatetime: createDatetime,
           overtimeStart: overtimeStart,
