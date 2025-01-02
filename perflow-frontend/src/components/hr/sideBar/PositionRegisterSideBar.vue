@@ -7,6 +7,7 @@ import SubmitButton from "@/components/hr/SubmitButton.vue";
 import api from "@/config/axios.js";
 import ButtonDropDown from "@/components/common/ButtonDropDown.vue";
 import {values} from "vuedraggable/dist/vuedraggable.common.js";
+import Alert from "@/components/common/Alert.vue";
 
 const props = defineProps({
       isSidebarOpen: {
@@ -27,19 +28,33 @@ const updateLevel = (value) => {
   level.value = value;
 }
 
+const successModalVisible = ref(false);
+const failModalVisible = ref(false);
+
+const updateSuccessModalVisible = (value) => {
+
+  successModalVisible.value = value;
+  if(value === false ){
+    location.reload();
+  }
+}
+const updateFailModalVisible = (value) => {
+
+  failModalVisible.value = value;
+}
+
 const registerPosition = async () => {
   try {
     await api.post("/hr/position",{
       name: name.value,
       positionLevel: level.value
     });
-    alert("직위 등록 성공!.")
-    location.reload(true);
+    updateSuccessModalVisible(true);
   } catch (error) {
     if (error.response.data.message){
-      alert(error.response.data.message);
+      updateFailModalVisible(true);
     } else {
-      alert("직위 등록 중 오류가 발생했습니다.")
+      updateFailModalVisible(true);
     }
   }
 
@@ -51,6 +66,8 @@ function closeSidebar() {
 </script>
 
 <template>
+  <Alert :visible=successModalVisible message="직위 등록 성공!" @update:visible="updateSuccessModalVisible"/>
+  <Alert :visible=failModalVisible message="직위 등록 중 오류가 발생했습니다." @update:visible="updateFailModalVisible"/>
 <div class="modify-sidebar" :class="{ open: props.isSidebarOpen }">
   <div id="side-header">
     <img src="@/assets/image/arrow-right.png" @click="closeSidebar" id="close">
