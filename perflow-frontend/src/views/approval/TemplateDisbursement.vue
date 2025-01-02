@@ -235,16 +235,18 @@ const showAlert = (msg) => {
             width="600px"
         />
 
-        <!-- 지출일 -->
-        <label class="label">
-          <span class="label-name">지출일</span>
-          <span class="asterisk">*</span>
-        </label>
-        <SearchGroupBar
-            v-model="expendDate"
-            placeholder="지출일 선택"
-            type="date"
-        />
+        <div class="date-container">
+          <!-- 지출일 -->
+          <label class="label">
+            <span class="label-name">지출일</span>
+            <span class="asterisk">*</span>
+          </label>
+          <SearchGroupBar
+              v-model="expendDate"
+              placeholder="지출일 선택"
+              type="date"
+          />
+        </div>
       </div>
 
       <!-- 지출 내역 테이블 -->
@@ -377,7 +379,6 @@ const showAlert = (msg) => {
 .main-container {
   display: flex;
   justify-content: center; /* 중앙 정렬 */
-  align-items: center; /* 세로 정렬 */
   gap: 0px;
   min-width: 1200px;  /* 최소 너비 설정 */
   padding: 0 50px;  /* 좌우 여백 */
@@ -690,4 +691,16 @@ const showAlert = (msg) => {
   font-weight: bold;
   color: #3C4651;
 }
+
+.date-container {
+  height: 100px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.date-container .label {
+  margin-right: 10px;
+}
+
 </style>
