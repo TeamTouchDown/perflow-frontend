@@ -136,6 +136,11 @@ const fetchDepartments = async () => {
   }
 };
 
+const goToAnnouncementDetail = (annId) => {
+  router.push(`/announcements/${annId}`);
+};
+
+
 // 초기 데이터 가져오기
 onMounted(() => {
   fetchAnnouncements();
@@ -179,7 +184,23 @@ const columns = [
     </div>
 
     <div id="announcement-list">
-      <TableBasic :row-key="'annId'" :rows="announcements" :columns="columns" />
+      <TableBasic
+          :row-key="'annId'"
+          :rows="announcements"
+          :columns="columns"
+      >
+        <!-- 제목 열 커스터마이징 -->
+        <template #title="{ row }">
+    <span
+        @click="goToAnnouncementDetail(row.annId)"
+        style="color: inherit; cursor: pointer; text-decoration: none;"
+        class="clickable-title"
+    >
+      {{ row.title }}
+    </span>
+        </template>
+      </TableBasic>
+
       <div class="paging-wrapper">
         <PagingBar
             :page-size="pages.pageSize"
@@ -264,6 +285,12 @@ const columns = [
   font-weight: bold;
   color: #3c4651;
   margin-bottom: 10px;
+}
+
+.clickable-title {
+  color: #000; /* 원하는 색상으로 변경 */
+  cursor: pointer;
+  text-decoration: none;
 }
 
 .write-button {
