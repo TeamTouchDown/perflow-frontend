@@ -588,11 +588,11 @@ onMounted(() => {
   border: 1px solid #bd76f8;
 }
 .doc-status-value.승인 {
-  color: #28a745; /* 초록색 */
+  color: #28a745;
   border: 1px solid #28a745;
 }
 .doc-status-value.반려 {
-  color: #ff8c00; /* 주황색 */
-  border: 1px solid #ff8c00; /* 주황색 */
+  color: #ff8c00;
+  border: 1px solid #ff8c00;
 }
 </style>

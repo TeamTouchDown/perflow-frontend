@@ -9,6 +9,7 @@ import TableCheck from "@/components/common/TableCheck.vue";
 import PagingBar from "@/components/common/PagingBar.vue";
 import dayjs from "dayjs";
 import Tooltip from "@/components/common/ToolTip.vue";
+import Alert from "@/components/common/Alert.vue";
 
 const columns = [
   {label: "상태", field: "status"},
@@ -74,7 +75,7 @@ const handleTitleClick = (row) => {
     router.push({ name: "workReportDetail", query: {docId: row.docId, type: "inbox",  status: row.status } })
     // 업무 보고서
   } else {
-    alert("올바르지 않은 서식입니다.");
+    showAlert("올바르지 않은 서식입니다.");
   }
 };
 
@@ -121,12 +122,25 @@ const fetchInboxDocsWithCriteria = async(page = 1) => {
   }
 };
 
+const alertVisible = ref(false);
+const alertMsg = ref('');
+const showAlert = (msg) => {
+  alertMsg.value = msg;
+  alertVisible.value = true;
+}
+
 onMounted(() => {
   fetchInboxDocs();
 })
 </script>
 
 <template>
+
+  <Alert
+      v-model="alertVisible"
+      :message="alertMsg"
+  />
+
   <!-- 헤더 -->
   <div id="header-div">
     <div id="header-top" class="flex-between">
@@ -319,33 +333,36 @@ onMounted(() => {
 
 .status-tag {
   display: inline-block;
-  padding: 5px 5px;
-  border-radius: 15px;
-  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 13px;
   font-weight: bold;
-  color: white;
   text-align: center;
   min-width: 50px;
 }
 
 /* 승인 */
 .status-tag.승인 {
-  background-color: #4CAF50;
+  color: #28a745; /* 초록색 */
+  border: 1px solid #28a745;
 }
 
 /* 반려 */
 .status-tag.반려 {
-  background-color: #FF9800;
+  color: #ff8c00;
+  border: 1px solid #ff8c00;
 }
 
 /* 진행 */
 .status-tag.진행 {
-  background-color: #bd76f8;
+  color: #bd76f8;
+  border: 1px solid #bd76f8;
 }
 
 /* 알 수 없음 */
 .status-tag.기타 {
-  background-color: #007bff; /* 회색 */
+  color: #007bff; /* 회색 */
+  border: 1px solid #007bff; /* 회색 */
 }
 
 /* 툴팁 */
