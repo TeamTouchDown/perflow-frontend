@@ -67,6 +67,16 @@ const updateApprovalList = (newList) => {
   console.log("updateApprovalList - 업데이트 된 approvalData: ", approvalData.value);
 };
 
+const updateShareList = (newList) => {
+  shareData.value = newList.map((item) => ({
+    type: '공유',
+    empId: item.empId,
+    name: item.name,
+    position: item.position,
+  }));
+  console.log("updateShareList - 업데이트 된 shareData: ", shareData.value);
+};
+
 const shareList = ref([]);  // 공유 목록
 const shareData = ref([]);  // 모달에서 선택한, approvalShareBox 에 전달할 데이터
 
@@ -244,7 +254,7 @@ const docData = () => {
         },
       ],
     })),
-    shares: shareList.value.map((share) => ({
+    shares: shareData.value.map((share) => ({
       shareEmpDeptType: 'EMPLOYEE',
       employees: [share.empId],
     })),
@@ -379,10 +389,11 @@ const goTo = (url) => {
       <!-- 테스트 -->
       <ApprovalShareBox
           title="테스트"
-          :placeholder="shareData.length ? '' : '결재선이 없습니다.'"
+          :placeholder="shareData.length ? '' : '공유처가 없습니다.'"
           :data="shareData.map((item) => ({
-          ...item,
-          type: item.displayType  // 한글 값만 표시
+          type: '공유',
+          name: item.name,
+          position: item.position,
           }))"
           @onSettingsClick="openTestShareModal"
       />
@@ -402,75 +413,6 @@ const goTo = (url) => {
                 @updateShareList="updateShareList"
                 @closeModal="closeTestShareModal"
             />
-          </div>
-        </template>
-      </ModalBasic>
-
-      <!-- 공유 -->
-      <ApprovalShareBox
-          title="공유"
-          :placeholder="shareData.length ? '' : '공유처가 없습니다.'"
-          :data="shareData"
-          @onSettingsClick="openShareModal"
-      />
-
-      <ModalBasic
-          :isOpen="isShareModalOpen"
-          title="공유 설정"
-          width="800px"
-          :button1="{ label: '닫기', color: 'gray', onClick: closeShareModal }"
-          :button2="{ label: '저장하기', color: 'orange', onClick: saveShareSettings }"
-          @close="closeShareModal"
-      >
-        <template #default>
-          <div class="modal-layout">
-            <!-- 조직도 트리 -->
-            <div class="modal-box left">
-              <OrganizationTree
-                  context="share"
-                  @update:selectedShareEmployees="updateShareSelectedEmployees"
-              />
-              <ButtonBasic
-                  label="추가"
-                  color="white"
-                  size="small"
-                  @click="addToShareList"
-              />
-            </div>
-
-            <!-- 공유 목록 -->
-            <div class="modal-box right">
-              <h3>공유 리스트</h3>
-              <div class="table-container">
-                <table class="share-table">
-                  <thead>
-                  <tr>
-                    <th>이름</th>
-                    <th>직위</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr
-                      v-for="(emp, index) in shareList"
-                      :key="emp.empId"
-                      :class="{ 'selected-row': selectedShareRows.has(index) }"
-                      @click="toggleShareRowSelection(index)"
-                  >
-                    <td>{{ emp.name }}</td>
-                    <td>{{ emp.position }}</td>
-                  </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div class="button-container">
-                <ButtonBasic
-                    label="삭제"
-                    color="white"
-                    size="small"
-                    @click="deleteShareSelectedRows"
-                />
-              </div>
-            </div>
           </div>
         </template>
       </ModalBasic>

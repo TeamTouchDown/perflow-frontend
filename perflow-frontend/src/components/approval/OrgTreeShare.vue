@@ -57,10 +57,16 @@ const handleShare = () => {
       });
     }
   });
+
+  // 선택 해제된 사원 제거
+  selectedShareList.value = selectedShareList.value.filter((share) =>
+    selectedEmps.value.includes(share.empId)
+  );
+
 }
 
 // selectedEmps 변경 시 handleShare 호출
-watch(selectedEmps, (newSelectedEmps) => {
+watch(selectedEmps, () => {
   handleShare();
 });
 
