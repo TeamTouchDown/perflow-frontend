@@ -5,6 +5,7 @@ import {computed, reactive, ref} from "vue";
 import AddressInputFeild from "@/components/hr/AddressInputField.vue";
 import SubmitButton from "@/components/hr/SubmitButton.vue";
 import api from "@/config/axios.js";
+import Alert from "@/components/common/Alert.vue";
 
 const props = defineProps({
       isSidebarOpen: {
@@ -30,6 +31,22 @@ const updateEmail = (value) => {
 const updateContact = (value) => {
   contact.value = value;
 }
+
+const successModalVisible = ref(false);
+const failModalVisible = ref(false);
+
+const updateSuccessModalVisible = (value) => {
+
+  successModalVisible.value = value;
+  if(value === false ){
+    location.reload();
+  }
+}
+const updateFailModalVisible = (value) => {
+
+  failModalVisible.value = value;
+}
+
 const updateEmployee = async () => {
   const totalAddress = address.value.postcode + " " + address.value.roadAddress + " " + address.value.extraAddress
   try {
@@ -38,13 +55,12 @@ const updateEmployee = async () => {
       email: email.value,
       contact: contact.value
     });
-    alert("정보 수정 성공!.")
-    location.reload(true);
+    updateSuccessModalVisible(true);
   } catch (error) {
     if (error.response.data.message){
-      alert(error.response.data.message);
+      updateFailModalVisible(true);
     } else {
-      alert("정보 수정 중 오류가 발생했습니다.")
+      updateFailModalVisible(true);
     }
   }
 
@@ -56,7 +72,9 @@ function closeSidebar() {
 </script>
 
 <template>
-<div class="modify-sidebar" :class="{ open: props.isSidebarOpen }">
+  <Alert :visible=successModalVisible message="정보 수정 성공!" @update:visible="updateSuccessModalVisible"/>
+  <Alert :visible=failModalVisible message="정보 수정 중 오류가 발생했습니다." @update:visible="updateFailModalVisible"/>
+  <div class="modify-sidebar" :class="{ open: props.isSidebarOpen }">
   <div id="side-header">
     <img src="../../../assets/image/arrow-right.png" @click="closeSidebar" id="close">
     <p id="title">{{props.title}}</p>
