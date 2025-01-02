@@ -74,10 +74,13 @@ const selectDept = () => {
   cursor: pointer;
 }
 
+/* ▼, ▶ 스타일 */
 .toggle-btn {
   margin-right: 5px;
   cursor: pointer;
   font-weight: bold;
+  font-size: 10px;
+  color: #AFA9A9;
 }
 
 .dept-name {

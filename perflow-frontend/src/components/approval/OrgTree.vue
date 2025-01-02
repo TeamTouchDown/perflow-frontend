@@ -114,93 +114,91 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="org-tree">
+  <div class="approval-container">
+    <div class="org-tree">
 
-    <!-- 부서 목록 -->
-    <div class="tree-container">
-      <div class="tree-header">
-      </div>
-      <ul>
-        <OrgTreeNode
-            v-for="dept in topDepts"
-            :key="dept.deptId"
-            :dept="dept"
-            @onSelectDept="loadEmpsByDept"
-        />
-      </ul>
-    </div>
-
-    <!-- 사원 목록 -->
-    <div class="emp-container">
-      <div class="emp-header">
-        <span class="header-name">이름</span>
-        <span class="header-position">직위</span>
-      </div>
-      <div class="emp-list">
+      <!-- 부서 목록 -->
+      <div class="tree-container">
+        <div class="tree-header">
+        </div>
         <ul>
-          <li v-for="emp in emps" :key="emp.empId">
-            <input
-              type="checkbox"
-              :value="emp.empId"
-              v-model="selectedEmps"
-            />
-            <span class="emp-name">{{ emp.name }}</span>
-            <span class="emp-position">{{ emp.position }}</span>
-          </li>
+          <OrgTreeNode
+              v-for="dept in topDepts"
+              :key="dept.deptId"
+              :dept="dept"
+              @onSelectDept="loadEmpsByDept"
+          />
         </ul>
       </div>
-    </div>
 
-    <!-- 결재 방식 버튼 -->
-    <div class="button-container">
-      <div class="button-group">
-        <button
-          v-for="type in approvalTypes"
-          :key="type"
-          class="styled-button"
-          @click="handleApproval(type)"
+      <!-- 사원 목록 -->
+      <div class="emp-container">
+        <div class="emp-header">
+          <span class="header-name">이름</span>
+          <span class="header-position">직위</span>
+        </div>
+        <div class="emp-list">
+          <ul>
+            <li v-for="emp in emps" :key="emp.empId">
+              <input
+                  type="checkbox"
+                  :value="emp.empId"
+                  v-model="selectedEmps"
+              />
+              <span class="emp-name">{{ emp.name }}</span>
+              <span class="emp-position">{{ emp.position }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 결재 방식 버튼 -->
+      <div class="button-container">
+        <div class="button-group">
+          <button
+              v-for="type in approvalTypes"
+              :key="type"
+              class="styled-button"
+              @click="handleApproval(type)"
+          >
+            <span class="button-text">{{ type }}</span>
+            <img src="@/assets/icons/approval_button_arrow.png" alt="arrow" class="button-arrow" />
+          </button>
+        </div>
+      </div>
+
+      <!-- 선택된 사원 리스트 -->
+      <div class="approval-list-container">
+        <div class="type-header">
+          <span class="header-order">순서</span>
+          <span class="header-type">결재종류</span>
+          <span class="header-name">이름</span>
+          <span class="header-position">직위</span>
+        </div>
+        <draggable
+            v-model="selectedApprovalList"
+            class="type-list"
+            @end="updateOrder"
         >
-          <span class="button-text">{{ type }}</span>
-          <img src="@/assets/icons/approval_button_arrow.png" alt="arrow" class="button-arrow" />
-        </button>
+          <template #item="{ element }">
+            <li>
+              <span class="type-order">{{ element.order }}</span>
+              <span class="type-type">{{ element.type }}</span>
+              <span class="type-name">{{ element.name }}</span>
+              <span class="type-position">{{ element.position }}</span>
+              <input
+                  type="checkbox"
+                  :value="element.empId"
+                  v-model="selectedDeleteList"
+                  class="delete-checkbox"
+              />
+            </li>
+          </template>
+        </draggable>
       </div>
     </div>
-
-    <!-- 선택된 사원 리스트 -->
-    <div class="approval-list-container">
-      <div class="type-header">
-        <span class="header-order">순서</span>
-        <span class="header-type">결재종류</span>
-        <span class="header-name">이름</span>
-        <span class="header-position">직위</span>
-      </div>
-      <draggable
-          v-model="selectedApprovalList"
-          class="type-list"
-          @end="updateOrder"
-      >
-        <template #item="{ element }">
-          <li>
-            <span class="type-order">{{ element.order }}</span>
-            <span class="type-type">{{ element.type }}</span>
-            <span class="type-name">{{ element.name }}</span>
-            <span class="type-position">{{ element.position }}</span>
-            <input
-                type="checkbox"
-                :value="element.empId"
-                v-model="selectedDeleteList"
-                class="delete-checkbox"
-            />
-          </li>
-        </template>
-      </draggable>
-    </div>
-    <!-- 삭제 버튼 -->
-    <div class="delete-container">
+    <div class="approval-buttons">
       <button class="delete-button" @click="deleteSelectedItems">삭제하기</button>
-    </div>
-    <!-- 저장 버튼 -->
-    <div class="save-container">
       <button class="save-button" @click="saveSelection">결재선 저장</button>
     </div>
   </div>
@@ -208,9 +206,21 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.approval-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-left: 50px;
+}
 
 .org-tree {
   display: flex;  /* 부서, 사원 목록을 한 행에 배치 */
+}
+
+.approval-buttons {
+  display: flex;
+  justify-content: flex-end;  /* 버튼 오른쪽 정렬 */
+  gap: 10px;  /* 버튼 간 간격 */
 }
 
 .tree-container {
@@ -386,7 +396,7 @@ li {
   background-color: #F7F7F7; /* 마우스 올릴 때 배경색 변경 */
 }
 
-button {
+.button-group button {
   background-color: #fff;
   color: #3C4651;
   border: 1px solid #AFA9A9;
@@ -402,15 +412,28 @@ button {
 
 /* 결재 목록 행 삭제 버튼 */
 .delete-button {
-  position: absolute; /* 리스트의 오른쪽 끝에 고정 */
-  right: 10px;
+  background-color: #D9D9D9;
   color: #3C4651;
-  border: 1px solid #817F7F;
+  border: none;
   cursor: pointer;
 }
 .delete-button:hover {
   background-color: #F7F7F7; /* 마우스 올릴 때 배경색 변경 */
 }
+/* 결재 목록 저장 버튼 */
+.save-button {
+  background-image: linear-gradient(to right, #f37321 0%, #fb0 100%);
+  color: white;
+  border: none;
+}
+
+.delete-button,
+.save-button {
+  width: 100px;
+  height: 45px;
+  border-radius: 8px;
+}
+
 
 /* 스클로 바 스타일 */
 .tree-container::-webkit-scrollbar,

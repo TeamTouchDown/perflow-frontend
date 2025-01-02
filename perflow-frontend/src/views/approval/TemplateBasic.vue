@@ -2,15 +2,13 @@
 import ButtonBasic from "@/components/common/ButtonBasic.vue";
 import InputField from "@/components/common/InputField.vue";
 import ApprovalShareBox from "@/components/approval/ApprovalShareBox.vue";
-import ModalBasic from "@/components/common/ModalBasic.vue";
 import {ref} from "vue";
-import OrganizationTree from "@/components/approval/OrganizationTree.vue";
-import draggable from "vuedraggable";
 import {createNewDocument} from "@/config/approval.js";
 import router from "@/router/router.js";
 import ButtonDropDown2 from "@/components/common/ButtonDropDown2.vue";
 import OrgTree from "@/components/approval/OrgTree.vue";
 import OrgTreeShare from "@/components/approval/OrgTreeShare.vue";
+import ModalNoButton from "@/components/common/ModalNoButton.vue";
 
 const selectedApprovalEmployees = ref([]); // 체크된 사원 목록
 const selectedShareEmployees = ref([]); // 체크된 사원 목록
@@ -365,13 +363,11 @@ const goTo = (url) => {
           @onSettingsClick="openTestApprovalModal"
       />
 
-      <ModalBasic
+      <ModalNoButton
           :isOpen="isTestApprovalModalOpen"
           title="결재선 설정 테스트"
-          width="1000px"
-          height="500px"
-          :button1="{ label: '닫기', color: 'gray', onClick: closeTestApprovalModal }"
-          :button2="{ label: '저장하기', color: 'orange', onClick: saveTestApprovalSettings }"
+          width="900px"
+          height="420px"
           @close="closeTestApprovalModal"
       >
         <template #default>
@@ -382,7 +378,7 @@ const goTo = (url) => {
             />
           </div>
         </template>
-      </ModalBasic>
+      </ModalNoButton>
         <!---->
 
       <!-- 테스트 -->
@@ -398,13 +394,11 @@ const goTo = (url) => {
           @onSettingsClick="openTestShareModal"
       />
 
-      <ModalBasic
+      <ModalNoButton
           :isOpen="isTestShareModalOpen"
           title="공유 설정 테스트"
           width="800px"
           height="500px"
-          :button1="{ label: '닫기', color: 'gray', onClick: closeTestShareModal }"
-          :button2="{ label: '저장하기', color: 'orange', onClick: saveTestShareSettings }"
           @close="closeTestShareModal"
       >
         <template #default>
@@ -415,7 +409,7 @@ const goTo = (url) => {
             />
           </div>
         </template>
-      </ModalBasic>
+      </ModalNoButton>
     </div>
   </div>
 </template>
