@@ -79,7 +79,7 @@ const onMenuItemClick = (action) => {
   background: linear-gradient(to right, #ff9900, #ffcc33);
   color: white;
   padding: 8px 12px;
-  border-radius: 5px;
+  border-radius: 10px;
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
