@@ -76,8 +76,8 @@ onMounted(()=> {
 </script>
 
 <template>
-  <Alert :model-value=logoutModalVisible message="로그아웃 되었습니다." @update:visible="updateLogoutModalVisible"/>
-  <Alert :model-value=extendModalVisible message="로그인 시간이 연장되었습니다." @update:visible="updateExtendModalVisible"/>
+  <Alert :model-value=logoutModalVisible message="로그아웃 되었습니다." @update:modelValue="updateLogoutModalVisible"/>
+  <Alert :model-value=extendModalVisible message="로그인 시간이 연장되었습니다." @update:modelValue="updateExtendModalVisible"/>
   <div id="nav">
     <div id="nav-logo" @click="goTo('/main-page')">
       <img src="@/assets/image/logo.png" alt="로고" id="logo-image">
