@@ -8,6 +8,7 @@ import ButtonBasic from "@/components/common/ButtonBasic.vue";
 import FileUpload from "@/components/common/FileUpload.vue";
 import ToolTip from "@/components/common/ToolTip.vue";
 import Alert from "@/components/common/Alert.vue";
+import ButtonBack from "@/components/common/ButtonBack.vue";
 
 const payrolls = ref([]);
 
@@ -215,6 +216,7 @@ onMounted(() => {
 <template>
   <div class="container">
     <div class="header">
+      <ButtonBack />
       <p>급여정산</p>
       <div class="search-bar">
         <SearchBar
