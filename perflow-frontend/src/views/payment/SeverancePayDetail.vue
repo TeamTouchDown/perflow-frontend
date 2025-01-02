@@ -7,6 +7,7 @@ import ButtonBasic from "@/components/common/ButtonBasic.vue";
 import FileUpload from "@/components/common/FileUpload.vue";
 import ToolTip from "@/components/common/ToolTip.vue";
 import Alert from "@/components/common/Alert.vue";
+import ButtonBack from "@/components/common/ButtonBack.vue";
 
 const severancePays = ref([]);
 
@@ -143,7 +144,10 @@ onMounted(() => {
 <template>
   <div class="container">
     <div class="header">
-      <p>퇴직금 정산</p>
+      <div class="header-btn">
+        <ButtonBack />
+        <p>퇴직금 정산</p>
+      </div>
       <div class="btn">
         <div @mouseenter="tooltipVisible=true" @mouseleave="tooltipVisible=false">
           <ExcelDropDown
@@ -257,6 +261,12 @@ onMounted(() => {
   font-size: 35px;
   font-weight: bold;
   margin: 0;
+}
+
+.header-btn {
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
 .btn {
