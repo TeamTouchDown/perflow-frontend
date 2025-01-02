@@ -11,6 +11,7 @@ import ThreeYearChart from "@/views/payment/ThreeYearChart.vue";
 import FileUpload from "@/components/common/FileUpload.vue";
 import ButtonBasic from "@/components/common/ButtonBasic.vue";
 import ToolTip from "@/components/common/ToolTip.vue";
+import InputField from "@/components/common/InputField.vue";
 
 const router = useRouter();
 
@@ -22,10 +23,31 @@ const state = reactive({
   pageSize: 10
 });
 
+// 보험료 비율 데이터를 저장하는 변수
+const insuranceRates = ref({
+  nationalPensionRate: '',
+  healthInsuranceRate: '',
+  hireInsuranceRate: '',
+  longTermCareInsuranceRate: ''
+});
+
 const isFileUploadVisible = ref(false); // 파일 업로드 창 표시 여부
 
 // 선택된 파일 목록을 저장할 변수
 const selectedFiles = ref([]);
+
+// 모달 창 표시 여부
+const isModalVisible = ref(false);
+
+// 모달 열기
+const openModal = async () => {
+  isModalVisible.value = true;
+};
+
+// 모달 닫기
+const closeModal = () => {
+  isModalVisible.value = false;
+};
 
 // 급여대장 목록을 가져오는 함수
 const fetchPayrolls = async (page = 1) => {
@@ -49,6 +71,17 @@ const fetchPayrolls = async (page = 1) => {
     state.pageSize = response.data.pageSize;
   } catch (error) {
     console.error('급여대장 목록을 불러오는 중 에러가 발생했습니다. : ', error);
+  }
+};
+
+// 보험료율을 등록하는 함수
+const submitInsuranceRates = async () => {
+  try {
+    const response = await api.post(`/hr/insurance-rate`, insuranceRates.value)
+    insuranceRates.value = response.data;
+    closeModal();
+  } catch (error) {
+    console.log("보험료율을 등록하는 중 에러가 발생했습니다. : ", error);
   }
 };
 
@@ -175,9 +208,59 @@ onMounted(() => {
       <hr>
       <div class="excel">
         <div class="excel-btn">
-          <button class="insurance-btn">
-            보험료 설정
-          </button>
+          <div>
+            <button class="insurance-btn" @click="openModal">
+              보험료 설정
+            </button>
+            <!-- 모달 -->
+            <div v-if="isModalVisible" class="modal" @click="closeModal">
+              <div class="modal-content" @click.stop>
+                <h3>보험료 설정</h3>
+                <form @submit.prevent="submitInsuranceRates">
+                  <div>
+                    <InputField
+                        v-model="insuranceRates.nationalPensionRate"
+                        label="국민연금"
+                        placeholder="국민연금 보험료율을 입력해 주세요."
+                        :isRequired="true"
+                        width="600px"
+                    />
+                  </div>
+                  <div>
+                    <InputField
+                        v-model="insuranceRates.healthInsuranceRate"
+                        label="건강보험"
+                        placeholder="건강보험료율을 입력해 주세요."
+                        :isRequired="true"
+                        width="600px"
+                    />
+                  </div>
+                  <div>
+                    <InputField
+                        v-model="insuranceRates.hireInsuranceRate"
+                        label="고용보험"
+                        placeholder="고용보험료율을 입력해 주세요."
+                        :isRequired="true"
+                        width="600px"
+                    />
+                  </div>
+                  <div>
+                    <InputField
+                        v-model="insuranceRates.longTermCareInsuranceRate"
+                        label="장기요양보험"
+                        placeholder="장기요양보험료율을 입력해 주세요."
+                        :isRequired="true"
+                        width="600px"
+                    />
+                  </div>
+                  <div class="excel-btn" style="flex-direction: row-reverse">
+                    <button class="insurance-btn" type="submit">저장</button>
+                    <button class="cancel-btn" @click="closeModal">취소</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
           <div @mouseenter="tooltipVisible=true" @mouseleave="tooltipVisible=false">
             <ExcelDropDown
                 buttonName="엑셀"
@@ -308,6 +391,42 @@ hr {
   color: white;
   background-image: linear-gradient(to right, #f37321 0%, #fb0 100%);
   cursor: pointer;
+}
+
+h3 {
+  margin-bottom: 50px;
+}
+
+.cancel-btn {
+  width: 100px;
+  height: 40px;
+  justify-content: center;
+  align-items: center;
+  background-color: #D9D9D9;
+  color: #3C4651;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: bold;
+  border: none;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .table {
