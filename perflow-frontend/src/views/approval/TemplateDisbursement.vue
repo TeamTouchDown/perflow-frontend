@@ -10,6 +10,7 @@ import {createNewDocument} from "@/config/approval.js";
 import router from "@/router/router.js";
 import ButtonDropDown2 from "@/components/common/ButtonDropDown2.vue";
 import SearchGroupBar from "@/components/common/SearchGroupBar.vue";
+import DropdownBasic from "@/components/common/DropdownBasic.vue";
 
 const selectedApprovalEmployees = ref([]); // 체크된 사원 목록
 const selectedShareEmployees = ref([]); // 체크된 사원 목록
@@ -337,7 +338,11 @@ const goTo = (url) => {
 
     <!-- 결재선 -->
     <div class="box-container">
-
+      <DropdownBasic
+          defaultOption="지출결의서"
+          :options="dropdownOptions"
+          @selectOption="handleDropdownSelect"
+      />
       <!-- 드롭 다운 -->
       <span class="dropdown-title">서식 선택</span>
       <ButtonDropDown2

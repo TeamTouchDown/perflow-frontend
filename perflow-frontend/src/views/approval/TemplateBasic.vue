@@ -9,6 +9,7 @@ import ButtonDropDown2 from "@/components/common/ButtonDropDown2.vue";
 import OrgTree from "@/components/approval/OrgTree.vue";
 import OrgTreeShare from "@/components/approval/OrgTreeShare.vue";
 import ModalNoButton from "@/components/common/ModalNoButton.vue";
+import DropdownBasic from "@/components/common/DropdownBasic.vue";
 
 const approvalData = ref([]);  // approvalShareBox 에 전달할 데이터
 
@@ -212,18 +213,15 @@ const goTo = (url) => {
     <!-- 결재선 -->
     <div class="box-container">
 
-      <!-- 드롭 다운 -->
-      <span class="dropdown-title">서식 선택</span>
-      <ButtonDropDown2
-        :options="dropdownOptions"
-        defaultOption="기본 서식"
-        width="155px"
-        height="35px"
-        fontSize="15px"
-        @selectId="handleDropdownSelect"
-      />
+      <div class="dropdown-container">
+        <span class="dropdown-title">서식 선택</span>
+        <DropdownBasic
+            defaultOption="기본 서식"
+            :options="dropdownOptions"
+            @selectOption="handleDropdownSelect"
+        />
+      </div>
 
-      <!-- 테스트 -->
       <ApprovalShareBox
           title="테스트"
           :placeholder="approvalData.length ? '' : '결재선이 없습니다.'"
@@ -236,7 +234,7 @@ const goTo = (url) => {
 
       <ModalNoButton
           :isOpen="isApprovalModalOpen"
-          title="결재선 설정 테스트"
+          title="결재선 설정"
           width="900px"
           height="420px"
           @close="closeApprovalModal"
@@ -267,7 +265,7 @@ const goTo = (url) => {
 
       <ModalNoButton
           :isOpen="isShareModalOpen"
-          title="공유 설정 테스트"
+          title="공유 설정"
           width="650px"
           height="450px"
           @close="closeShareModal"
@@ -382,6 +380,11 @@ const goTo = (url) => {
   border-bottom: 2px solid #ff6600;
 }
 
+.dropdown-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 .dropdown-title {
   font-size: 14px;
   font-weight: bold;
