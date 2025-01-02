@@ -54,6 +54,8 @@ import Outbox from "@/views/approval/Outbox.vue";
 import Inbox from "@/views/approval/Inbox.vue";
 
 import EmpDetailPage from "@/views/hr/employee/EmpDetailPage.vue";
+import AnnDetail from "@/views/announcement/AnnDetail.vue";
+import AnnUpdate from "@/views/announcement/AnnUpdate.vue";
 
 
 const routes = [
@@ -126,7 +128,9 @@ const routes = [
 
     // 공지
     {path:'/announcements', name: 'announcements-list', component: AnnList},
-    {path: '/announcements/create', name: 'announcements-create', component: AnnCreate}
+    {path: '/announcements/create', name: 'announcements-create', component: AnnCreate},
+    {path: '/announcements/:annId', name: 'announcements-detail', component: AnnDetail},
+    {path: '/announcements/update/:annId', name: 'announcements-update', component: AnnUpdate}
 
 ]
 
