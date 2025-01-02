@@ -136,8 +136,8 @@ onMounted(()=>{
 </script>
 
 <template>
-  <Alert :visible=successModalVisible message="발령 등록에 성공했습니다!" @update:visible="updateSuccessModalVisible"/>
-  <Alert :visible=failModalVisible message="발령 등록 중 오류가 발생했습니다." @update:visible="updateFailModalVisible"/>
+  <Alert :model-value=successModalVisible message="발령 등록에 성공했습니다!" @update:modelValue="updateSuccessModalVisible"/>
+  <Alert :model-value=failModalVisible message="발령 등록 중 오류가 발생했습니다." @update:modelValue="updateFailModalVisible"/>
   <div class="modify-sidebar" :class="{ open: props.isSidebarOpen }">
   <div id="side-header">
     <img src="../../../assets/image/arrow-right.png" @click="closeSidebar" id="close">

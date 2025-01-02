@@ -148,8 +148,8 @@ onMounted(async ()=>{
 </script>
 
 <template>
-  <Alert :visible=successModalVisible message="사원 등록 성공!" @update:visible="updateSuccessModalVisible"/>
-  <Alert :visible=failModalVisible message="사원 등록 중 오류가 발생했습니다." @update:visible="updateFailModalVisible"/>
+  <Alert :model-value=successModalVisible message="사원 등록 성공!" @update:modelValue="updateSuccessModalVisible"/>
+  <Alert :model-value=failModalVisible message="사원 등록 중 오류가 발생했습니다." @update:modelValue="updateFailModalVisible"/>
   <div id="emp-register-container">
     <HeaderContainer
       title="구성원"

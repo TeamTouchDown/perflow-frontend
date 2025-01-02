@@ -4,9 +4,22 @@ import {useAuthStore} from "@/store/authStore.js";
 import {useStore} from "@/store/store.js";
 import api from "@/config/axios.js";
 import router from "@/router/router.js";
+import Alert from "@/components/common/Alert.vue";
 
 const authStore = useAuthStore();
-const store = useStore();
+
+const logoutModalVisible = ref(false);
+const extendModalVisible = ref(false);
+
+const updateLogoutModalVisible = (value) => {
+  logoutModalVisible.value = value;
+  if(!value) {
+    goTo("/login")
+  }
+}
+const updateExtendModalVisible = (value) => {
+  logoutModalVisible.value = value;
+}
 
 const msTime = computed(() => {
   return authStore.$state.remainingTime
@@ -23,7 +36,7 @@ const fetchTimer = () => {
 };
 const refresh =  async () => {
   await authStore.refreshAccessToken();
-  alert("로그인 시간이 연장되었습니다.")
+  updateExtendModalVisible(true);
 }
 
 const initial = computed(() => {
@@ -47,6 +60,8 @@ const logout = async () => {
   await api.post(`/logout`);
 
   authStore.logout();
+
+  updateLogoutModalVisible(true);
 }
 
 const goTo = (url) => {
@@ -61,6 +76,8 @@ onMounted(()=> {
 </script>
 
 <template>
+  <Alert :model-value=logoutModalVisible message="로그아웃 되었습니다." @update:modelValue="updateLogoutModalVisible"/>
+  <Alert :model-value=extendModalVisible message="로그인 시간이 연장되었습니다." @update:modelValue="updateExtendModalVisible"/>
   <div id="nav">
     <div id="nav-logo" @click="goTo('/main-page')">
       <img src="@/assets/image/logo.png" alt="로고" id="logo-image">
