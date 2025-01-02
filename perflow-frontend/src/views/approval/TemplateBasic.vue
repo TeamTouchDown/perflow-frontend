@@ -10,10 +10,6 @@ import OrgTree from "@/components/approval/OrgTree.vue";
 import OrgTreeShare from "@/components/approval/OrgTreeShare.vue";
 import ModalNoButton from "@/components/common/ModalNoButton.vue";
 
-const selectedApprovalEmployees = ref([]); // 체크된 사원 목록
-const selectedShareEmployees = ref([]); // 체크된 사원 목록
-
-const approvalList = ref([]); // 결재 목록
 const approvalData = ref([]);  // approvalShareBox 에 전달할 데이터
 
 const updateApprovalList = (newList) => {
@@ -75,16 +71,15 @@ const updateShareList = (newList) => {
   console.log("updateShareList - 업데이트 된 shareData: ", shareData.value);
 };
 
-const shareList = ref([]);  // 공유 목록
 const shareData = ref([]);  // 모달에서 선택한, approvalShareBox 에 전달할 데이터
 
-// 테스트용
-const isTestApprovalModalOpen = ref(false);
-const isTestShareModalOpen = ref(false);
-const openTestApprovalModal = () => (isTestApprovalModalOpen.value = true);
-const closeTestApprovalModal = () => (isTestApprovalModalOpen.value = false);
-const openTestShareModal = () => (isTestShareModalOpen.value = true);
-const closeTestShareModal = () => (isTestShareModalOpen.value = false);
+// 모달 상태
+const isApprovalModalOpen = ref(false);
+const isShareModalOpen = ref(false);
+const openApprovalModal = () => (isApprovalModalOpen.value = true);
+const closeApprovalModal = () => (isApprovalModalOpen.value = false);
+const openShareModal = () => (isShareModalOpen.value = true);
+const closeShareModal = () => (isShareModalOpen.value = false);
 
 
 // 서식 드롭다운
@@ -102,131 +97,6 @@ const handleDropdownSelect = (id) => {
   });
 }
 
-// 모달 상태
-const isApprovalModalOpen = ref(false);
-const isShareModalOpen = ref(false);  // 공유 모달 상태
-
-// 모달 열기/닫기
-const openApprovalModal = () => (isApprovalModalOpen.value = true);
-const closeApprovalModal = () => (isApprovalModalOpen.value = false);
-
-const openShareModal = () => (isShareModalOpen.value = true);
-const closeShareModal = () => (isShareModalOpen.value = false);
-
-// 설정 저장
-const saveApprovalSettings = () => {
-  approvalData.value = [...approvalList.value];
-  console.log("결재선 설정 저장: approvalData: ", approvalData.value);
-  closeApprovalModal();
-};
-
-const saveTestApprovalSettings = () => {
-  approvalData.value = [...approvalList.value];
-  console.log("결재선 설정 저장: approvalData: ", approvalData.value);
-  closeTestApprovalModal();
-}
-
-const saveTestShareSettings = () => {
-  shareData.value = [...shareList.value]; // 선택된 공유 데이터
-  console.log("공유 설정 저장 - shareData: ", shareData.value);
-  closeShareModal();
-}
-
-const saveShareSettings = () => {
-  shareData.value = [...shareList.value]; // 선택된 공유 데이터
-  console.log("공유 설정 저장 - shareData: ", shareData.value);
-  closeShareModal();
-}
-
-// 조직도에서 선택된 사원 업데이트
-const updateApprovalSelectedEmployees = (employees) => {
-  console.log("updateApprovalSelectedEmployees 호출");
-  console.log("조직도에서 선택된 결재선 사원 목록: ", employees);
-  selectedApprovalEmployees.value = employees;
-  console.log("업데이트 된 selectedApprovalEmployees: ", selectedApprovalEmployees.value);
-};
-
-const updateShareSelectedEmployees = (employees) => {
-  console.log("updateShareSelectedEmployees 호출");
-  console.log("선택된 공유 사원 목록: ", employees);
-  selectedShareEmployees.value = employees;
-  // shareData.value = employees;  // 공유 리스트 업데이트
-  console.log("업데이트 된 shareData: ", shareData.value);
-}
-
-const selectedApproveRows = ref(new Set());
-const selectedShareRows = ref(new Set());
-
-// 체크박스 선택/해제 핸들러
-const toggleApproveRowSelection = (index) => {
-  if (selectedApproveRows.value.has(index)) {
-    selectedApproveRows.value.delete(index); // 이미 선택된 경우 해제
-  } else {
-    selectedApproveRows.value.add(index); // 선택 안 된 경우 추가
-  }
-};
-
-const toggleShareRowSelection = (index) => {
-  if (selectedShareRows.value.has(index)) {
-    selectedShareRows.value.delete(index); // 이미 선택된 경우 해제
-  } else {
-    selectedShareRows.value.add(index); // 선택 안 된 경우 추가
-  }
-};
-
-// 선택된 행 삭제
-const deleteApproveSelectedRows = () => {
-  approvalList.value = approvalList.value.filter(
-      (_, index) => !selectedApproveRows.value.has(index)
-  );
-  selectedApproveRows.value.clear(); // 선택 목록 초기화
-};
-
-const deleteShareSelectedRows = () => {
-  shareList.value = shareList.value.filter(
-      (_, index) => !selectedShareRows.value.has(index)
-  );
-  selectedShareRows.value.clear(); // 선택 목록 초기화
-};
-
-
-// 버튼 클릭 시 결재 순서에 추가
-const addToApprovalList = (type) => {
-  console.log("addToApprovalList 메소드 호출");
-
-  const typeMapping = {
-    동의: "SEQ",
-    참조: "CC",
-    합의: "AGR",
-    병렬: "PLL",
-    병렬합의: "PLLAGR"
-  };
-
-  const newApprovals = selectedApprovalEmployees.value.map((emp) => ({
-    type,
-    displayType: type,  // 결재방식 - 한글 값
-    approveType: typeMapping[type], // 결재방식 - enum 값
-    name: emp.name, // 사원 이름
-    position: emp.position, // 직위
-    empId: emp.empId,
-  }));
-  approvalList.value.push(...newApprovals);
-  console.log("결재선 추가 - 업데이트 된 approvalList: ", approvalList.value);
-  selectedApprovalEmployees.value = []; // 선택 목록 초기화
-};
-
-const addToShareList = () => {
-  // 추가 한 사람 다시 추가 못하도록
-  const newShares = selectedShareEmployees.value.filter(
-      (emp) => !shareList.value.some((share) => share.empId === emp.empId)
-  ).map((emp) => ({
-    empId: emp.empId,
-    name: emp.name,
-    position: emp.position,
-  }));
-  shareList.value.push(...newShares);
-  selectedShareEmployees.value = [];  // 선택 목록 초기화
-};
 
 const title = ref('');  // 문서 제목
 const content = ref('');  // 문서 내용
@@ -259,6 +129,7 @@ const docData = () => {
   };
 };
 
+// 새 문서 생성
 const createNewDoc = async () => {
 
   if (!title.value || !content.value) {
@@ -360,21 +231,21 @@ const goTo = (url) => {
           ...item,
           type: item.displayType  // 한글 값만 표시
           }))"
-          @onSettingsClick="openTestApprovalModal"
+          @onSettingsClick="openApprovalModal"
       />
 
       <ModalNoButton
-          :isOpen="isTestApprovalModalOpen"
+          :isOpen="isApprovalModalOpen"
           title="결재선 설정 테스트"
           width="900px"
           height="420px"
-          @close="closeTestApprovalModal"
+          @close="closeApprovalModal"
       >
         <template #default>
           <div class="modal-layout">
             <OrgTree
                 @updateApprovalList="updateApprovalList"
-                @closeModal="closeTestApprovalModal"
+                @closeModal="closeApprovalModal"
             />
           </div>
         </template>
@@ -391,21 +262,21 @@ const goTo = (url) => {
           name: item.name,
           position: item.position,
           }))"
-          @onSettingsClick="openTestShareModal"
+          @onSettingsClick="openShareModal"
       />
 
       <ModalNoButton
-          :isOpen="isTestShareModalOpen"
+          :isOpen="isShareModalOpen"
           title="공유 설정 테스트"
           width="650px"
           height="450px"
-          @close="closeTestShareModal"
+          @close="closeShareModal"
       >
         <template #default>
           <div class="modal-layout">
             <OrgTreeShare
                 @updateShareList="updateShareList"
-                @closeModal="closeTestShareModal"
+                @closeModal="closeShareModal"
             />
           </div>
         </template>
@@ -455,83 +326,11 @@ const goTo = (url) => {
   align-items: center; /* 중앙 정렬 */
 }
 
-.approval-button-group {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: center;
-  margin: 20px;
-  width: fit-content; /* 자식인 buttonbasic 의 폭에 맞춤 */
-}
-
 /* 모달 내부 레이아웃 */
 .modal-layout {
   display: flex;
   gap: 10px;
   height: 300px;
-}
-
-/* 모달 내부 박스 공통 스타일 */
-.modal-box {
-  flex: 1;
-  border: none;
-  border-radius: 8px;
-  padding: 16px;
-  overflow-y: auto;
-}
-
-.modal-box.center {
-  max-width: fit-content;
-  padding: 0;
-  margin: auto;
-}
-
-.modal-box.left {
-  height: fit-content; /* 자식 컴포넌트 크기에 맞춤*/
-  padding-right: 0;
-}
-
-.modal-box.right {
-  display: flex;
-  flex-direction: column;
-  height: 300px; /* 전체 높이를 고정 */
-}
-
-.share-table,
-.approval-table {
-  flex: 1; /* 테이블이 가능한 최대 공간을 차지 */
-  overflow-y: auto; /* 내용이 많아지면 스크롤 */
-  margin: 0;
-  border-spacing: 0; /* 셀 간의 간격 제거 */
-  border-collapse: separate; /* 둥근 테두리 유지 */
-}
-
-.table-container {
-  flex: 1;
-  overflow-y: auto; /* 테이블에 스크롤 추가 */
-  margin-bottom: 10px; /* 버튼과 테이블 간의 간격 */
-}
-
-.button-container {
-  display: flex;
-  justify-content: flex-end; /* 버튼을 오른쪽 정렬 */
-  margin-top: 10px; /* 테이블과 버튼 사이의 간격 */
-}
-
-.center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.approval-table {
-  width: 100%;
-  border: 1px solid #D9D9D9; /* 테이블 바깥 테두리 */
-  border-radius: 10px; /* 둥근 테두리 */
-  border-spacing: 0; /* 셀 간의 간격 제거 */
-  border-collapse: separate; /* border-spacing 적용을 위해 separate 설정 */
-  overflow: hidden; /* 둥근 테두리를 유지 */
-  margin-top: 10px;
 }
 
 .approval-table th,
@@ -550,41 +349,6 @@ const goTo = (url) => {
   background-color: #f4f4f4;
   font-weight: bold;
 }
-
-
-/* 선택된 행 */
-.selected-row {
-  background-color: #f0f0f0; /* 클릭 시 회색 배경 적용 */
-  cursor: pointer;
-}
-
-.share-table {
-  width: 100%;
-  border: 1px solid #D9D9D9; /* 테이블 바깥 테두리 */
-  border-radius: 10px; /* 둥근 테두리 */
-  border-spacing: 0; /* 셀 간의 간격 제거 */
-  border-collapse: separate; /* border-spacing 적용을 위해 separate 설정 */
-  overflow: hidden; /* 둥근 테두리를 유지 */
-  margin-top: 10px;
-}
-
-.share-table th,
-.share-table td {
-  border: none; /* 내부 셀의 모든 테두리 제거 */
-  border-bottom: 1px solid #D9D9D9; /* 셀 아래 가로선만 표시 */
-  padding: 8px;
-  text-align: center;
-}
-
-.share-table tr:last-child td {
-  border-bottom: none; /* 마지막 행의 아래쪽 가로선 제거 */
-}
-
-.share-table th {
-  background-color: #f4f4f4;
-  font-weight: bold;
-}
-
 
 #title {
   font-size: 35px;
