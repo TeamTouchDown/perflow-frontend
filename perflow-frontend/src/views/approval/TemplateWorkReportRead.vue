@@ -188,33 +188,27 @@ onMounted(() => {
           <span class="label">작성자</span>
           <span class="value">{{ createUserData }}</span>
         </div>
+
         <!-- 제목 -->
         <div class="field">
           <span class="label">제목</span>
           <span class="value">{{ title }}</span>
         </div>
-        <!-- 진행사항 -->
-        <div class="field">
-          <span class="label">진행사항</span>
-          <span class="value">{{ PROGRESSING }}</span>
-        </div>
-        <!-- 특이사항 -->
-        <div class="field">
-          <span class="label">특이사항</span>
-          <span class="value">{{ SPECIAL }}</span>
-        </div>
-        <!-- 예정사항 -->
-        <div class="field">
-          <span class="label">예정사항</span>
-          <span class="value">{{ PLANNED }}</span>
-        </div>
 
-      <ButtonBasic
-          color="orange"
-          size="medium"
-          label="목록으로"
-          @click="router.go(-1)"
-      />
+        <div class="content-field">
+          <div class="field">
+            <span class="label">진행사항</span>
+            <span class="value" style="white-space: pre-line;">{{ PROGRESSING }}</span>
+          </div>
+          <div class="field">
+            <span class="label">특이사항</span>
+            <span class="value" style="white-space: pre-line;">{{ SPECIAL }}</span>
+          </div>
+          <div class="field">
+            <span class="label">예정사항</span>
+            <span class="value" style="white-space: pre-line;">{{ PLANNED }}</span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -311,14 +305,25 @@ onMounted(() => {
       />
     </div>
   </div>
+  <div class="button-group">
+    <ButtonBasic
+        color="orange"
+        size="medium"
+        label="목록으로"
+        @click="router.go(-1)"
+    />
+  </div>
 </template>
 
 <style scoped>
 .main-container {
   display: flex;
   justify-content: center; /* 중앙 정렬 */
-  align-items: center; /* 세로 정렬 */
+  align-items: flex-start; /* 세로 정렬 */
   gap: 0px;
+  width: 1300px;
+  height: auto;
+  margin-left: 100px;
 }
 
 .empty-container {
@@ -598,5 +603,34 @@ onMounted(() => {
 .doc-status-value.반려 {
   color: #ff8c00; /* 주황색 */
   border: 1px solid #ff8c00; /* 주황색 */
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.content-field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.content-field .field {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;  /* 위쪽 끝 정렬 */
+}
+
+
+.content-field .value {
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  background-color: #fafafa;
+  width: 500px;
+  height: auto;
 }
 </style>

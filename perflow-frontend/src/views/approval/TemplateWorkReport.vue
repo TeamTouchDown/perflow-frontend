@@ -211,34 +211,35 @@ const goTo = (url) => {
             width="600px"
         />
 
-        <!-- 진행사항 -->
-        <InputField
-            v-model="PROGRESSING"
-            label="진행사항"
-            placeholder="내용을 입력해 주세요."
-            type="textarea"
-            height="180px"
-            width="600px"
-        />
-        <!-- 특이사항 -->
-        <InputField
-            v-model="SPECIAL"
-            label="특이사항"
-            placeholder="내용을 입력해 주세요."
-            type="textarea"
-            height="180px"
-            width="600px"
-        />
-        <!-- 예정사항 -->
-        <InputField
-            v-model="PLANNED"
-            label="예정사항"
-            placeholder="내용을 입력해 주세요."
-            type="textarea"
-            height="180px"
-            width="600px"
-        />
-
+        <div class="content-field">
+          <!-- 진행사항 -->
+          <InputField
+              v-model="PROGRESSING"
+              label="진행사항"
+              placeholder="내용을 입력해 주세요."
+              type="textarea"
+              height="180px"
+              width="600px"
+          />
+          <!-- 특이사항 -->
+          <InputField
+              v-model="SPECIAL"
+              label="특이사항"
+              placeholder="내용을 입력해 주세요."
+              type="textarea"
+              height="180px"
+              width="600px"
+          />
+          <!-- 예정사항 -->
+          <InputField
+              v-model="PLANNED"
+              label="예정사항"
+              placeholder="내용을 입력해 주세요."
+              type="textarea"
+              height="180px"
+              width="600px"
+          />
+        </div>
       </div>
 
       <div class="button-group">
@@ -500,5 +501,19 @@ const goTo = (url) => {
   font-size: 14px;
   font-weight: bold;
   color: #3C4651;
+}
+
+/* input field 스크롤 설정 */
+/* input field 의 textarea 까지 전달 */
+.content-field::v-deep(textarea)::-webkit-scrollbar {
+  width: 5px;
+}
+.content-field::v-deep(textarea)::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+.content-field::v-deep(textarea)::-webkit-scrollbar-thumb {
+  background: #D9D9D9;
+  border-radius: 10px;
 }
 </style>

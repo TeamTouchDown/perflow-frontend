@@ -228,13 +228,6 @@ onMounted(() => {
           <span>합계 {{ rows.reduce((sum, row) => sum + Number(row.amount || 0), 0).toLocaleString() }} 원 </span>
         </div>
       </div>
-
-      <ButtonBasic
-          color="orange"
-          size="medium"
-          label="목록으로"
-          @click="router.go(-1)"
-      />
     </div>
 
     <div class="box-container">
@@ -329,7 +322,16 @@ onMounted(() => {
         }))"
       />
     </div>
-    </div>
+  </div>
+
+  <div class="button-group">
+    <ButtonBasic
+        color="orange"
+        size="medium"
+        label="목록으로"
+        @click="router.go(-1)"
+    />
+  </div>
 
 </template>
 
@@ -339,6 +341,8 @@ onMounted(() => {
   justify-content: center; /* 중앙 정렬 */
   align-items: flex-start;  /* container 들이 같은 높이에서 시작 */
   gap: 0px; /* container 간 간격 */
+  width: 1300px;
+  margin-left: 100px;
 }
 
 .empty-container {
@@ -408,6 +412,13 @@ onMounted(() => {
 .value {
   font-size: 16px;
   color: #3C4651;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
 }
 
 #title {

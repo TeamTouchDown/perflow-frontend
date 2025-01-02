@@ -168,19 +168,12 @@ onMounted(() => {
           <span class="label">제목</span>
           <span class="value">{{ title }}</span>
         </div>
-        <div class="field">
-          <span class="label">내용</span>
-          <span class="value">{{ content }}</span>
+        <div class="content-field">
+          <div class="field">
+            <span class="label">내용</span>
+            <span class="value" style="white-space: pre-line;">{{ content }}</span>
+          </div>
         </div>
-      </div>
-
-      <div class="button-group">
-        <ButtonBasic
-            color="orange"
-            size="medium"
-            label="목록으로"
-            @click="router.go(-1)"
-        />
       </div>
     </div>
 
@@ -277,14 +270,24 @@ onMounted(() => {
       />
     </div>
   </div>
+  <div class="button-group">
+    <ButtonBasic
+        color="orange"
+        size="medium"
+        label="목록으로"
+        @click="router.go(-1)"
+    />
+  </div>
 </template>
 
 <style scoped>
 .main-container {
   display: flex;
   justify-content: center;  /* 중앙 정렬 */
-  align-items: center;  /* 세로 정렬 */
+  align-items: flex-start;  /* 세로 정렬 */
   gap: 0px;
+  width: 900px;
+  margin-left: 400px;
 }
 
 .empty-container {
@@ -298,8 +301,9 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   gap: 0px;
-  width: 400px;
+  width: 600px;
   margin-top: 50px;
+  margin-right: 50px;
 }
 
 .box-container {
@@ -359,11 +363,31 @@ onMounted(() => {
 
 .button-group {
   display: flex;
-  flex-direction: row; /* 버튼 가로 정렬 */
-  align-items: center; /* 중앙 정렬 */
-  margin-top: 100px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
 }
 
+.content-field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.content-field .field {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;  /* 위쪽 끝 정렬 */
+}
+
+
+.content-field .value {
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  background-color: #fafafa;
+  width: 500px;
+  height: 415px;
+}
 
 #title {
   font-size: 35px;
