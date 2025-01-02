@@ -6,6 +6,7 @@ import ApprovalShareBoxRead from "@/components/approval/ApprovalShareBoxRead.vue
 import api from "@/config/axios.js";
 import {useRoute} from "vue-router";
 import {useAuthStore} from "@/store/authStore.js";
+import Alert from "@/components/common/Alert.vue";
 
 const route = useRoute();
 const authStore = useAuthStore();
@@ -16,6 +17,7 @@ const docType = route.query.type;
 const approveSbjStatus = route.query.approveSbjStatus;
 const processDatetime = route.query.processDatetime;
 const comment = route.query.comment;
+const docStatus = route.query.status;
 
 // 초기화
 const title = ref("");
@@ -46,13 +48,25 @@ const fetchDocumentDetail = async () => {
     shares.value = docData.shares || [];  // 공유 데이터
   } catch (error) {
     console.error("문서 상세 조회 실패:", error);
-    alert("문서 데이터를 불러오지 못했습니다.");
+    showAlert("문서 데이터를 불러오지 못했습니다.");
   }
 };
 
 const goTo = (url) => {
   router.push(url);
 }
+
+const formatDocStatus = computed(() => {
+  if (docStatus === "APPROVED") {
+    return "승인";
+  } else if (docStatus === "REJECTED") {
+    return "반려";
+  } else if (docStatus === "ACTIVATED") {
+    return "진행";
+  } else {
+    return docStatus;
+  }
+});
 
 // 작성일시 형식 변환
 const formatCreateDatetime = (rawString) => {
@@ -128,12 +142,21 @@ const handleApproval = async (status) => {
     };
 
     await api.put("/approval/docs", requestData);
-    alert(`문서가 ${status === "APPROVED" ? "승인" : "반려"}되었습니다.`);
+    showAlert("문서를 결재했습니다.");
+    // alert(`문서가 ${status === "APPROVED" ? "승인" : "반려"}되었습니다.`);
     router.push("/approval/waiting");
   } catch (error) {
     console.error("결재 처리 실패: ", error);
-    alert("결재 처리 중 오류가 발생했습니다.");
+    showAlert("결재 처리 중 오류가 발생했습니다.");
   }
+}
+
+/* alert 창 */
+const alertVisible = ref(false);
+const alertMsg = ref('');
+const showAlert = (msg) => {
+  alertMsg.value = msg;
+  alertVisible.value = true;
 }
 
 onMounted(() => {
@@ -143,6 +166,11 @@ onMounted(() => {
 </script>
 
 <template>
+
+  <Alert
+      v-model="alertVisible"
+      :message="alertMsg"
+  />
 
   <div id="header-div">
     <div id="header-top" class="flex-between">
@@ -175,37 +203,39 @@ onMounted(() => {
           <span class="label">작성자</span>
           <span class="value">{{ createUserData }}</span>
         </div>
+
         <!-- 제목 -->
         <div class="field">
           <span class="label">제목</span>
           <span class="value">{{ title }}</span>
         </div>
-        <!-- 진행사항 -->
-        <div class="field">
-          <span class="label">진행사항</span>
-          <span class="value">{{ PROGRESSING }}</span>
-        </div>
-        <!-- 특이사항 -->
-        <div class="field">
-          <span class="label">특이사항</span>
-          <span class="value">{{ SPECIAL }}</span>
-        </div>
-        <!-- 예정사항 -->
-        <div class="field">
-          <span class="label">예정사항</span>
-          <span class="value">{{ PLANNED }}</span>
-        </div>
 
-      <ButtonBasic
-          color="orange"
-          size="medium"
-          label="목록으로"
-          @click="router.go(-1)"
-      />
+        <div class="content-field">
+          <div class="field">
+            <span class="label">진행사항</span>
+            <span class="value" style="white-space: pre-line;">{{ PROGRESSING }}</span>
+          </div>
+          <div class="field">
+            <span class="label">특이사항</span>
+            <span class="value" style="white-space: pre-line;">{{ SPECIAL }}</span>
+          </div>
+          <div class="field">
+            <span class="label">예정사항</span>
+            <span class="value" style="white-space: pre-line;">{{ PLANNED }}</span>
+          </div>
+        </div>
       </div>
     </div>
 
     <div class="box-container">
+
+      <!-- 처리/수신/발신함 문서 조회 시 문서 상태 -->
+      <div class="doc-container">
+        <div v-if="docType !== 'waiting'" class="doc-status-container">
+          <span class="doc-status-title">문서 상태</span>
+          <span class="doc-status-value" :class="formatDocStatus"> {{ formatDocStatus }}</span>
+        </div>
+      </div>
 
       <!-- 대기 문서 결재 -->
       <div class="waiting-approval-container">
@@ -290,14 +320,25 @@ onMounted(() => {
       />
     </div>
   </div>
+  <div class="button-group">
+    <ButtonBasic
+        color="orange"
+        size="medium"
+        label="목록으로"
+        @click="router.go(-1)"
+    />
+  </div>
 </template>
 
 <style scoped>
 .main-container {
   display: flex;
   justify-content: center; /* 중앙 정렬 */
-  align-items: center; /* 세로 정렬 */
+  align-items: flex-start; /* 세로 정렬 */
   gap: 0px;
+  width: 1300px;
+  height: auto;
+  margin-left: 100px;
 }
 
 .empty-container {
@@ -486,6 +527,25 @@ onMounted(() => {
   font-size: 15px;
 }
 
+/* 문서 상태 */
+.doc-status-container {
+  margin-top: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 20px;
+  width: 300px;
+  background-color: #fafafa;
+  align-items: center;
+  justify-content: center;
+}
+
+.doc-status-title {
+  color: #3C4651;
+  font-weight: bold;
+  font-size: 15px;
+  margin-right: 30px;
+}
+
 /* 대기 문서 결재 */
 .doc-approval-title {
   font-size: 15px;
@@ -541,4 +601,51 @@ onMounted(() => {
   border-radius: 10px;
 }
 
+.doc-status-value {
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 12px;
+}
+.doc-status-value.진행 {
+  color: #bd76f8;
+  border: 1px solid #bd76f8;
+}
+.doc-status-value.승인 {
+  color: #28a745; /* 초록색 */
+  border: 1px solid #28a745;
+}
+.doc-status-value.반려 {
+  color: #ff8c00; /* 주황색 */
+  border: 1px solid #ff8c00; /* 주황색 */
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.content-field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.content-field .field {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;  /* 위쪽 끝 정렬 */
+}
+
+
+.content-field .value {
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  background-color: #fafafa;
+  width: 500px;
+  height: auto;
+}
 </style>

@@ -86,7 +86,7 @@ const labelStyles = computed(() => ({
 
 .label {
   font-size: 14px;
-  margin-right: 30px;
+  margin-right: 35px;
   white-space: nowrap;  /* 라벨 줄바꿈 x */
   margin-top: 10px;
 }

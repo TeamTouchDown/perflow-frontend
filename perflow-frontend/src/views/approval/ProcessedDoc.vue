@@ -9,6 +9,7 @@ import TableCheck from "@/components/common/TableCheck.vue";
 import PagingBar from "@/components/common/PagingBar.vue";
 import dayjs from "dayjs";
 import Tooltip from "@/components/common/ToolTip.vue";
+import Alert from "@/components/common/Alert.vue";
 
 const columns = [
   {label: "상태", field: "status"},
@@ -67,14 +68,14 @@ const handleTitleClick = (row) => {
 
   if (templateId === 4) {
     // 기본 서식
-    router.push({ name: "basicDetail", query: { docId: row.docId, type: "processed", approveSbjStatus: row.approveSbjStatus, processDatetime: row.processDatetime, comment: row.comment } });
+    router.push({ name: "basicDetail", query: { docId: row.docId, type: "processed", approveSbjStatus: row.approveSbjStatus, processDatetime: row.processDatetime, comment: row.comment, status: row.status } });
   } else if (templateId === 5) {
-    router.push({ name: "disbursementDetail", query: {docId: row.docId, type: "processed", approveSbjStatus: row.approveSbjStatus, processDatetime: row.processDatetime, comment: row.comment } })
+    router.push({ name: "disbursementDetail", query: {docId: row.docId, type: "processed", approveSbjStatus: row.approveSbjStatus, processDatetime: row.processDatetime, comment: row.comment, status: row.status } })
   } else if (templateId === 6) {
-    router.push({ name: "workReportDetail", query: {docId: row.docId, type: "processed", approveSbjStatus: row.approveSbjStatus, processDatetime: row.processDatetime, comment: row.comment } })
+    router.push({ name: "workReportDetail", query: {docId: row.docId, type: "processed", approveSbjStatus: row.approveSbjStatus, processDatetime: row.processDatetime, comment: row.comment, status: row.status } })
     // 업무 보고서
   } else {
-    alert("올바르지 않은 서식입니다.");
+    showAlert("올바르지 않은 서식입니다.");
   }
 };
 
@@ -120,12 +121,25 @@ const fetchProcessedDocsWithCriteria = async(page = 1) => {
   }
 };
 
+const alertVisible = ref(false);
+const alertMsg = ref('');
+const showAlert = (msg) => {
+  alertMsg.value = msg;
+  alertVisible.value = true;
+}
+
 onMounted(() => {
   fetchProcessedDocs();
 })
 </script>
 
 <template>
+
+  <Alert
+      v-model="alertVisible"
+      :message="alertMsg"
+  />
+
   <!-- 헤더 -->
   <div id="header-div">
     <div id="header-top" class="flex-between">
@@ -151,37 +165,41 @@ onMounted(() => {
       <div id="search-container">
         <!-- 검색 필드 -->
         <div class="conditions">
-          <SearchGroupBar
-              v-model ="searchCriteria.title"
-              placeholder="제목"
-              type="text"
-              width="500px"
-              height="40px"
-          />
-          <SearchGroupBar
-              v-model ="searchCriteria.createUser"
-              placeholder="작성자"
-              type="text"
-          />
-          <SearchGroupBar
-              v-model ="searchCriteria.fromDate"
-              placeholder="작성일(시작)"
-              type="date"
-          />
-          <SearchGroupBar
-              v-model ="searchCriteria.toDate"
-              placeholder="작성일(끝)"
-              type="date"
-          />
-        </div>
-        <!-- 검색 버튼 -->
-        <div class="button">
-          <ButtonBasic
-              color="orange"
-              size="medium"
-              label="검색하기"
-              @click="handleSearch"
-          />
+          <div class="condition-row">
+            <SearchGroupBar
+                v-model ="searchCriteria.title"
+                placeholder="제목"
+                type="text"
+                width="500px"
+                height="40px"
+            />
+            <SearchGroupBar
+                v-model ="searchCriteria.createUser"
+                placeholder="작성자"
+                type="text"
+            />
+          </div>
+          <div class="condition-row">
+            <SearchGroupBar
+                v-model ="searchCriteria.fromDate"
+                placeholder="작성일(시작)"
+                type="date"
+            />
+            <SearchGroupBar
+                v-model ="searchCriteria.toDate"
+                placeholder="작성일(끝)"
+                type="date"
+            />
+            <!-- 검색 버튼 -->
+            <div class="button">
+              <ButtonBasic
+                  color="orange"
+                  size="medium"
+                  label="검색하기"
+                  @click="handleSearch"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -279,7 +297,6 @@ onMounted(() => {
   text-decoration: underline;
 }
 
-
 /* 검색 컨테이너 */
 #search-container {
   display: flex;
@@ -294,8 +311,15 @@ onMounted(() => {
 
 .conditions {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 10px;  /* 필드 간 간격 */
+  width: 100%
+}
+
+.condition-row {
+  display: flex;
+  gap: 10px;
+  margin-left: 50px;
 }
 
 .button {
@@ -306,28 +330,29 @@ onMounted(() => {
 
 .status-tag {
   display: inline-block;
-  padding: 5px 5px;
-  border-radius: 15px;
-  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 13px;
   font-weight: bold;
-  color: white;
   text-align: center;
   min-width: 50px;
 }
-
 /* 승인 */
 .status-tag.approved {
-  background-color: #4CAF50;
+  color: #28a745; /* 초록색 */
+  border: 1px solid #28a745;
 }
 
 /* 반려 */
 .status-tag.rejected {
-  background-color: #FF9800;
+  color: #ff8c00;
+  border: 1px solid #ff8c00;
 }
 
 /* 알 수 없음 */
 .status-tag.unknown {
-  background-color: #007bff; /* 회색 */
+  color: #007bff; /* 회색 */
+  border: 1px solid #007bff; /* 회색 */
 }
 
 /* 툴팁 */
