@@ -96,8 +96,8 @@ function closeSidebar() {
 </script>
 
 <template>
-  <Alert :visible=successModalVisible message="정보 수정 성공!" @update:visible="updateSuccessModalVisible"/>
-  <Alert :visible=failModalVisible message="정보 수정 중 오류가 발생했습니다." @update:visible="updateFailModalVisible"/>
+  <Alert :model-value=successModalVisible message="정보 수정 성공!" @update:visible="updateSuccessModalVisible"/>
+  <Alert :model-value=failModalVisible message="정보 수정 중 오류가 발생했습니다." @update:visible="updateFailModalVisible"/>
   <div class="modify-sidebar" :class="{ open: props.isSidebarOpen }">
   <div id="side-header">
     <img src="../../../assets/image/arrow-right.png" @click="closeSidebar" id="close">

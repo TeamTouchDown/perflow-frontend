@@ -111,9 +111,9 @@ onMounted(()=>{
 </script>
 
 <template>
-  <Alert :visible=successCreateModalVisible message="권한 부여에 성공했습니다." @update:visible="updateSuccessCreateModalVisible"/>
-  <Alert :visible=successModalVisible message="권한 회수에 성공했습니다." @update:visible="updateSuccessModalVisible"/>
-  <Alert :visible=failModalVisible message="권한 부여중 오류가 발생했습니다." @update:visible="updateFailModalVisible"/>
+  <Alert :model-value=successCreateModalVisible message="권한 부여에 성공했습니다." @update:visible="updateSuccessCreateModalVisible"/>
+  <Alert :model-value=successModalVisible message="권한 회수에 성공했습니다." @update:visible="updateSuccessModalVisible"/>
+  <Alert :model-value=failModalVisible message="권한 부여중 오류가 발생했습니다." @update:visible="updateFailModalVisible"/>
   <div id="authority-container">
     <HeaderContainer title="권한 관리"/>
     <div id="menu"><p class="menu-list">사원 목록</p><p class="menu-list">권한목록</p></div>

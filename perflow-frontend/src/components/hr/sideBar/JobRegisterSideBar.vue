@@ -81,8 +81,8 @@ onMounted(()=>{
 </script>
 
 <template>
-  <Alert :visible=successModalVisible message="직책 등록 성공!" @update:visible="updateSuccessModalVisible"/>
-  <Alert :visible=failModalVisible message="직책 등록 중 오류가 발생했습니다." @update:visible="updateFailModalVisible"/>
+  <Alert :model-value=successModalVisible message="직책 등록 성공!" @update:visible="updateSuccessModalVisible"/>
+  <Alert :model-value=failModalVisible message="직책 등록 중 오류가 발생했습니다." @update:visible="updateFailModalVisible"/>
 <div class="modify-sidebar" :class="{ open: props.isSidebarOpen }">
   <div id="side-header">
     <img src="../../../assets/image/arrow-right.png" @click="closeSidebar" id="close">
