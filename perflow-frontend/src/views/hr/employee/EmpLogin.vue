@@ -45,8 +45,8 @@ const login = async () => {
 
 <template>
   <article id="login-div">
-    <Alert :model-value=modalVisible message="로그인에 성공했습니다!" @update:visible="updateModalVisible"/>
-    <Alert :model-value=failModalVisible message="로그인에 실패했습니다. 입력값을 확인해주세요." @update:visible="updateFailModalVisible"/>
+    <Alert :model-value=modalVisible message="로그인에 성공했습니다!" @update:modelValue="updateModalVisible"/>
+    <Alert :model-value=failModalVisible message="로그인에 실패했습니다. 입력값을 확인해주세요." @update:modelValue="updateFailModalVisible"/>
     <p class="title">Perflow 로그인</p>
     <div class="input-group">
       <span class="input-title">사번</span><br>
