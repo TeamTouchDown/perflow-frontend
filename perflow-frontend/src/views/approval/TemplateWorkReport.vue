@@ -10,6 +10,7 @@ import DropdownBasic from "@/components/common/DropdownBasic.vue";
 import ModalNoButton from "@/components/common/ModalNoButton.vue";
 import OrgTree from "@/components/approval/OrgTree.vue";
 import OrgTreeShare from "@/components/approval/OrgTreeShare.vue";
+import Alert from "@/components/common/Alert.vue";
 
 const approvalData = ref([]);
 const shareData = ref([]);
@@ -141,17 +142,17 @@ const docData = () => {
 const createNewDoc = async () => {
 
   if (!title.value || !fromDate.value || !toDate.value) {
-    alert('필수 항목을 모두 입력해주세요.');
+    showAlert('필수 항목을 모두 입력해주세요.');
     return;
   }
 
   try {
     const data = docData();
     const response = await createNewDocument(data);
-    alert('결재 문서 생성 완료');
+    showAlert('결재 문서 생성 완료');
     goTo("/approval/waiting");
   } catch (error) {
-    alert(`결재 문서 생성에 실패했습니다. 오류: ${error.message}`);
+    showAlert(`결재 문서 생성에 실패했습니다.`);
     console.error(error);
   }
 };
@@ -160,9 +161,21 @@ const goTo = (url) => {
   router.push(url);
 }
 
+/* alert 창 */
+const alertVisible = ref(false);
+const alertMsg = ref('');
+const showAlert = (msg) => {
+  alertMsg.value = msg;
+  alertVisible.value = true;
+}
 </script>
 
 <template>
+
+  <Alert
+      v-model="alertVisible"
+      :message="alertMsg"
+  />
 
   <div id="header-div">
     <div id="header-top" class="flex-between">

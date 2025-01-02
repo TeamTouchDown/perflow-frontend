@@ -10,6 +10,7 @@ import DropdownBasic from "@/components/common/DropdownBasic.vue";
 import ModalNoButton from "@/components/common/ModalNoButton.vue";
 import OrgTree from "@/components/approval/OrgTree.vue";
 import OrgTreeShare from "@/components/approval/OrgTreeShare.vue";
+import Alert from "@/components/common/Alert.vue";
 
 const approvalData = ref([]);  // approvalShareBox 에 전달할 데이터
 const shareData = ref([]);  // 모달에서 선택한, approvalShareBox 에 전달할 데이터
@@ -162,28 +163,28 @@ const docData = () => {
 const createNewDoc = async () => {
 
   if (!title.value) {
-    alert('제목을 입력해주세요.');
+    showAlert('제목을 입력해주세요.');
     return;
   }
 
   if (!expendDate.value) {
-    alert('지출일을 선택해주세요.')
+    showAlert('지출일을 선택해주세요.')
     return;
   }
 
   const hasEmptyAmount = rows.value.some((row) => !row.amount || row.amount <= 0);
   if (hasEmptyAmount) {
-    alert('금액을 입력해주세요. 0보다 큰 값을 입력해야 합니다.')
+    showAlert('금액을 입력해주세요. 0보다 큰 값을 입력해야 합니다.')
     return;
   }
 
   try {
     const data = docData();
     const response = await createNewDocument(data);
-    alert('결재 문서 생성 완료');
+    showAlert('결재 문서 생성 완료');
     goTo("/approval/home");
   } catch (error) {
-    alert(`결재 문서 생성에 실패했습니다. 오류: ${error.message}`);
+    showAlert(`결재 문서 생성에 실패했습니다. 오류: ${error.message}`);
     console.error(error);
   }
 };
@@ -192,9 +193,22 @@ const goTo = (url) => {
   router.push(url);
 }
 
+/* alert 창 */
+const alertVisible = ref(false);
+const alertMsg = ref('');
+const showAlert = (msg) => {
+  alertMsg.value = msg;
+  alertVisible.value = true;
+}
+
 </script>
 
 <template>
+
+  <Alert
+      v-model="alertVisible"
+      :message="alertMsg"
+  />
 
   <div id="header-div">
     <div id="header-top" class="flex-between">

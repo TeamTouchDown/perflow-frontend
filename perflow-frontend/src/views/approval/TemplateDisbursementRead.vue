@@ -6,6 +6,7 @@ import api from "@/config/axios.js";
 import ApprovalShareBoxRead from "@/components/approval/ApprovalShareBoxRead.vue";
 import router from "@/router/router.js";
 import {useAuthStore} from "@/store/authStore.js";
+import Alert from "@/components/common/Alert.vue";
 
 const route = useRoute();
 const authStore = useAuthStore();
@@ -55,7 +56,7 @@ const fetchDocumentDetail = async () => {
     shares.value = docData.shares || [];  // 공유 데이터
   } catch (error) {
     console.error("문서 상세 조회 실패:", error);
-    alert("문서 데이터를 불러오지 못했습니다.");
+    showAlert("문서 데이터를 불러오지 못했습니다.");
   }
 };
 
@@ -150,12 +151,21 @@ const handleApproval = async (status) => {
     };
 
     await api.put("/approval/docs", requestData);
-    alert(`문서가 ${status === "APPROVED" ? "승인" : "반려"}되었습니다.`);
+    showAlert("문서를 결재했습니다.");
+    // alert(`문서가 ${status === "APPROVED" ? "승인" : "반려"}되었습니다.`);
     router.push("/approval/waiting");
   } catch (error) {
     console.error("결재 처리 실패: ", error);
-    alert("결재 처리 중 오류가 발생했습니다.");
+    showAlert("결재 처리 중 오류가 발생했습니다.");
   }
+}
+
+/* alert 창 */
+const alertVisible = ref(false);
+const alertMsg = ref('');
+const showAlert = (msg) => {
+  alertMsg.value = msg;
+  alertVisible.value = true;
 }
 
 onMounted(() => {
@@ -165,6 +175,11 @@ onMounted(() => {
 </script>
 
 <template>
+
+  <Alert
+      v-model="alertVisible"
+      :message="alertMsg"
+  />
 
   <div id="header-div">
     <div id="header-top" class="flex-between">
