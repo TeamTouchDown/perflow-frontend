@@ -6,6 +6,7 @@ import ExcelDropDown from "@/components/common/ExcelDropDown.vue";
 import ButtonBasic from "@/components/common/ButtonBasic.vue";
 import FileUpload from "@/components/common/FileUpload.vue";
 import ToolTip from "@/components/common/ToolTip.vue";
+import Alert from "@/components/common/Alert.vue";
 
 const severancePays = ref([]);
 
@@ -17,6 +18,15 @@ const isFileUploadVisible = ref(false); // 파일 업로드 창 표시 여부
 const selectedFiles = ref([]);
 
 const severancePayId = route.params.severancePayId;
+
+const alertVisible = ref(false);
+
+const alertMsg = ref('');
+
+const showAlert = (msg) => {
+  alertMsg.value = msg;
+  alertVisible.value = true;
+}
 
 console.log("severancePayId : ",severancePayId);
 
@@ -67,7 +77,7 @@ const menuItem = [
         window.URL.revokeObjectURL(url); // URL 객체를 해제합니다.
       } catch (error) {
         console.error('파일 다운로드 중 오류 발생:', error);
-        alert('파일 다운로드에 실패했습니다.');
+        showAlert('파일 다운로드에 실패했습니다.');
       }
     }
   },
@@ -88,7 +98,7 @@ const tooltipWidth = "190px";
 // 파일 업로드 핸들러
 const handleFileUpload = async () => {
   if (selectedFiles.value.length === 0) {
-    alert("업로드할 파일을 선택해주세요.");
+    showAlert("업로드할 파일을 선택해주세요.");
     return;
   }
 
@@ -104,11 +114,11 @@ const handleFileUpload = async () => {
       },
     });
     console.log("업로드 성공:", response.data);
-    alert("파일이 성공적으로 업로드되었습니다.");
+    showAlert("파일이 성공적으로 업로드되었습니다.");
     isFileUploadVisible.value = false; // 모달 닫기
   } catch (error) {
     console.error("업로드 실패:", error);
-    alert("파일 업로드 중 오류가 발생했습니다.");
+    showAlert("파일 업로드 중 오류가 발생했습니다.");
   }
 };
 
@@ -178,6 +188,10 @@ onMounted(() => {
           />
         </div>
       </div>
+      <Alert
+          v-model="alertVisible"
+          :message="alertMsg"
+      />
     </div>
     <div class="table-container">
       <table>
