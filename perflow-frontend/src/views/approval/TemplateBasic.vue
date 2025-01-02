@@ -5,13 +5,13 @@ import ApprovalShareBox from "@/components/approval/ApprovalShareBox.vue";
 import {ref} from "vue";
 import {createNewDocument} from "@/config/approval.js";
 import router from "@/router/router.js";
-import ButtonDropDown2 from "@/components/common/ButtonDropDown2.vue";
 import OrgTree from "@/components/approval/OrgTree.vue";
 import OrgTreeShare from "@/components/approval/OrgTreeShare.vue";
 import ModalNoButton from "@/components/common/ModalNoButton.vue";
 import DropdownBasic from "@/components/common/DropdownBasic.vue";
 
-const approvalData = ref([]);  // approvalShareBox 에 전달할 데이터
+const approvalData = ref([]);
+const shareData = ref([]);
 
 const updateApprovalList = (newList) => {
 
@@ -71,8 +71,6 @@ const updateShareList = (newList) => {
   }));
   console.log("updateShareList - 업데이트 된 shareData: ", shareData.value);
 };
-
-const shareData = ref([]);  // 모달에서 선택한, approvalShareBox 에 전달할 데이터
 
 // 모달 상태
 const isApprovalModalOpen = ref(false);
@@ -248,7 +246,6 @@ const goTo = (url) => {
           </div>
         </template>
       </ModalNoButton>
-        <!---->
 
       <ApprovalShareBox
           title="공유"
