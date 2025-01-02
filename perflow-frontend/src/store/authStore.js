@@ -21,7 +21,8 @@ export const useAuthStore = defineStore('auth', {
             this.accessToken = newAccessToken;
             this.refreshToken = newRefreshToken;
             this.isLogin = true;
-
+            localStorage.setItem("accessToken", newAccessToken);
+            localStorage.setItem("refreshToken", newRefreshToken);
             const decoded = jwtDecode(newAccessToken);
             this.empId = decoded.empId;
             this.empName = decoded.name;
@@ -86,6 +87,8 @@ export const useAuthStore = defineStore('auth', {
             this.refreshToken = null;
             this.isLogin = false;
             this.remainingTime = 0;
+            localStorage.setItem("accessToken", null);
+            localStorage.setItem("refreshToken", null);
             clearInterval(this.timerInterval);
             alert("로그아웃 되었습니다.")
             router.push('/login');
