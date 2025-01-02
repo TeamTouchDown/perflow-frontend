@@ -1,7 +1,7 @@
 <script setup>
 import {useStore} from "@/store/store.js";
 import {useAuthStore} from "@/store/authStore.js";
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import OrgTreeNode from "@/components/approval/OrgTreeNode.vue";
 
 const store = useStore();
@@ -14,8 +14,8 @@ const emps = ref([]); // 선택된 부서의 사원 목록
 const selectedEmps = ref([]); // 선택된 사원 목록
 const loggedInEmpId = authStore.empId;  // 현재 로그인 한 사원 id
 // 결재 방식
-const selectedShareList = ref([]); // 결재 방식과 함께 추가된 사원
-const selectedDeleteList = ref([]); // 결재 목록에서 삭제할 사원
+const selectedShareList = ref([]); // 공유 목록에 추가된 사원
+const selectedDeleteList = ref([]); // 공유 목록에서 삭제할 사원
 
 // emit
 const emit = defineEmits(["updateShareList", "closeModal"]);
@@ -45,23 +45,36 @@ const loadEmpsByDept = async (deptId) => {
 }
 
 // 사원 선택 시 공유 리스트에 추가
-const handleShare = (empId) => {
+const handleShare = () => {
 
-  const employee = emps.value.find((emp) => emp.empId === empId);
-  if (employee && !selectedShareList.value.some((e) => e.empId === empId)) {
-    selectedShareList.value.push({
-      empId: employee.empId,
-      name: employee.name,
-      position: employee.position,
-    });
-  }
+  selectedEmps.value.forEach((empId) => {
+    const employee = emps.value.find((emp) => emp.empId === empId);
+    if (employee && !selectedShareList.value.some((e) => e.empId === empId)) {
+      selectedShareList.value.push({
+        empId: employee.empId,
+        name: employee.name,
+        position: employee.position,
+      });
+    }
+  });
 }
+
+// selectedEmps 변경 시 handleShare 호출
+watch(selectedEmps, (newSelectedEmps) => {
+  handleShare();
+});
 
 // 공유 목록 사원 삭제
 const deleteSelectedItems = () => {
   selectedShareList.value = selectedShareList.value.filter(
       (item) => !selectedDeleteList.value.includes(item.empId)
   );
+
+  // 선택된 사원 목록에서 삭제
+  selectedEmps.value = selectedEmps.value.filter(
+      (empId) => !selectedDeleteList.value.includes(empId)
+  );
+
   // 체크박스 초기화
   selectedDeleteList.value = [];
 }
@@ -117,7 +130,15 @@ onMounted(() => {
         <span class="header-position">직위</span>
       </div>
       <ul>
-        <li></li>
+        <li v-for="emp in selectedShareList" :key="emp.empId">
+          <span class="share-name">{{ emp.name }}</span>
+          <span class="share-position">{{ emp.position }}</span>
+          <input
+            type="checkbox"
+            :value="emp.empId"
+            v-model="selectedDeleteList"
+          />
+        </li>
       </ul>
     </div>
 
