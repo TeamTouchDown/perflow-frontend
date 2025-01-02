@@ -174,18 +174,23 @@ onMounted(() => {
       </div>
       <hr>
       <div class="excel">
-        <div @mouseenter="tooltipVisible=true" @mouseleave="tooltipVisible=false">
-          <ExcelDropDown
-              buttonName="엑셀"
-              :menuItems="menuItem"
-          />
-          <!-- 툴팁 -->
-          <ToolTip
-              :text="tooltipText"
-              :visible.sync="tooltipVisible"
-              :position="tooltipPosition"
-              :width="tooltipWidth"
-          />
+        <div class="excel-btn">
+          <button class="insurance-btn">
+            보험료 설정
+          </button>
+          <div @mouseenter="tooltipVisible=true" @mouseleave="tooltipVisible=false">
+            <ExcelDropDown
+                buttonName="엑셀"
+                :menuItems="menuItem"
+            />
+            <!-- 툴팁 -->
+            <ToolTip
+                :text="tooltipText"
+                :visible.sync="tooltipVisible"
+                :position="tooltipPosition"
+                :width="tooltipWidth"
+            />
+          </div>
         </div>
       </div>
       <div class="table">
@@ -283,6 +288,26 @@ hr {
   padding: 0;
   margin: 0 0 15px 0;
   position: relative;
+}
+
+.excel-btn {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.insurance-btn {
+  width: 100px;
+  height: 40px;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: bold;
+  color: white;
+  background-image: linear-gradient(to right, #f37321 0%, #fb0 100%);
+  cursor: pointer;
 }
 
 .table {
