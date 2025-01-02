@@ -51,8 +51,8 @@ const pwdRegister = async (token) => {
 </script>
 
 <template>
-  <Alert :model-value=successModalVisible message="비밀번호 등록에 성공했습니다! 로그인 페이지로 이동합니다!" @update:visible="updateSuccessModalVisible"/>
-  <Alert :model-value=failModalVisible message="비밀번호 등록에 실패했습니다. 입력값을 확인해주세요." @update:visible="updateFailModalVisible"/>
+  <Alert :model-value=successModalVisible message="비밀번호 등록에 성공했습니다! 로그인 페이지로 이동합니다!" @update:modelValue="updateSuccessModalVisible"/>
+  <Alert :model-value=failModalVisible message="비밀번호 등록에 실패했습니다. 입력값을 확인해주세요." @update:modelValue="updateFailModalVisible"/>
   <article id="pwd-register-div">
     <p class="title">Perflow 가입 비밀번호 등록</p>
     <div class="input-group">
