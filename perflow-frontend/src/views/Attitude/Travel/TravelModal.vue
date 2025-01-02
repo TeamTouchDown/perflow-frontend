@@ -5,6 +5,9 @@ import ModalBasic from "@/components/common/ModalBasic.vue";
 import SearchGroupBar from "@/components/common/SearchGroupBar.vue";
 import ButtonDropDown from "@/components/common/ButtonDropDown.vue";
 import api from "@/config/axios.js";
+import { useStore } from "@/store/store.js";
+
+const store = useStore();
 
 // 부모에서 전달된 props 정의
 defineProps({
@@ -12,91 +15,104 @@ defineProps({
 });
 
 // 부모로 이벤트 전달 설정
-const emit = defineEmits(["close"]);
+const emit = defineEmits(["close", "travel-success"]);
 
 // 상태 관리
-const annualType = ref(""); // 연차 구분
-const applyDate = ref("");  // 연차 신청일
-const approver = ref("");   // 결재자
-const startDate = ref("");  // 기간 시작일
-const endDate = ref("");    // 기간 종료일
-const errorMessage = ref(""); // 에러 메시지
+const travelDivision = ref(""); // 출장 구분
+const travelReason = ref("");   // 출장 사유
+const approver = ref("");       // 결재자
+const startDate = ref("");      // 기간 시작일
+const endDate = ref("");        // 기간 종료일
+const errorMessage = ref("");   // 에러 메시지
 
-// 연차 구분 옵션
-const annualTypeOptions = [
-  { label: "종일 연차", value: "FULLDAY" },
-  { label: "오전 반차", value: "MORNINGHALF" },
-  { label: "오후 반차", value: "AFTERNOONHALF" },
+// 출장 구분 옵션
+const travelDivisionOptions = [
+  { label: "국내 출장", value: "DOMESTIC" },
+  { label: "해외 출장", value: "OVERSEAS" },
 ];
 
-// 날짜 포맷 함수 (외부 정의)
+// 날짜 포맷 함수
 const formatDate = (date, time) => {
   // 날짜 포맷을 'YYYY-MM-DDTHH:mm:ss' 형식으로 변환
+  if (!date) return "";
   const isoDate = new Date(date).toISOString().split('T')[0];
-  return `${isoDate}T${time}`;
+  const timeStr = time.split(':')[0] + ':' + time.split(':')[1];
+  return `${isoDate}T${timeStr}:00`;
 };
 
 const handleApply = async () => {
-  if (!annualType.value) { // 연차 유형 미선택 시 에러 처리
-    alert("연차 구분을 선택해 주세요.");
+  if (!travelDivision.value) { // 출장 유형 미선택 시 에러 처리
+    alert("출장 구분을 선택해 주세요.");
+    return;
+  }
+  if (!startDate.value || !endDate.value) {
+    alert("시작일과 종료일을 입력해 주세요.");
+    return;
+  }
+  if (new Date(startDate.value) > new Date(endDate.value)) {
+    alert("종료일은 시작일보다 뒤이어야 합니다.");
+    return;
+  }
+  if (!approver.value) {
+    alert("결재자 사번을 입력해 주세요.");
+    return;
+  }
+  if (!travelReason.value) {
+    alert("출장 사유를 입력해 주세요.");
     return;
   }
   try {
     // 1. 입력값 가져오기
     const requestData = {
-      approver: approver.value, // 결재자 사번
-      annualStart: formatDate(startDate.value, "09:00:00"), // 시작 시간 반영
-      annualEnd: formatDate(endDate.value, "18:00:00"),     // 종료 시간 반영
-      annualType: annualType.value,                        // 연차 유형
+      approverId: approver.value, // 결재자 사번
+      enrollTravel: formatDate(new Date(), "09:00:00"), // 신청일 (현재 날짜)
+      travelStart: formatDate(startDate.value, "09:00:00"), // 시작 시간 반영
+      travelEnd: formatDate(endDate.value, "18:00:00"),     // 종료 시간 반영
+      travelDivision: travelDivision.value,                 // 출장 유형
+      travelReason: travelReason.value,                     // 출장 사유
     };
 
     // 요청 데이터 확인
     console.log("Request Data:", requestData);
 
     // 2. 서버 요청 (API 호출)
-    const response = await api.post('/emp/annual', requestData);
+    store.showLoading();
+    const response = await api.post('/emp/approval/travels', requestData);
+    store.hideLoading();
 
     // 3. 성공 처리
-    console.log('연차 신청 성공:', response);
-    alert('연차 신청이 완료되었습니다!');
+    console.log('출장 신청 성공:', response);
+    alert('출장 신청이 완료되었습니다!');
+    emit('close');
+    emit('travel-success');
   } catch (error) {
     // 4. 에러 처리
-    console.error('연차 신청 실패:', error);
+    console.error('출장 신청 실패:', error);
+    store.hideLoading();
 
     if (error.response) {
       console.error('서버 응답 데이터:', error.response.data); // 서버 에러 메시지 출력
-      alert(`연차 신청 실패: ${error.response.data.message || '알 수 없는 오류'}`);
+      alert(`출장 신청 실패: ${error.response.data.message || '알 수 없는 오류'}`);
     } else {
       alert('올바르지 않은 값이 입력되었습니다.');
     }
   }
 };
 
-
 const resetForm = () => {
-  annualType.value = "";
-  applyDate.value = "";
+  travelDivision.value = "";
+  travelReason.value = "";
   approver.value = "";
   startDate.value = "";
   endDate.value = "";
   errorMessage.value = "";
 };
-/*watch(
-    () => props.isOpen,
-    (newVal, oldVal) => {
-      if (newVal === true) {
-        // 모달이 "열릴 때" 폼 초기화
-        resetForm();
-      }
-    }
-);*/
 
-// ButtonDropDown에서 선택된 값을 annualType에 반영
-const handleAnnualTypeSelect = (selectedLabel) => {
-  // ButtonDropDown은 label을 반환하므로,
-  // annualTypeOptions에서 해당 label을 가진 value를 찾는다.
-  const option = annualTypeOptions.find(opt => opt.label === selectedLabel);
-  annualType.value = option ? option.value : "";
+
+// ButtonDropDown에서 선택된 값을 travelDivision에 반영
+const handleTravelDivisionSelect = (selectedLabel) => {
+  const option = travelDivisionOptions.find(opt => opt.label === selectedLabel);
+  travelDivision.value = option ? option.value : "";
 };
 </script>
 
@@ -104,37 +120,46 @@ const handleAnnualTypeSelect = (selectedLabel) => {
   <div v-if="isOpen" class="modal-wrapper">
     <ModalBasic
         :isOpen="isOpen"
-        title="연차 신청하기"
+        title="출장 신청하기"
         width="800px"
-        height="450px"
+        height="550px"
         @close="emit('close')"
     >
       <!-- 전체 컨테이너 -->
       <div class="modal-container">
-        <!-- 연차 신청 폼 -->
+        <!-- 출장 신청 폼 -->
         <div class="modal-body">
           <div class="form-container">
             <div class="form-group date-range">
-              <SearchGroupBar v-model="startDate" placeholder="연차 시작일" type="date"/>
+              <SearchGroupBar v-model="startDate" placeholder="출장 시작일" type="date"/>
               ~
-              <SearchGroupBar v-model="endDate" placeholder="연차 종료일" type="date"/>
+              <SearchGroupBar v-model="endDate" placeholder="출장 종료일" type="date"/>
             </div>
 
-            <div class="form-group search-box">
+            <div class="form-group">
               <SearchGroupBar
                   v-model="approver"
                   placeholder="결재자 사번을 입력해주세요"
                   type="text"
               />
             </div>
+
+            <div class="form-group">
+              <SearchGroupBar
+                  v-model="travelReason"
+                  placeholder="출장 사유를 입력해주세요"
+                  type="text"
+              />
+            </div>
+
             <div class="form-group">
               <ButtonDropDown
-                  :options="annualTypeOptions"
-                  default-option="연차 구분"
-                  v-model="annualType"
+                  :options="travelDivisionOptions"
+                  default-option="출장 구분"
+                  v-model="travelDivision"
                   width="200px"
                   height="40px"
-                  @select="handleAnnualTypeSelect"
+                  @select="handleTravelDivisionSelect"
               />
             </div>
 
@@ -145,14 +170,13 @@ const handleAnnualTypeSelect = (selectedLabel) => {
 
         <!-- 푸터 버튼 -->
         <div class="modal-footer">
-          <ButtonBasic label="취소" size = "medium" color="gray" @click="emit('close')" />
-          <ButtonBasic label="신청" size = "medium" color="orange" @click="handleApply" />
+          <ButtonBasic label="취소" size="medium" color="gray" @click="emit('close')"/>
+          <ButtonBasic label="신청" size="medium" color="orange" @click="handleApply"/>
         </div>
       </div>
     </ModalBasic>
   </div>
 </template>
-
 
 <style scoped>
 .modal-wrapper {
@@ -172,7 +196,7 @@ const handleAnnualTypeSelect = (selectedLabel) => {
 .modal-container {
   display: flex;
   flex-direction: column;
-  height: 350px; /* 모달 높이를 100%로 유지 */
+  height: 100%; /* 모달 높이를 100%로 유지 */
 }
 
 .error-message {
@@ -180,17 +204,20 @@ const handleAnnualTypeSelect = (selectedLabel) => {
   font-size: 14px;
   margin-top: 10px;
 }
+
 .form-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 15px;
   padding: 20px;
 }
+
 .form-group {
   display: flex;
   align-items: center;
   gap: 10px;
 }
+
 .modal-content {
   display: flex;
   flex-direction: column;
@@ -199,13 +226,15 @@ const handleAnnualTypeSelect = (selectedLabel) => {
   height: calc(100% - 60px); /* 버튼 높이를 뺀 나머지 영역 사용 */
   overflow-y: auto; /* 스크롤 필요 시 추가 */
 }
+
 /* 모달 본문 */
 .modal-body {
   flex: 2; /* 남은 공간 모두 차지 */
   overflow-y: visible; /* 내부 스크롤 활성화 */
   padding: 5px;
-  height: 400px/* 내용 여백 */
+  height: 400px; /* 내용 여백 */
 }
+
 .modal-header {
   padding: 10px 20px; /* 헤더 패딩 최소화 */
   font-size: 18px; /* 글자 크기 조정 */
