@@ -50,12 +50,15 @@ const closeModal = () => {
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
+  min-width: 400px;
+  min-height: 150px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
 .alert-message {
   font-size: 20px;
+  margin-top: 20px;
   margin-bottom: 20px;
   color: #3C4651;
 }
@@ -69,6 +72,7 @@ const closeModal = () => {
   border-radius: 10px;
   font-size: 15px;
   font-weight: bold;
+  margin-top: 30px;
   color: white;
   background-image: linear-gradient(to right, #f37321 0%, #fb0 100%);
   cursor: pointer;
