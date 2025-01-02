@@ -3,34 +3,50 @@ import {ref} from "vue";
 import api from "@/config/axios.js";
 import { useAuthStore } from '@/store/authStore.js';
 import router from "@/router/router.js";
+import Alert from "@/components/common/Alert.vue";
 
 const empId = ref("");
 const password = ref("")
+const modalVisible = ref(false);
+const failModalVisible = ref(false);
+const updateModalVisible = (value) => {
 
+  modalVisible.value = value;
+  if( value === false) {
+    router.push("/main-page");
+  }
+}
+const updateFailModalVisible = (value) => {
+
+  failModalVisible.value = value;
+}
 const login = async () => {
 
-  const authStore = useAuthStore();
+  try{
+    const authStore = useAuthStore();
 
-  const response = await api.post(
-      `/login`,
-      {
-        empId : empId.value,
-        password : password.value
-      }
-  );
+    const response = await api.post(
+        `/login`,
+        {
+          empId : empId.value,
+          password : password.value
+        }
+    );
+    updateModalVisible(true);
+    const accessToken = response.headers.get(`Authorization`);
+    const refreshToken = response.headers.get(`refreshToken`);
 
-  const accessToken = response.headers.get(`Authorization`);
-  const refreshToken = response.headers.get(`refreshToken`);
-
-  authStore.setTokens(accessToken, refreshToken);
-
-  alert("로그인 되었습니다.")
-  await router.push("/main-page");
+    authStore.setTokens(accessToken, refreshToken);
+  } catch (error) {
+    updateFailModalVisible(true);
+  }
 }
 </script>
 
 <template>
   <article id="login-div">
+    <Alert :visible=modalVisible message="로그인에 성공했습니다!" @update:visible="updateModalVisible"/>
+    <Alert :visible=failModalVisible message="로그인에 실패했습니다. 입력값을 확인해주세요." @update:visible="updateFailModalVisible"/>
     <p class="title">Perflow 로그인</p>
     <div class="input-group">
       <span class="input-title">사번</span><br>
