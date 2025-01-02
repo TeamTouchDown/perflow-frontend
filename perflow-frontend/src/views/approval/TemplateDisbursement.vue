@@ -338,21 +338,15 @@ const goTo = (url) => {
 
     <!-- 결재선 -->
     <div class="box-container">
-      <DropdownBasic
-          defaultOption="지출결의서"
-          :options="dropdownOptions"
-          @selectOption="handleDropdownSelect"
-      />
-      <!-- 드롭 다운 -->
-      <span class="dropdown-title">서식 선택</span>
-      <ButtonDropDown2
-          :options="dropdownOptions"
-          defaultOption="기본 서식"
-          width="155px"
-          height="35px"
-          fontSize="15px"
-          @selectId="handleDropdownSelect"
-      />
+
+      <div class="dropdown-container">
+        <span class="dropdown-title">서식 선택</span>
+        <DropdownBasic
+            defaultOption="지출결의서"
+            :options="dropdownOptions"
+            @selectOption="handleDropdownSelect"
+        />
+      </div>
 
       <ApprovalShareBox
           title="결재선"
@@ -845,5 +839,16 @@ const goTo = (url) => {
   padding: 10px;
   border-bottom: 2px solid #ff6600;
   border-top: 2px solid #ff6600;
+}
+
+.dropdown-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.dropdown-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #3C4651;
 }
 </style>

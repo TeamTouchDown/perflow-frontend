@@ -223,7 +223,7 @@ const goTo = (url) => {
       </div>
 
       <ApprovalShareBox
-          title="테스트"
+          title="결재선"
           :placeholder="approvalData.length ? '' : '결재선이 없습니다.'"
           :data="approvalData.map((item) => ({
           ...item,
@@ -250,10 +250,8 @@ const goTo = (url) => {
       </ModalNoButton>
         <!---->
 
-      <!-- 테스트 -->
-      <!-- 테스트 -->
       <ApprovalShareBox
-          title="테스트"
+          title="공유"
           :placeholder="shareData.length ? '' : '공유처가 없습니다.'"
           :data="shareData.map((item) => ({
           type: '공유',

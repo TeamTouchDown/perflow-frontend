@@ -10,6 +10,7 @@ import {createNewDocument} from "@/config/approval.js";
 import router from "@/router/router.js";
 import ButtonDropDown2 from "@/components/common/ButtonDropDown2.vue";
 import SearchGroupBar from "@/components/common/SearchGroupBar.vue";
+import DropdownBasic from "@/components/common/DropdownBasic.vue";
 
 const selectedApprovalEmployees = ref([]); // 체크된 사원 목록
 const selectedShareEmployees = ref([]); // 체크된 사원 목록
@@ -308,15 +309,14 @@ const goTo = (url) => {
     <div class="box-container">
 
       <!-- 드롭 다운 -->
-      <span class="dropdown-title">서식 선택</span>
-      <ButtonDropDown2
-          :options="dropdownOptions"
-          defaultOption="기본 서식"
-          width="155px"
-          height="35px"
-          fontSize="15px"
-          @selectId="handleDropdownSelect"
-      />
+      <div class="dropdown-container">
+        <span class="dropdown-title">서식 선택</span>
+        <DropdownBasic
+            defaultOption="지출결의서"
+            :options="dropdownOptions"
+            @selectOption="handleDropdownSelect"
+        />
+      </div>
 
       <ApprovalShareBox
           title="결재선"
@@ -757,4 +757,14 @@ const goTo = (url) => {
   margin-right: 15px;
 }
 
+.dropdown-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.dropdown-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #3C4651;
+}
 </style>
