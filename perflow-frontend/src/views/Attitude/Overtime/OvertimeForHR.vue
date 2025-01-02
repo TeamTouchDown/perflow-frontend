@@ -41,8 +41,8 @@ const columns = [
   { label: "결재자 이름", field: "approverName" },     // 승인자 이름
   { label: "초과근무 유형", field: "overtimeType" },   // 초과근무 유형
   { label: "신청일", field: "enrollOvertime" },        // 신청일
-  { label: "초과근무 시작일", field: "overtimeStart" }, // 초과근무 시작일
-  { label: "초과근무 종료일", field: "overtimeEnd" },   // 초과근무 종료일
+  { label: "초과근무 시작시간", field: "overtimeStart" }, // 초과근무 시작일
+  { label: "초과근무 종료시간", field: "overtimeEnd" },   // 초과근무 종료일
   { label: "초과근무 상태", field: "overtimeStatus" },  // 초과근무 상태// 상태
 ];
 
@@ -156,7 +156,7 @@ onMounted(() => {
   <div id="header-div">
     <div id="header-top" class="flex-between">
 
-      <p id="title">인사팀 출장 내역 조회</p>
+      <p id="title">인사팀 초과근무 내역 조회</p>
     </div>
 
 
@@ -166,12 +166,12 @@ onMounted(() => {
         <div class="conditions">
           <SearchGroupBar
               v-model="searchCriteria.fromDate"
-              placeholder="연차 시작일"
+              placeholder="초과근무 시작일"
               type="date"
           />
           <SearchGroupBar
               v-model="searchCriteria.toDate"
-              placeholder="연차 종료일"
+              placeholder="초과근무 종료일"
               type="date"
           />
           <ButtonDropDown
