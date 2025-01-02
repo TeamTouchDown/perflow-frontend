@@ -41,8 +41,8 @@ const columns = [
   { label: "결재자 이름", field: "approverName" },     // 승인자 이름
   { label: "초과근무 유형", field: "overtimeType" },   // 초과근무 유형
   { label: "신청일", field: "enrollOvertime" },        // 신청일
-  { label: "초과근무 시작시간", field: "overtimeStart" }, // 초과근무 시작일
-  { label: "초과근무 종료시간", field: "overtimeEnd" },   // 초과근무 종료일
+  { label: "초과 시작시간", field: "overtimeStart" }, // 초과근무 시작일
+  { label: "초과 종료시간", field: "overtimeEnd" },   // 초과근무 종료일
   { label: "초과근무 상태", field: "overtimeStatus" },  // 초과근무 상태// 상태
 ];
 
@@ -56,6 +56,16 @@ const statusOptions = [
   { label: "승인", value: "CONFIRMED" },
   { label: "반려", value: "REJECTED" },
 ];
+const overtimeStatusMap = {
+  PENDING: "대기",
+  CONFIRMED: "승인",
+  REJECTED: "반려",
+};
+const overtimeTypeMap = {
+  NIGHT: "야간 근무",
+  EXTENDED: "연장 근무",
+  HOLIDAY: "휴일 근무"
+}
 
 /* ----------------------------
  * API로 초과근무 데이터 가져오기
@@ -74,11 +84,11 @@ const fetchOvertimeData = async () => {
       empName: item.empName,                               // empName
       approverId: item.approverId,                         // approverId
       approverName: item.approverName,                     // approverName
-      overtimeType: item.overtimeType,                     // 초과근무 유형
+      overtimeType: overtimeTypeMap[item.overtimeType],                     // 초과근무 유형
       enrollOvertime: dayjs(item.enrollOvertime).format("YYYY-MM-DD"), // 신청일
       overtimeStart: dayjs(item.overtimeStart).format("YYYY-MM-DD"),   // 초과근무 시작일
       overtimeEnd: dayjs(item.overtimeEnd).format("YYYY-MM-DD"),       // 초과근무 종료일
-      overtimeStatus: item.overtimeStatus,                 // 초과근무 상태
+      overtimeStatus: overtimeStatusMap[item.overtimeStatus],                 // 초과근무 상태
       overtimeRejectReason: item.overtimeRejectReason,     // 반려 사유
       updateDatetime: dayjs(item.updateDatetime).format("YYYY-MM-DD HH:mm:ss"), // 수정일
       status: item.status,                                 // 상태

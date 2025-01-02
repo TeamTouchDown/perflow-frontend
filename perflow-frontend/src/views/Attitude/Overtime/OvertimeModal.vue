@@ -260,7 +260,10 @@ onMounted(async () => {
                   height="40px"
               />
             </div>-->
-            <SearchButtonDropDown default-option="결재자 사번을 입력해주세요" width="300px" :options="empList" @select-id="updateApproverId" />
+            <SearchButtonDropDown
+                default-option="결재자 사번을 입력해주세요"
+                width="300px" :options="empList"
+                @select-id="updateApproverId" />
             <!-- 에러 메시지 -->
             <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
           </div>
