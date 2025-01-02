@@ -91,70 +91,71 @@ onMounted(() => {
 </script>
 
 <template>
+  <div class="share-container">
 
-  <div class="org-tree">
+    <div class="org-tree">
 
-    <!-- 부서 목록 -->
-    <div class="tree-container">
-      <div class="tree-header">
-      </div>
-      <ul>
-        <OrgTreeNode
-            v-for="dept in topDepts"
-            :key="dept.deptId"
-            :dept="dept"
-            @onSelectDept="loadEmpsByDept"
-        />
-      </ul>
-    </div>
-
-    <!-- 사원 목록 -->
-    <div class="emp-container">
-      <div class="emp-header">
-        <span class="header-name">이름</span>
-        <span class="header-position">직위</span>
-      </div>
-      <div class="emp-list">
+      <!-- 부서 목록 -->
+      <div class="tree-container">
+        <div class="tree-header">
+        </div>
         <ul>
-          <li v-for="emp in emps" :key="emp.empId">
-            <input
-                type="checkbox"
-                :value="emp.empId"
-                v-model="selectedEmps"
-            />
-            <span class="emp-name">{{ emp.name }}</span>
-            <span class="emp-position">{{ emp.position }}</span>
-          </li>
+          <OrgTreeNode
+              v-for="dept in topDepts"
+              :key="dept.deptId"
+              :dept="dept"
+              @onSelectDept="loadEmpsByDept"
+          />
         </ul>
       </div>
-    </div>
 
-    <!-- 선택된 사원 리스트 -->
-    <div class="share-list-container">
-      <div class="type-header">
-        <span class="header-name">이름</span>
-        <span class="header-position">직위</span>
+      <!-- 사원 목록 -->
+      <div class="emp-container">
+        <div class="emp-header">
+          <span class="header-name">이름</span>
+          <span class="header-position">직위</span>
+        </div>
+        <div class="emp-list">
+          <ul>
+            <li v-for="emp in emps" :key="emp.empId">
+              <input
+                  type="checkbox"
+                  :value="emp.empId"
+                  v-model="selectedEmps"
+              />
+              <span class="emp-name">{{ emp.name }}</span>
+              <span class="emp-position">{{ emp.position }}</span>
+            </li>
+          </ul>
+        </div>
       </div>
-      <ul>
-        <li v-for="emp in selectedShareList" :key="emp.empId">
-          <span class="share-name">{{ emp.name }}</span>
-          <span class="share-position">{{ emp.position }}</span>
-          <input
-            type="checkbox"
-            :value="emp.empId"
-            v-model="selectedDeleteList"
-          />
-        </li>
-      </ul>
+
+      <!-- 선택된 사원 리스트 -->
+      <div class="share-list-container">
+        <div class="share-header">
+          <span class="header-name">이름</span>
+          <span class="header-position">직위</span>
+        </div>
+        <div class="share-list">
+          <ul>
+            <li v-for="emp in selectedShareList" :key="emp.empId">
+              <span class="share-name">{{ emp.name }}</span>
+              <span class="share-position">{{ emp.position }}</span>
+              <input
+                  type="checkbox"
+                  :value="emp.empId"
+                  v-model="selectedDeleteList"
+              />
+            </li>
+          </ul>
+        </div>
+
+      </div>
     </div>
 
-    <!-- 삭제 버튼 -->
-    <div class="delete-container">
+    <div class="share-buttons">
       <button class="delete-button" @click="deleteSelectedItems">삭제하기</button>
-    </div>
-    <!-- 저장 버튼 -->
-    <div class="save-container">
-      <button class="save-button" @click="saveSelection">공유 저장</button>
+      <button class="save-button" @click="saveSelection">저장하기</button>
     </div>
   </div>
 
@@ -162,9 +163,21 @@ onMounted(() => {
 
 <style scoped>
 
+.share-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-left: 50px;
+}
 
 .org-tree {
   display: flex;  /* 부서, 사원 목록을 한 행에 배치 */
+}
+
+.share-buttons {
+  display: flex;
+  justify-content: flex-end;  /* 버튼 오른쪽 정렬 */
+  gap: 10px;  /* 버튼 간 간격 */
 }
 
 .tree-container {
@@ -190,18 +203,19 @@ onMounted(() => {
 
 .share-list-container {
   position: relative; /* 헤더를 컨테이너 안에 고정하기 위함 */
-  width: 270px;
+  width: 160px;
   height: 270px;
   border: 1px solid #d9d9d9;
   border-radius: 10px;
   overflow-y: auto; /* 스크롤 활성화 */
-  padding: 50px 0px 20px 20px;
+  padding: 50px 0 20px 0;
+  margin-left: 20px;
 }
 
 /* 컨테이너 헤더 */
 .tree-header,
 .emp-header,
-.type-header {
+.share-header {
   position: absolute; /* 헤더를 컨테이너 상단에 고정 */
   top: 10px;
   left: 0;
@@ -229,11 +243,11 @@ onMounted(() => {
   margin-left: 30px;
 }
 
-.type-header .header-name {
-  margin-left: 13px;
+.share-header .header-name {
+  margin-left: 23px;
 }
-.type-header .header-position {
-  margin-left: 20px;
+.share-header .header-position {
+  margin-left: 25px;
 }
 
 /* ul, li 스타일 */
@@ -273,6 +287,12 @@ li {
   padding: 3px 0;
 }
 
+.share-list li {
+  display: flex;
+  align-items: center;
+  padding: 3px 0;
+}
+
 .emp-name,
 .emp-position {
   white-space: nowrap;  /* 줄바꿈 x */
@@ -289,7 +309,16 @@ li {
   text-align: left;
 }
 
-button {
+.share-name {
+  width: 80px;
+  text-align: center;
+}
+.share-position {
+  width: 50px;
+  text-align: center;
+}
+
+.button-group button {
   background-color: #fff;
   color: #3C4651;
   border: 1px solid #AFA9A9;
@@ -305,14 +334,26 @@ button {
 
 /* 결재 목록 행 삭제 버튼 */
 .delete-button {
-  position: absolute; /* 리스트의 오른쪽 끝에 고정 */
-  right: 10px;
+  background-color: #D9D9D9;
   color: #3C4651;
-  border: 1px solid #817F7F;
+  border: none;
   cursor: pointer;
 }
 .delete-button:hover {
   background-color: #F7F7F7; /* 마우스 올릴 때 배경색 변경 */
+}
+
+.save-button {
+  background-image: linear-gradient(to right, #f37321 0%, #fb0 100%);
+  color: white;
+  border: none;
+}
+
+.delete-button,
+.save-button {
+  width: 100px;
+  height: 45px;
+  border-radius: 8px;
 }
 
 /* 스클로 바 스타일 */

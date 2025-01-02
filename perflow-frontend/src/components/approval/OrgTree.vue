@@ -169,7 +169,7 @@ onMounted(() => {
 
       <!-- 선택된 사원 리스트 -->
       <div class="approval-list-container">
-        <div class="type-header">
+        <div class="share-header">
           <span class="header-order">순서</span>
           <span class="header-type">결재종류</span>
           <span class="header-name">이름</span>
@@ -199,7 +199,7 @@ onMounted(() => {
     </div>
     <div class="approval-buttons">
       <button class="delete-button" @click="deleteSelectedItems">삭제하기</button>
-      <button class="save-button" @click="saveSelection">결재선 저장</button>
+      <button class="save-button" @click="saveSelection">저장하기</button>
     </div>
   </div>
 
@@ -266,7 +266,7 @@ onMounted(() => {
 /* 컨테이너 헤더 */
 .tree-header,
 .emp-header,
-.type-header {
+.share-header {
   position: absolute; /* 헤더를 컨테이너 상단에 고정 */
   top: 10px;
   left: 0;
@@ -296,16 +296,16 @@ onMounted(() => {
   margin-left: 30px;
 }
 
-.type-header .header-type {
+.share-header .header-type {
   margin-left: 0px;
 }
-.type-header .header-name {
+.share-header .header-name {
   margin-left: 13px;
 }
-.type-header .header-position {
+.share-header .header-position {
   margin-left: 20px;
 }
-.type-header .header-order {
+.share-header .header-order {
   margin-left: 10px;
   margin-right: 0px;
 }

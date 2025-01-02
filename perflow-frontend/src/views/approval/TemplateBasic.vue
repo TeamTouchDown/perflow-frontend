@@ -397,8 +397,8 @@ const goTo = (url) => {
       <ModalNoButton
           :isOpen="isTestShareModalOpen"
           title="공유 설정 테스트"
-          width="800px"
-          height="500px"
+          width="650px"
+          height="450px"
           @close="closeTestShareModal"
       >
         <template #default>
