@@ -149,32 +149,36 @@ onMounted(() => {
       <div id="search-container">
         <!-- 검색 필드 -->
         <div class="conditions">
-          <SearchGroupBar
-              v-model ="searchCriteria.title"
-              placeholder="제목"
-              type="text"
-              width="500px"
-              height="40px"
-          />
-          <SearchGroupBar
-              v-model ="searchCriteria.fromDate"
-              placeholder="작성일(시작)"
-              type="date"
-          />
-          <SearchGroupBar
-              v-model ="searchCriteria.toDate"
-              placeholder="작성일(끝)"
-              type="date"
-          />
-        </div>
-        <!-- 검색 버튼 -->
-        <div class="button">
-          <ButtonBasic
-              color="orange"
-              size="medium"
-              label="검색하기"
-              @click="handleSearch"
-          />
+          <div class="condition-row">
+            <SearchGroupBar
+                v-model ="searchCriteria.title"
+                placeholder="제목"
+                type="text"
+                width="500px"
+                height="40px"
+            />
+          </div>
+          <div class="condition-row">
+            <SearchGroupBar
+                v-model ="searchCriteria.fromDate"
+                placeholder="작성일(시작)"
+                type="date"
+            />
+            <SearchGroupBar
+                v-model ="searchCriteria.toDate"
+                placeholder="작성일(끝)"
+                type="date"
+            />
+            <!-- 검색 버튼 -->
+            <div class="button">
+              <ButtonBasic
+                  color="orange"
+                  size="medium"
+                  label="검색하기"
+                  @click="handleSearch"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -288,14 +292,19 @@ onMounted(() => {
 
 .conditions {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 10px;  /* 필드 간 간격 */
+  width: 100%
+}
+
+.condition-row {
+  display: flex;
+  gap: 10px;
+  margin-left: 200px;
 }
 
 .button {
-  display: flex;
-  justify-content: flex-end;
-  width: 100% /* 오른쪽 끝에 검색*/
+  margin-left: 138px;
 }
 
 .status-tag {

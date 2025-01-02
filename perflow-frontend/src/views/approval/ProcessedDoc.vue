@@ -151,37 +151,41 @@ onMounted(() => {
       <div id="search-container">
         <!-- 검색 필드 -->
         <div class="conditions">
-          <SearchGroupBar
-              v-model ="searchCriteria.title"
-              placeholder="제목"
-              type="text"
-              width="500px"
-              height="40px"
-          />
-          <SearchGroupBar
-              v-model ="searchCriteria.createUser"
-              placeholder="작성자"
-              type="text"
-          />
-          <SearchGroupBar
-              v-model ="searchCriteria.fromDate"
-              placeholder="작성일(시작)"
-              type="date"
-          />
-          <SearchGroupBar
-              v-model ="searchCriteria.toDate"
-              placeholder="작성일(끝)"
-              type="date"
-          />
-        </div>
-        <!-- 검색 버튼 -->
-        <div class="button">
-          <ButtonBasic
-              color="orange"
-              size="medium"
-              label="검색하기"
-              @click="handleSearch"
-          />
+          <div class="condition-row">
+            <SearchGroupBar
+                v-model ="searchCriteria.title"
+                placeholder="제목"
+                type="text"
+                width="500px"
+                height="40px"
+            />
+            <SearchGroupBar
+                v-model ="searchCriteria.createUser"
+                placeholder="작성자"
+                type="text"
+            />
+          </div>
+          <div class="condition-row">
+            <SearchGroupBar
+                v-model ="searchCriteria.fromDate"
+                placeholder="작성일(시작)"
+                type="date"
+            />
+            <SearchGroupBar
+                v-model ="searchCriteria.toDate"
+                placeholder="작성일(끝)"
+                type="date"
+            />
+            <!-- 검색 버튼 -->
+            <div class="button">
+              <ButtonBasic
+                  color="orange"
+                  size="medium"
+                  label="검색하기"
+                  @click="handleSearch"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -279,7 +283,6 @@ onMounted(() => {
   text-decoration: underline;
 }
 
-
 /* 검색 컨테이너 */
 #search-container {
   display: flex;
@@ -294,8 +297,15 @@ onMounted(() => {
 
 .conditions {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 10px;  /* 필드 간 간격 */
+  width: 100%
+}
+
+.condition-row {
+  display: flex;
+  gap: 10px;
+  margin-left: 50px;
 }
 
 .button {
