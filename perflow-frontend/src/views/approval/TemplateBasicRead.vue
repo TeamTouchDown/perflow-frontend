@@ -17,6 +17,7 @@ const docType = route.query.type;
 const approveSbjStatus = route.query.approveSbjStatus;
 const processDatetime = route.query.processDatetime;
 const comment = route.query.comment;
+const docStatus = route.query.status;
 
 // 초기화
 const title = ref("");
@@ -52,6 +53,18 @@ const fetchDocumentDetail = async () => {
     alert("문서 데이터를 불러오지 못했습니다.");
   }
 };
+
+const formatDocStatus = computed(() => {
+  if (docStatus === "APPROVED") {
+    return "승인";
+  } else if (docStatus === "REJECTED") {
+    return "반려";
+  } else if (docStatus === "ACTIVATED") {
+    return "진행";
+  } else {
+    return docStatus;
+  }
+});
 
 // 작성일시 형식 변환
 const formatCreateDatetime = (rawString) => {
@@ -173,6 +186,14 @@ onMounted(() => {
 
     <div class="box-container" >
 
+      <!-- 처리/수신/발신함 문서 조회 시 문서 상태 -->
+      <div class="doc-container">
+        <div v-if="docType !== 'waiting'" class="doc-status-container">
+          <span class="doc-status-title">문서 상태</span>
+          <span class="doc-status-value" :class="formatDocStatus"> {{ formatDocStatus }}</span>
+        </div>
+      </div>
+
       <!-- 대기 문서 결재 -->
       <div class="waiting-approval-container">
         <div v-if="docType === 'waiting'" class="doc-approval-container">
@@ -288,6 +309,25 @@ onMounted(() => {
   gap: 20px;
   margin-right: 50px;
   margin-left: 70px;
+}
+
+/* 문서 상태 */
+.doc-status-container {
+  margin-top: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 20px;
+  width: 300px;
+  background-color: #fafafa;
+  align-items: center;
+  justify-content: center;
+}
+
+.doc-status-title {
+  color: #3C4651;
+  font-weight: bold;
+  font-size: 15px;
+  margin-right: 30px;
 }
 
 .field-container {
@@ -513,5 +553,22 @@ onMounted(() => {
   background: #D9D9D9;
   border-radius: 10px;
 }
-
+.doc-status-value {
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 12px;
+}
+.doc-status-value.진행 {
+  color: #bd76f8;
+  border: 1px solid #bd76f8;
+}
+.doc-status-value.승인 {
+  color: #28a745; /* 초록색 */
+  border: 1px solid #28a745;
+}
+.doc-status-value.반려 {
+  color: #ff8c00; /* 주황색 */
+  border: 1px solid #ff8c00; /* 주황색 */
+}
 </style>
