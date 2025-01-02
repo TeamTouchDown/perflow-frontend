@@ -7,6 +7,8 @@ import ButtonDropDown from "@/components/common/ButtonDropDown.vue";
 import DateSearchBar from "@/components/common/DateSearchBar.vue";
 import EmpButtonDropDown from "@/components/common/SearchButtonDropDown.vue";
 import HRButtonDropDown from "@/components/hr/HRButtonDropDown.vue";
+import router from "@/router/router.js";
+import Alert from "@/components/common/Alert.vue";
 
 const props = defineProps({
       isSidebarOpen: {
@@ -78,6 +80,22 @@ const fetchEmpList = async () => {
   })).data;
   empList.value = response.employeeList.map(emp => ({ label: emp.name, id: emp.empId }));
 }
+
+const successModalVisible = ref(false);
+const failModalVisible = ref(false);
+
+const updateSuccessModalVisible = (value) => {
+
+  successModalVisible.value = value;
+  if(value === false ){
+    location.reload();
+  }
+}
+const updateFailModalVisible = (value) => {
+
+  failModalVisible.value = value;
+}
+
 // 사원 목록 검색
 const fetchEmpListByName = async (name) => {
   const response = (await api.get("/employees/lists/search", {
@@ -97,13 +115,12 @@ const registerAppoint = async () => {
       after : after.value,
       appointDate : appointDate.value
     });
-    alert("발령 등록에 성공했습니다!");
-    location.reload(true);
+    updateSuccessModalVisible(true);
   } catch (error) {
     if (error.response.data.message){
-      alert(error.response.data.message);
+      updateFailModalVisible(true);
     } else {
-      alert("발령 등록 중 오류가 발생했습니다.")
+      updateFailModalVisible(true);
     }
   }
 }
@@ -119,7 +136,9 @@ onMounted(()=>{
 </script>
 
 <template>
-<div class="modify-sidebar" :class="{ open: props.isSidebarOpen }">
+  <Alert :visible=successModalVisible message="발령 등록에 성공했습니다!" @update:visible="updateSuccessModalVisible"/>
+  <Alert :visible=failModalVisible message="발령 등록 중 오류가 발생했습니다." @update:visible="updateFailModalVisible"/>
+  <div class="modify-sidebar" :class="{ open: props.isSidebarOpen }">
   <div id="side-header">
     <img src="../../../assets/image/arrow-right.png" @click="closeSidebar" id="close">
     <p id="title">{{props.title}}</p>

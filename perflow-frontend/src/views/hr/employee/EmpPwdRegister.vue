@@ -4,6 +4,7 @@ import api from "@/config/axios.js";
 import {useRoute} from "vue-router";
 import router from "@/router/router.js";
 import {jwtDecode} from "jwt-decode";
+import Alert from "@/components/common/Alert.vue";
 
 const route = useRoute();
 const token = computed(() => route.query.token);
@@ -14,6 +15,20 @@ const validPwd = computed(()=>{
   return password.value === passwordCheck.value;
 });
 
+const successModalVisible = ref(false);
+const failModalVisible = ref(false);
+
+const updateSuccessModalVisible = (value) => {
+
+  successModalVisible.value = value;
+  if( value === false ) {
+    router.push("/login");
+  }
+}
+const updateFailModalVisible = (value) => {
+
+  failModalVisible.value = value;
+}
 const pwdRegister = async (token) => {
 
   try {
@@ -24,17 +39,20 @@ const pwdRegister = async (token) => {
       empId : empId,
       password : password.value
     });
-    alert("비밀번호 등록에 성공했습니다! 로그인 페이지로 이동합니다!");
-    router.push("/login")
+
+    updateSuccessModalVisible(true);
   } catch (error) {
+
+    updateFailModalVisible(true);
     console.log(error)
-    alert("비밀번호 등록에 실패했습니다. 입력값을 확인해주세요.");
   }
 
 }
 </script>
 
 <template>
+  <Alert :visible=successModalVisible message="비밀번호 등록에 성공했습니다! 로그인 페이지로 이동합니다!" @update:visible="updateSuccessModalVisible"/>
+  <Alert :visible=failModalVisible message="비밀번호 등록에 실패했습니다. 입력값을 확인해주세요." @update:visible="updateFailModalVisible"/>
   <article id="pwd-register-div">
     <p class="title">Perflow 가입 비밀번호 등록</p>
     <div class="input-group">
