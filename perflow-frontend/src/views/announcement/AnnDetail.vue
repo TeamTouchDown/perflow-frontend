@@ -338,6 +338,7 @@ const formatDate = (datetime) => {
   margin-bottom: 20px;
   font-size: 16px;
   line-height: 1.5;
+  min-height: 300px;
 }
 
 .file-section h3 {
