@@ -5,7 +5,7 @@ import api from "@/config/axios.js";
 import PagingBar from "@/components/common/PagingBar.vue";
 import ExcelDropDown from "@/components/common/ExcelDropDown.vue";
 import TableMove from "@/components/common/TableMove.vue";
-import ThreeMonthChart from "@/views/payment/ThreeMonthChart.vue";
+import ThreeMonthChart from "@/views/payment/OneYearChart.vue";
 import ThreeYearByMonthChart from "@/views/payment/ThreeYearByMonthChart.vue";
 import ThreeYearChart from "@/views/payment/ThreeYearChart.vue";
 import FileUpload from "@/components/common/FileUpload.vue";
