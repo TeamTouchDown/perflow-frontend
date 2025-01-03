@@ -80,6 +80,7 @@ const routes = [
     {path: '/employees/pwd', name: 'EmpPwdRegister', component: EmpPwdRegister},
 
     // 결재
+    {path: '/approval', name: 'approval', component: ApprovalHome},
     {path: '/approval/home', name: 'approvalHome', component: ApprovalHome},
     {path: '/approval/create', name: 'newDoc', component: TemplateBasic},
     {path: '/approval/waiting', name: 'waitingDoc', component: WaitingDoc},
