@@ -1,9 +1,10 @@
 <script setup>
-import {ref} from "vue";
+import { ref } from "vue";
 import api from "@/config/axios.js";
 import { useAuthStore } from '@/store/authStore.js';
 import router from "@/router/router.js";
 import Alert from "@/components/common/Alert.vue";
+import { initFCMToken } from "@/config/notification/FcmService.js";
 
 const empId = ref("");
 const password = ref("")
@@ -20,6 +21,20 @@ const updateFailModalVisible = (value) => {
 
   failModalVisible.value = value;
 }
+// 기기 유형을 식별하는 함수
+const getDeviceType = () => {
+  let deviceType = 'OTHER';
+  const userAgent = navigator.userAgent;
+  if (userAgent.includes("Chrome") && !userAgent.includes("Edge") && !userAgent.includes("OPR")) { // Edge와 Opera 제외
+    deviceType = "CHROME";
+  } else if (userAgent.includes("Firefox")) {
+    deviceType = "FIREFOX";
+  } else if (userAgent.includes("Safari") && !userAgent.includes("Chrome")) { // Chrome 제외
+    deviceType = "SAFARI";
+  }
+  return deviceType;
+}
+
 const login = async () => {
 
   try{
@@ -34,6 +49,15 @@ const login = async () => {
     );
     const accessToken = response.headers.get(`Authorization`);
     const refreshToken = response.headers.get(`refreshToken`);
+
+    // 기기 유형 식별 및 설정
+    const deviceType = getDeviceType();
+    authStore.setDeviceType(deviceType);
+
+    // FCM 토큰 초기화 및 등록
+    await initFCMToken(authStore.empId, deviceType, (token) => {
+      authStore.setFcmToken(token);
+    });
 
     authStore.setTokens(accessToken, refreshToken);
     updateModalVisible(true);
