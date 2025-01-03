@@ -198,9 +198,12 @@ onMounted(() => {
 
 #nav-logo, .nav-right {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   margin: 0 auto;
   cursor: pointer;
+}
+#nav-logo {
+  margin-right: 300px;
 }
 
 #logo-image {
@@ -224,6 +227,7 @@ onMounted(() => {
   align-items: center;
   display: flex;
   gap: 20px;
+  margin: 0;
 }
 
 #timer {
