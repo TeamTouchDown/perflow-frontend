@@ -8,6 +8,7 @@ import api from "@/config/axios.js";
 import ButtonDropDown from "@/components/common/ButtonDropDown.vue";
 import SearchButtonDropDown from "@/components/common/SearchButtonDropDown.vue";
 import HRButtonDropDown from "@/components/hr/HRButtonDropDown.vue";
+import Alert from "@/components/common/Alert.vue";
 
 const props = defineProps({
       isSidebarOpen: {
@@ -65,6 +66,22 @@ const fetchEmpList = async () => {
   empList.value = response.employeeList.map(emp => ({ label: emp.name, id: emp.empId }));
 }
 
+const successModalVisible = ref(false);
+const failModalVisible = ref(false);
+
+const updateSuccessModalVisible = (value) => {
+
+  successModalVisible.value = value;
+  if(value === false ){
+    location.reload();
+  }
+}
+const updateFailModalVisible = (value) => {
+
+  failModalVisible.value = value;
+}
+
+
 function closeSidebar() {
   emit('close-sidebar')
 }
@@ -79,13 +96,12 @@ const registerDepartment = async () => {
       manageDeptId:manageDeptId.value,
       picId:pic.value
     });
-    alert("부서 등록에 성공했습니다!")
-    location.reload(true);
+    updateSuccessModalVisible(true);
   } catch (error) {
     if (error.response.data.message){
-      alert(error.response.data.message);
+      updateFailModalVisible(true);
     } else {
-      alert("부서 등록 중 오류가 발생했습니다.")
+      updateFailModalVisible(true);
     }
   }
 }
@@ -97,7 +113,9 @@ onMounted(async ()=>{
 </script>
 
 <template>
-<div class="modify-sidebar" :class="{ open: props.isSidebarOpen }">
+  <Alert :model-value=successModalVisible message="부서 등록에 성공했습니다!" @update:modelValue="updateSuccessModalVisible"/>
+  <Alert :model-value=failModalVisible message="부서 등록 중 오류가 발생했습니다." @update:modelValue="updateFailModalVisible"/>
+  <div class="modify-sidebar" :class="{ open: props.isSidebarOpen }">
   <div id="side-header">
     <img src="../../../assets/image/arrow-right.png" @click="closeSidebar" id="close">
     <p id="title">{{props.title}}</p>

@@ -5,6 +5,7 @@ import {computed, onMounted, reactive, ref} from "vue";
 import SubmitButton from "@/components/hr/SubmitButton.vue";
 import api from "@/config/axios.js";
 import HRButtonDropDown from "@/components/hr/HRButtonDropDown.vue";
+import Alert from "@/components/common/Alert.vue";
 
 const props = defineProps({
       isSidebarOpen: {
@@ -41,16 +42,30 @@ const updateJob = async (jobId) => {
       responsibility: responsibility.value,
       deptId: departmentId.value
     });
-    alert("직책 수정 성공!")
-    location.reload(true);
+    updateSuccessModalVisible(true);
   } catch (error) {
     if (error.response.data.message){
-      alert(error.response.data.message);
+      updateFailModalVisible(true);
     } else {
-      alert("직책 수정 중 오류가 발생했습니다.")
+      updateFailModalVisible(true);
     }
   }
 
+}
+
+const successModalVisible = ref(false);
+const failModalVisible = ref(false);
+
+const updateSuccessModalVisible = (value) => {
+
+  successModalVisible.value = value;
+  if(value === false ){
+    location.reload();
+  }
+}
+const updateFailModalVisible = (value) => {
+
+  failModalVisible.value = value;
 }
 
 const fetchDeptList = async () => {
@@ -67,13 +82,15 @@ onMounted(()=>{
 </script>
 
 <template>
+  <Alert :model-value=successModalVisible message="직책 수정 성공!" @update:modelValue="updateSuccessModalVisible"/>
+  <Alert :model-value=failModalVisible message="직책 수정 중 오류가 발생했습니다." @update:modelValue="updateFailModalVisible"/>
 <div class="modify-sidebar" :class="{ open: props.isSidebarOpen }">
   <div id="side-header">
     <img src="../../../assets/image/arrow-right.png" @click="closeSidebar" id="close">
     <p id="title">{{props.title}}</p>
   </div>
   <div id="modify-contents">
-    <p class="sub-title">직책 번호 : {{jobId}}</p>
+    <p class="job-id">직책 번호 : {{jobId}}</p>
     <ModifyInputFeild title="직책명" @update-value="updateName"/>
     <ModifyInputFeild title="직책담당업무" @update-value="updateResponsibility"/>
     <p class="sub-title">부서</p>
@@ -106,6 +123,11 @@ p{
 /* 사이드바가 열릴 때 클래스 */
 .modify-sidebar.open {
   right: 0;
+}
+.job-id{
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 30px;
 }
 #side-header {
   padding: 20px 10px 20px 10px;

@@ -1,26 +1,24 @@
 import { defineStore } from 'pinia';
 import api from "@/config/axios.js";
-import { ref } from "vue";
+import {ref} from "vue";
 import router from "@/router/router.js";
 import {jwtDecode} from "jwt-decode";
 import { deleteTokenFromBackend } from "@/config/notification/FcmService.js";
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
-        accessToken: ref(null),
-        refreshToken: ref(null),
-        empId: ref(null),
-        empName: ref(null),
+        accessToken: ref(),
+        refreshToken: ref(),
+        empId: ref(),
+        empName: ref(),
         isLogin: ref(false),
-        authorities: ref(null),
-        fcmToken: ref(null),
-        deviceType: ref(null),
+        authorities: ref(),
         timerInterval: null,
         remainingTime: 0
     }),
     actions: {
         // 로그인 후 토큰 저장
-        setTokens(newAccessToken, newRefreshToken) {
+        setTokens( newAccessToken, newRefreshToken ) {
             this.accessToken = newAccessToken;
             this.refreshToken = newRefreshToken;
             this.isLogin = true;
@@ -42,8 +40,9 @@ export const useAuthStore = defineStore('auth', {
         },
         // 남은 시간 계산 및 실시간 업데이트
         startTimer() {
-            if (!this.isLogin) {
-                return;
+
+            if(!this.isLogin){
+                return
             }
 
             if (this.timerInterval) {
@@ -61,10 +60,10 @@ export const useAuthStore = defineStore('auth', {
                 const minutes = String(Math.floor((remaining % 3600) / 60)).padStart(2, '0');
                 const seconds = String(remaining % 60).padStart(2, '0');
 
-                this.remainingTime = minutes + '분 ' + seconds + '초';
+                this.remainingTime = minutes+'분 '+seconds+'초';
 
                 if (remaining <= 0) {
-                    alert("로그인 유효기간이 지났습니다.");
+                    alert("로그인 유효기간이 지났습니다.")
                     this.logout(); // 남은 시간이 0이면 로그아웃
                 }
             }, 1000);
@@ -73,8 +72,8 @@ export const useAuthStore = defineStore('auth', {
         // 토큰 갱신
         async refreshAccessToken() {
             try {
-                const response = await api.post('/reissue', {}, {
-                    headers: { refreshToken: this.refreshToken }
+                const response = await api.post('/reissue',{} , {
+                    headers : { refreshToken: this.refreshToken }
                 });
 
                 const newAccessToken = response.headers.get(`Authorization`);
@@ -86,7 +85,7 @@ export const useAuthStore = defineStore('auth', {
 
                 console.log(newAccessToken);
                 console.log(newRefreshToken);
-                this.setTokens(newAccessToken, newRefreshToken);
+                this.setTokens( newAccessToken, newRefreshToken );
                 return newAccessToken; // 갱신된 Access Token 반환
             } catch (error) {
                 console.error('Failed to refresh token:', error);
@@ -127,6 +126,7 @@ export const useAuthStore = defineStore('auth', {
                 router.push('/login');
             }
         },
+
     },
-    persist: true
+    persist:true
 });

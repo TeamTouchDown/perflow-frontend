@@ -3,11 +3,24 @@ import { ref } from "vue";
 import api from "@/config/axios.js";
 import { useAuthStore } from '@/store/authStore.js';
 import router from "@/router/router.js";
+import Alert from "@/components/common/Alert.vue";
 import { initFCMToken } from "@/config/notification/FcmService.js";
 
 const empId = ref("");
 const password = ref("")
+const modalVisible = ref(false);
+const failModalVisible = ref(false);
+const updateModalVisible = (value) => {
 
+  modalVisible.value = value;
+  if( value === false) {
+    router.push("/main-page");
+  }
+}
+const updateFailModalVisible = (value) => {
+
+  failModalVisible.value = value;
+}
 // 기기 유형을 식별하는 함수
 const getDeviceType = () => {
   let deviceType = 'OTHER';
@@ -23,21 +36,19 @@ const getDeviceType = () => {
 }
 
 const login = async () => {
-  const authStore = useAuthStore();
 
-  try {
+  try{
+    const authStore = useAuthStore();
+
     const response = await api.post(
         `/login`,
         {
-          empId: empId.value,
-          password: password.value
+          empId : empId.value,
+          password : password.value
         }
     );
-
     const accessToken = response.headers.get(`Authorization`);
     const refreshToken = response.headers.get(`refreshToken`);
-
-    authStore.setTokens(accessToken, refreshToken);
 
     // 기기 유형 식별 및 설정
     const deviceType = getDeviceType();
@@ -48,17 +59,18 @@ const login = async () => {
       authStore.setFcmToken(token);
     });
 
-    alert("로그인 되었습니다.");
-    await router.push("/main-page");
+    authStore.setTokens(accessToken, refreshToken);
+    updateModalVisible(true);
   } catch (error) {
-    console.error("로그인 실패:", error);
-    alert("로그인에 실패했습니다. 다시 시도해주세요.");
+    updateFailModalVisible(true);
   }
 }
 </script>
 
 <template>
   <article id="login-div">
+    <Alert :model-value=modalVisible message="로그인에 성공했습니다!" @update:modelValue="updateModalVisible"/>
+    <Alert :model-value=failModalVisible message="로그인에 실패했습니다. 입력값을 확인해주세요." @update:modelValue="updateFailModalVisible"/>
     <p class="title">Perflow 로그인</p>
     <div class="input-group">
       <span class="input-title">사번</span><br>

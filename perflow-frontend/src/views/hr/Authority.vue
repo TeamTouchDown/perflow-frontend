@@ -6,6 +6,9 @@ import {computed, onMounted, ref} from "vue";
 import SlideToggle from "@/components/common/SlideToggle.vue";
 import {useStore} from "@/store/store.js";
 import SearchBar from "@/components/common/SearchBar.vue";
+import AppointRegisterSideBar from "@/components/hr/sideBar/AppointRegisterSideBar.vue";
+import Alert from "@/components/common/Alert.vue";
+import router from "@/router/router.js";
 
 const employees = ref([]);
 const selectedEmpId = ref(null);
@@ -24,6 +27,23 @@ const checkAuth = (number) => {
   if (!selectedEmp.value || !selectedEmp.value.authorities) return false;
   return selectedEmp.value.authorities.includes(number);
 };
+const successCreateModalVisible = ref(false);
+const successModalVisible = ref(false);
+const failModalVisible = ref(false);
+
+const updateSuccessCreateModalVisible = (value) => {
+
+  successCreateModalVisible.value = value;
+}
+const updateSuccessModalVisible = (value) => {
+
+  successModalVisible.value = value;
+}
+const updateFailModalVisible = (value) => {
+
+  failModalVisible.value = value;
+}
+
 // 사원 목록 조회
 const fetchEmpList = async () => {
 
@@ -56,7 +76,7 @@ const updateAuthority = async (checked, authId) => {
         empId : selectedEmpId.value,
         authorityId : authId
       });
-      alert("권한 부여 성공!")
+      updateSuccessCreateModalVisible(true);
     } else {
       await api.delete("/master/auth",{
         data:{
@@ -64,7 +84,7 @@ const updateAuthority = async (checked, authId) => {
           authorityId : authId
         }
       });
-      alert("권한 회수 성공!")
+      updateSuccessModalVisible(true);
     }
     await fetchEmpList();
     store.hideLoading();
@@ -77,9 +97,10 @@ const updateAuthority = async (checked, authId) => {
     }
     if (errorMessage){
       store.hideLoading()
-      alert(errorMessage);
+      updateFailModalVisible(true);
     } else {
-      alert("권한 수정 중 오류가 발생했습니다.")
+      store.hideLoading()
+      updateFailModalVisible(true);
     }
   }
 }
@@ -90,6 +111,9 @@ onMounted(()=>{
 </script>
 
 <template>
+  <Alert :model-value=successCreateModalVisible message="권한 부여에 성공했습니다." @update:modelValue="updateSuccessCreateModalVisible"/>
+  <Alert :model-value=successModalVisible message="권한 회수에 성공했습니다." @update:modelValue="updateSuccessModalVisible"/>
+  <Alert :model-value=failModalVisible message="권한 부여중 오류가 발생했습니다." @update:modelValue="updateFailModalVisible"/>
   <div id="authority-container">
     <HeaderContainer title="권한 관리"/>
     <div id="menu"><p class="menu-list">사원 목록</p><p class="menu-list">권한목록</p></div>
@@ -145,6 +169,7 @@ p {
   padding: 30px;
   font-size: 18px;
   border-radius: 10px;
+  overflow-y: auto;
 
 }
 #authority-list {
@@ -192,6 +217,7 @@ p {
   display: flex;
   width: 900px;
   margin-top: 20px;
+  overflow-y: auto; /* 스크롤이 필요할 때 스크롤바 표시 */
 }
 .menu-list {
   width: 400px;
@@ -199,5 +225,25 @@ p {
   text-align: left;
   font-size: 18px;
   font-weight: bold;
+}
+/* 스크롤바 전체 영역 */
+#emp-list::-webkit-scrollbar {
+  width: 3px; /* 스크롤바 너비 */
+}
+
+/* 스크롤바 트랙(바탕) 영역 */
+#emp-list::-webkit-scrollbar-track {
+  background: none; /* 트랙 배경색 */
+}
+
+/* 스크롤바 손잡이(thumb) 영역 */
+#emp-list::-webkit-scrollbar-thumb {
+  background: #D9D9D9; /* 손잡이 색상 */
+  border-radius: 4px; /* 모서리를 둥글게 */
+}
+
+/* 마우스를 손잡이 위에 올렸을 때 색상 변환 */
+#emp-list::-webkit-scrollbar-thumb:hover {
+  background: #555; /* 손잡이 호버 색상 */
 }
 </style>

@@ -2,23 +2,26 @@
 import ButtonBasic from "@/components/common/ButtonBasic.vue";
 import InputField from "@/components/common/InputField.vue";
 import ApprovalShareBox from "@/components/approval/ApprovalShareBox.vue";
-import ModalBasic from "@/components/common/ModalBasic.vue";
 import {computed, ref} from "vue";
-import OrganizationTree from "@/components/approval/OrganizationTree.vue";
-import draggable from "vuedraggable";
 import {createNewDocument} from "@/config/approval.js";
 import router from "@/router/router.js";
-import ButtonDropDown2 from "@/components/common/ButtonDropDown2.vue";
 import SearchGroupBar from "@/components/common/SearchGroupBar.vue";
+import DropdownBasic from "@/components/common/DropdownBasic.vue";
+import ModalNoButton from "@/components/common/ModalNoButton.vue";
+import OrgTree from "@/components/approval/OrgTree.vue";
+import OrgTreeShare from "@/components/approval/OrgTreeShare.vue";
+import Alert from "@/components/common/Alert.vue";
 
-const selectedApprovalEmployees = ref([]); // 체크된 사원 목록
-const selectedShareEmployees = ref([]); // 체크된 사원 목록
-
-const approvalList = ref([]); // 결재 목록
 const approvalData = ref([]);  // approvalShareBox 에 전달할 데이터
-
-const shareList = ref([]);  // 공유 목록
 const shareData = ref([]);  // 모달에서 선택한, approvalShareBox 에 전달할 데이터
+
+// 모달 상태
+const isApprovalModalOpen = ref(false);
+const isShareModalOpen = ref(false);
+const openApprovalModal = () => (isApprovalModalOpen.value = true);
+const closeApprovalModal = () => (isApprovalModalOpen.value = false);
+const openShareModal = () => (isShareModalOpen.value = true);
+const closeShareModal = () => (isShareModalOpen.value = false);
 
 // 서식 드롭다운
 const dropdownOptions = [
@@ -29,87 +32,14 @@ const dropdownOptions = [
 
 // 드롭다운 선택 시 호출
 const handleDropdownSelect = (id) => {
-  router.push({ name: id });
+  console.log(`선택된 드롭다운 옵션 id: ${id}`);
+  router.push({ name: id }).catch((error) => {
+    console.error("라우팅 에러: ", error);
+  });
 }
 
-// 모달 상태
-const isApprovalModalOpen = ref(false);
-const isShareModalOpen = ref(false);  // 공유 모달 상태
-
-// 모달 열기/닫기
-const openApprovalModal = () => (isApprovalModalOpen.value = true);
-const closeApprovalModal = () => (isApprovalModalOpen.value = false);
-
-const openShareModal = () => (isShareModalOpen.value = true);
-const closeShareModal = () => (isShareModalOpen.value = false);
-
-// 설정 저장
-const saveApprovalSettings = () => {
-  approvalData.value = [...approvalList.value];
-  console.log("결재선 설정 저장: approvalData: ", approvalData.value);
-  closeApprovalModal();
-};
-
-const saveShareSettings = () => {
-  shareData.value = [...shareList.value]; // 선택된 공유 데이터
-  console.log("공유 설정 저장 - shareData: ", shareData.value);
-  closeShareModal();
-}
-
-// 조직도에서 선택된 사원 업데이트
-const updateApprovalSelectedEmployees = (employees) => {
-  console.log("updateApprovalSelectedEmployees 호출");
-  console.log("조직도에서 선택된 결재선 사원 목록: ", employees);
-  selectedApprovalEmployees.value = employees;
-  console.log("업데이트 된 selectedApprovalEmployees: ", selectedApprovalEmployees.value);
-};
-
-const updateShareSelectedEmployees = (employees) => {
-  console.log("updateShareSelectedEmployees 호출");
-  console.log("선택된 공유 사원 목록: ", employees);
-  selectedShareEmployees.value = employees;
-  // shareData.value = employees;  // 공유 리스트 업데이트
-  console.log("업데이트 된 shareData: ", shareData.value);
-}
-
-const selectedApproveRows = ref(new Set());
-const selectedShareRows = ref(new Set());
-
-// 체크박스 선택/해제 핸들러
-const toggleApproveRowSelection = (index) => {
-  if (selectedApproveRows.value.has(index)) {
-    selectedApproveRows.value.delete(index); // 이미 선택된 경우 해제
-  } else {
-    selectedApproveRows.value.add(index); // 선택 안 된 경우 추가
-  }
-};
-
-const toggleShareRowSelection = (index) => {
-  if (selectedShareRows.value.has(index)) {
-    selectedShareRows.value.delete(index); // 이미 선택된 경우 해제
-  } else {
-    selectedShareRows.value.add(index); // 선택 안 된 경우 추가
-  }
-};
-
-// 선택된 행 삭제
-const deleteApproveSelectedRows = () => {
-  approvalList.value = approvalList.value.filter(
-      (_, index) => !selectedApproveRows.value.has(index)
-  );
-  selectedApproveRows.value.clear(); // 선택 목록 초기화
-};
-
-const deleteShareSelectedRows = () => {
-  shareList.value = shareList.value.filter(
-      (_, index) => !selectedShareRows.value.has(index)
-  );
-  selectedShareRows.value.clear(); // 선택 목록 초기화
-};
-
-// 버튼 클릭 시 결재 순서에 추가
-const addToApprovalList = (type) => {
-  console.log("addToApprovalList 메소드 호출");
+// 결재선 설정 업데이트
+const updateApprovalList = (newList) => {
 
   const typeMapping = {
     동의: "SEQ",
@@ -119,31 +49,56 @@ const addToApprovalList = (type) => {
     병렬합의: "PLLAGR"
   };
 
-  const newApprovals = selectedApprovalEmployees.value.map((emp) => ({
-    type,
-    displayType: type,  // 결재방식 - 한글 값
-    approveType: typeMapping[type], // 결재방식 - enum 값
-    name: emp.name, // 사원 이름
-    position: emp.position, // 직위
-    empId: emp.empId,
-  }));
-  approvalList.value.push(...newApprovals);
-  console.log("결재선 추가 - 업데이트 된 approvalList: ", approvalList.value);
-  selectedApprovalEmployees.value = []; // 선택 목록 초기화
+  let currentOrder = 1; // 현재 결재 순서
+  let isPllGroup = false; // 병렬 그룹 여부
+
+  approvalData.value = newList.map((item, index, array) => {
+
+    console.log("현재 항목 타입: ", item.type);
+
+    const isParallel = item.type === "병렬" || item.type === "병렬합의";
+
+    if (isParallel) {
+      // 병렬 그룹 시작
+      isPllGroup = true;
+    }
+
+    // 병렬 그룹이 끝난 뒤 currentOrder 증가
+    if (!isParallel && isPllGroup) {
+      isPllGroup = false; // 병렬 그룹 종료
+      currentOrder++; // 병렬 그룹 종료 후 증가
+    }
+
+    // 병렬 그룹이면 같은 currentOrder, 아니면 증가
+    const lineOrder = isParallel ? currentOrder : currentOrder++;
+
+    return {
+      ...item,
+      displayType: item.type, // 한글 값으로 표시
+      approveType: typeMapping[item.type],
+      approveLineOrder: lineOrder,
+    };
+  });
+
+  // 병렬 그룹이 끝난 후 마지막 currentOrder 증가 처리
+  if (isPllGroup) {
+    currentOrder++;
+  }
+
+  console.log("updateApprovalList - 업데이트 된 approvalData: ", approvalData.value);
 };
 
-const addToShareList = () => {
-  // 추가 한 사람 다시 추가 못하도록
-  const newShares = selectedShareEmployees.value.filter(
-      (emp) => !shareList.value.some((share) => share.empId === emp.empId)
-  ).map((emp) => ({
-    empId: emp.empId,
-    name: emp.name,
-    position: emp.position,
+// 공유 설정 업데이트
+const updateShareList = (newList) => {
+  shareData.value = newList.map((item) => ({
+    type: '공유',
+    empId: item.empId,
+    name: item.name,
+    position: item.position,
   }));
-  shareList.value.push(...newShares);
-  selectedShareEmployees.value = [];  // 선택 목록 초기화
+  console.log("updateShareList - 업데이트 된 shareData: ", shareData.value);
 };
+
 
 const title = ref('');  // 문서 제목
 const expendDate = ref(""); // 지출일
@@ -185,10 +140,10 @@ const docData = () => {
     templateId: 5, // 지출 결의서 서식 id
     title: title.value, // 문서 제목
     fields: fields,
-    approveLines: approvalList.value.map((line, index) => ({
+    approveLines: approvalData.value.map((line, index) => ({
       groupId: null,
       approveType: line.approveType,
-      approveLineOrder: index + 1,
+      approveLineOrder: line.approveLineOrder,
       pllGroupId: null,
       approveTemplateTypes: 'MANUAL',
       approveSbjs: [
@@ -198,7 +153,7 @@ const docData = () => {
         },
       ],
     })),
-    shares: shareList.value.map((share) => ({
+    shares: shareData.value.map((share) => ({
       shareEmpDeptType: 'EMPLOYEE',
       employees: [share.empId],
     })),
@@ -208,28 +163,28 @@ const docData = () => {
 const createNewDoc = async () => {
 
   if (!title.value) {
-    alert('제목을 입력해주세요.');
+    showAlert('제목을 입력해주세요.');
     return;
   }
 
   if (!expendDate.value) {
-    alert('지출일을 선택해주세요.')
+    showAlert('지출일을 선택해주세요.')
     return;
   }
 
   const hasEmptyAmount = rows.value.some((row) => !row.amount || row.amount <= 0);
   if (hasEmptyAmount) {
-    alert('금액을 입력해주세요. 0보다 큰 값을 입력해야 합니다.')
+    showAlert('금액을 입력해주세요. 0보다 큰 값을 입력해야 합니다.')
     return;
   }
 
   try {
     const data = docData();
     const response = await createNewDocument(data);
-    alert('결재 문서 생성 완료');
+    showAlert('결재 문서 생성 완료');
     goTo("/approval/home");
   } catch (error) {
-    alert(`결재 문서 생성에 실패했습니다. 오류: ${error.message}`);
+    showAlert(`결재 문서 생성에 실패했습니다. 오류: ${error.message}`);
     console.error(error);
   }
 };
@@ -238,9 +193,22 @@ const goTo = (url) => {
   router.push(url);
 }
 
+/* alert 창 */
+const alertVisible = ref(false);
+const alertMsg = ref('');
+const showAlert = (msg) => {
+  alertMsg.value = msg;
+  alertVisible.value = true;
+}
+
 </script>
 
 <template>
+
+  <Alert
+      v-model="alertVisible"
+      :message="alertMsg"
+  />
 
   <div id="header-div">
     <div id="header-top" class="flex-between">
@@ -267,16 +235,18 @@ const goTo = (url) => {
             width="600px"
         />
 
-        <!-- 지출일 -->
-        <label class="label">
-          <span class="label-name">지출일</span>
-          <span class="asterisk">*</span>
-        </label>
-        <SearchGroupBar
-            v-model="expendDate"
-            placeholder="지출일 선택"
-            type="date"
-        />
+        <div class="date-container">
+          <!-- 지출일 -->
+          <label class="label">
+            <span class="label-name">지출일</span>
+            <span class="asterisk">*</span>
+          </label>
+          <SearchGroupBar
+              v-model="expendDate"
+              placeholder="지출일 선택"
+              type="date"
+          />
+        </div>
       </div>
 
       <!-- 지출 내역 테이블 -->
@@ -338,16 +308,14 @@ const goTo = (url) => {
     <!-- 결재선 -->
     <div class="box-container">
 
-      <!-- 드롭 다운 -->
-      <span class="dropdown-title">서식 선택</span>
-      <ButtonDropDown2
-          :options="dropdownOptions"
-          defaultOption="기본 서식"
-          width="155px"
-          height="35px"
-          fontSize="15px"
-          @selectId="handleDropdownSelect"
-      />
+      <div class="dropdown-container">
+        <span class="dropdown-title">서식 선택</span>
+        <DropdownBasic
+            defaultOption="지출결의서"
+            :options="dropdownOptions"
+            @selectOption="handleDropdownSelect"
+        />
+      </div>
 
       <ApprovalShareBox
           title="결재선"
@@ -359,178 +327,50 @@ const goTo = (url) => {
           @onSettingsClick="openApprovalModal"
       />
 
-      <!-- 모달 창 -->
-      <ModalBasic
+      <ModalNoButton
           :isOpen="isApprovalModalOpen"
           title="결재선 설정"
-          width="1000px"
-          :button1="{ label: '닫기', color: 'gray', onClick: closeApprovalModal }"
-          :button2="{ label: '저장하기', color: 'orange', onClick: saveApprovalSettings }"
+          width="900px"
+          height="420px"
           @close="closeApprovalModal"
       >
         <template #default>
           <div class="modal-layout">
-            <!-- 조직도 트리 -->
-            <div class="modal-box left">
-              <OrganizationTree
-                  context="approval"
-                  @update:selectedApprovalEmployees="updateApprovalSelectedEmployees"
-              />
-            </div>
-
-            <!-- 결재 버튼 그룹 -->
-            <div class="modal-box center">
-              <div class="approval-button-group">
-                <ButtonBasic
-                    label="동의"
-                    color="white"
-                    size="medium"
-                    @click="addToApprovalList('동의')"
-                />
-                <ButtonBasic
-                    label="참조"
-                    color="white"
-                    size="medium"
-                    @click="addToApprovalList('참조')"
-                />
-                <ButtonBasic
-                    label="합의"
-                    color="white"
-                    size="medium"
-                    @click="addToApprovalList('합의')"
-                />
-                <ButtonBasic
-                    label="병렬"
-                    color="white"
-                    size="medium"
-                    @click="addToApprovalList('병렬')"
-                />
-                <ButtonBasic
-                    label="병렬합의"
-                    color="white"
-                    size="medium"
-                    @click="addToApprovalList('병렬합의')"
-                />
-              </div>
-            </div>
-
-            <!-- 결재 목록 -->
-            <div class="modal-box right">
-              <div class="table-container">
-                <table class="approval-table">
-                  <!-- 테이블 헤더 -->
-                  <thead>
-                  <tr>
-                    <th>순서</th>
-                    <th>결재 종류</th>
-                    <th>이름</th>
-                    <th>직위</th>
-                  </tr>
-                  </thead>
-
-                  <!-- 드래그 가능한 테이블 바디 -->
-                  <draggable
-                      v-model="approvalList"
-                      tag="tbody"
-                      item-key="name"
-                  >
-                    <template #item="{ element, index }">
-                      <tr
-                          @click="toggleApproveRowSelection(index)"
-                          :class="{ 'selected-row': selectedApproveRows.has(index) }"
-                      >
-                        <td>{{ index + 1 }}</td>
-                        <td>{{ element.type }}</td>
-                        <td>{{ element.name }}</td>
-                        <td>{{ element.position }}</td>
-                      </tr>
-                    </template>
-                  </draggable>
-                </table>
-              </div>
-
-              <div class="button-container">
-                <ButtonBasic
-                    label="삭제"
-                    color="white"
-                    size="small"
-                    @click="deleteApproveSelectedRows"
-                />
-              </div>
-            </div>
-
+            <OrgTree
+                @updateApprovalList="updateApprovalList"
+                @closeModal="closeApprovalModal"
+            />
           </div>
         </template>
-      </ModalBasic>
+      </ModalNoButton>
 
-      <!-- 공유 -->
       <ApprovalShareBox
           title="공유"
           :placeholder="shareData.length ? '' : '공유처가 없습니다.'"
-          :data="shareData"
+          :data="shareData.map((item) => ({
+          type: '공유',
+          name: item.name,
+          position: item.position,
+          }))"
           @onSettingsClick="openShareModal"
       />
 
-      <ModalBasic
+      <ModalNoButton
           :isOpen="isShareModalOpen"
           title="공유 설정"
-          width="800px"
-          :button1="{ label: '닫기', color: 'gray', onClick: closeShareModal }"
-          :button2="{ label: '저장하기', color: 'orange', onClick: saveShareSettings }"
+          width="650px"
+          height="450px"
           @close="closeShareModal"
       >
         <template #default>
           <div class="modal-layout">
-            <!-- 조직도 트리 -->
-            <div class="modal-box left">
-              <OrganizationTree
-                  context="share"
-                  @update:selectedShareEmployees="updateShareSelectedEmployees"
-              />
-              <ButtonBasic
-                  label="추가"
-                  color="white"
-                  size="small"
-                  @click="addToShareList"
-              />
-            </div>
-
-            <!-- 공유 목록 -->
-            <div class="modal-box right">
-              <h3>공유 리스트</h3>
-              <div class="table-container">
-                <table class="share-table">
-                  <thead>
-                  <tr>
-                    <th>이름</th>
-                    <th>직위</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr
-                      v-for="(emp, index) in shareList"
-                      :key="emp.empId"
-                      :class="{ 'selected-row': selectedShareRows.has(index) }"
-                      @click="toggleShareRowSelection(index)"
-                  >
-                    <td>{{ emp.name }}</td>
-                    <td>{{ emp.position }}</td>
-                  </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div class="button-container">
-                <ButtonBasic
-                    label="삭제"
-                    color="white"
-                    size="small"
-                    @click="deleteShareSelectedRows"
-                />
-              </div>
-            </div>
+            <OrgTreeShare
+                @updateShareList="updateShareList"
+                @closeModal="closeShareModal"
+            />
           </div>
         </template>
-      </ModalBasic>
+      </ModalNoButton>
     </div>
   </div>
 </template>
@@ -539,7 +379,6 @@ const goTo = (url) => {
 .main-container {
   display: flex;
   justify-content: center; /* 중앙 정렬 */
-  align-items: center; /* 세로 정렬 */
   gap: 0px;
   min-width: 1200px;  /* 최소 너비 설정 */
   padding: 0 50px;  /* 좌우 여백 */
@@ -841,4 +680,27 @@ const goTo = (url) => {
   border-bottom: 2px solid #ff6600;
   border-top: 2px solid #ff6600;
 }
+
+.dropdown-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.dropdown-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #3C4651;
+}
+
+.date-container {
+  height: 100px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.date-container .label {
+  margin-right: 10px;
+}
+
 </style>

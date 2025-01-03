@@ -7,6 +7,8 @@ import ExcelDropDown from "@/components/common/ExcelDropDown.vue";
 import ButtonBasic from "@/components/common/ButtonBasic.vue";
 import FileUpload from "@/components/common/FileUpload.vue";
 import ToolTip from "@/components/common/ToolTip.vue";
+import Alert from "@/components/common/Alert.vue";
+import ButtonBack from "@/components/common/ButtonBack.vue";
 
 const payrolls = ref([]);
 
@@ -18,6 +20,15 @@ const isFileUploadVisible = ref(false); // 파일 업로드 창 표시 여부
 const selectedFiles = ref([]);
 
 const payrollId = route.params.payrollId;
+
+const alertVisible = ref(false);
+
+const alertMsg = ref('');
+
+const showAlert = (msg) => {
+  alertMsg.value = msg;
+  alertVisible.value = true;
+}
 
 // 금액 포맷 함수
 const formatCurrency = (value) => {
@@ -82,7 +93,7 @@ const menuItem = [
         window.URL.revokeObjectURL(url); // URL 객체를 해제합니다.
       } catch (error) {
         console.error('파일 다운로드 중 오류 발생:', error);
-        alert('파일 다운로드에 실패했습니다.');
+        showAlert('파일 다운로드에 실패했습니다.');
       }
     }
   },
@@ -103,7 +114,7 @@ const tooltipWidth = "190px";
 // 파일 업로드 핸들러
 const handleFileUpload = async () => {
   if (selectedFiles.value.length === 0) {
-    alert("업로드할 파일을 선택해주세요.");
+    showAlert("업로드할 파일을 선택해주세요.");
     return;
   }
 
@@ -119,11 +130,11 @@ const handleFileUpload = async () => {
       },
     });
     console.log("업로드 성공:", response.data);
-    alert("파일이 성공적으로 업로드되었습니다.");
+    showAlert("파일이 성공적으로 업로드되었습니다.");
     isFileUploadVisible.value = false; // 모달 닫기
   } catch (error) {
     console.error("업로드 실패:", error);
-    alert("파일 업로드 중 오류가 발생했습니다.");
+    showAlert("파일 업로드 중 오류가 발생했습니다.");
   }
 };
 
@@ -205,6 +216,7 @@ onMounted(() => {
 <template>
   <div class="container">
     <div class="header">
+      <ButtonBack />
       <p>급여정산</p>
       <div class="search-bar">
         <SearchBar
@@ -259,6 +271,10 @@ onMounted(() => {
           />
         </div>
       </div>
+      <Alert
+         v-model="alertVisible"
+         :message="alertMsg"
+      />
     </div>
     <div class="table-container">
       <table>
@@ -310,7 +326,7 @@ onMounted(() => {
           <tr v-for="item in payrolls" :key="item.payrollDetailId" class="contain">
             <td class="fixed-column">
               <div class="basic-info">
-                <img :src="item.img" alt="프로필 이미지" class="profile-img" />
+<!--                <img :src="item.img" alt="프로필 이미지" class="profile-img" />-->
                 <div class="profile">
                   <div class="text-info">
                     <p class="name">{{ item.empName }}</p>
@@ -489,11 +505,11 @@ thead th {
 
 /* 첫 번째 열의 다음 열도 고정 */
 .fixed-column:nth-child(2) {
-  left: 200px; /* 첫 번째 열의 너비만큼 설정 */
+  left: 140px; /* 첫 번째 열의 너비만큼 설정 */
 }
 
 .fixed-column:nth-child(3) {
-  left: 300px; /* 두 번째 열의 너비만큼 설정 */
+  left: 240px; /* 두 번째 열의 너비만큼 설정 */
 }
 
 /* 테이블 행 및 데이터 스타일 */

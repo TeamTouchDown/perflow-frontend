@@ -144,6 +144,11 @@ const emit = defineEmits(["onSettingsClick"]);
   background-color: #007bff; /* 파란색 */
 }
 
+.approval-type.공유 {
+  background-color: #bd76f8;
+  color: white;
+}
+
 .approval-name {
   font-weight: bold;
 }
@@ -160,7 +165,7 @@ const emit = defineEmits(["onSettingsClick"]);
 }
 
 .approval-type.default-type {
-  background-color: #bd76f8; /* 회색 배경 */
+  background-color: #bd76f8;
   color: white;
 }
 </style>

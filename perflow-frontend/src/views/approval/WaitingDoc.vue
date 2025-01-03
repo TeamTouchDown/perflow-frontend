@@ -9,6 +9,7 @@ import SearchGroupBar from "@/components/common/SearchGroupBar.vue";
 import router from "@/router/router.js";
 import dayjs from "dayjs";
 import Tooltip from "@/components/common/ToolTip.vue";
+import Alert from "@/components/common/Alert.vue";
 
 const columns = [
   { label: "제목", field: "title" },
@@ -63,7 +64,7 @@ const fetchWaitingDocs = async (page = 1) => {
 // 일괄 승인
 const bulkApproveDocs = async () => {
   if (selectedRows.value.length === 0) {
-    alert("선택된 문서가 없습니다.");
+    showAlert("선택된 문서가 없습니다.");
     return;
   }
 
@@ -84,13 +85,13 @@ const bulkApproveDocs = async () => {
     const requestData = {approvals};
     await api.put("approval/docs/bulk", requestData);
 
-    alert("문서들이 일괄 승인되었습니다.");
+    showAlert("문서들이 일괄 승인되었습니다.");
 
     await fetchWaitingDocs(currentPage.value);  // 목록 새로 고침
     selectedRows.value = [];  // 선택 초기화
   } catch (error) {
     console.error("일괄 승인 실패", error);
-    alert("일괄 승인에 실패하였습니다.");
+    showAlert("일괄 승인에 실패하였습니다.")
   }
 }
 
@@ -121,7 +122,7 @@ const handleTitleClick = (row) => {
     router.push({ name: "workReportDetail", query: {docId: row.docId, type: "waiting" } })
     // 업무 보고서
   } else {
-    alert("올바르지 않은 서식입니다.");
+    showAlert("올바르지 않은 서식입니다.")
   }
 }
 
@@ -161,6 +162,14 @@ const fetchWaitingDocsWithCriteria = async (page = 1) => {
   }
 }
 
+
+const alertVisible = ref(false);
+const alertMsg = ref('');
+const showAlert = (msg) => {
+  alertMsg.value = msg;
+  alertVisible.value = true;
+}
+
 onMounted(() => {
   fetchWaitingDocs();
 });
@@ -168,6 +177,11 @@ onMounted(() => {
 </script>
 
 <template>
+
+    <Alert
+      v-model="alertVisible"
+      :message="alertMsg"
+    />
   <!-- 헤더 -->
   <div id="header-div">
     <div id="header-top" class="flex-between">
@@ -193,40 +207,43 @@ onMounted(() => {
       <div id="search-container">
         <!-- 검색 필드 -->
         <div class="conditions">
-          <SearchGroupBar
-              v-model ="searchCriteria.title"
-              placeholder="제목"
-              type="text"
-              width="500px"
-              height="40px"
-          />
-          <SearchGroupBar
-              v-model ="searchCriteria.createUser"
-              placeholder="작성자"
-              type="text"
-          />
-          <SearchGroupBar
-              v-model ="searchCriteria.fromDate"
-              placeholder="작성일(시작)"
-              type="date"
-          />
-          <SearchGroupBar
-              v-model ="searchCriteria.toDate"
-              placeholder="작성일(끝)"
-              type="date"
-          />
-        </div>
-        <!-- 검색 버튼 -->
-        <div class="button">
-          <ButtonBasic
-              color="orange"
-              size="medium"
-              label="검색하기"
-              @click="handleSearch"
-          />
+          <div class="condition-row">
+            <SearchGroupBar
+                v-model ="searchCriteria.title"
+                placeholder="제목"
+                type="text"
+                width="500px"
+                height="40px"
+            />
+            <SearchGroupBar
+                v-model ="searchCriteria.createUser"
+                placeholder="작성자"
+                type="text"
+            />
+          </div>
+          <div class="condition-row">
+            <SearchGroupBar
+                v-model ="searchCriteria.fromDate"
+                placeholder="작성일(시작)"
+                type="date"
+            />
+            <SearchGroupBar
+                v-model ="searchCriteria.toDate"
+                placeholder="작성일(끝)"
+                type="date"
+            />
+            <!-- 검색 버튼 -->
+            <div class="button">
+              <ButtonBasic
+                  color="orange"
+                  size="medium"
+                  label="검색하기"
+                  @click="handleSearch"
+              />
+            </div>
+          </div>
         </div>
       </div>
-
     </div>
   </div>
 
@@ -345,8 +362,15 @@ onMounted(() => {
 
 .conditions {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 10px;  /* 필드 간 간격 */
+  width: 100%
+}
+
+.condition-row {
+  display: flex;
+  gap: 10px;
+  margin-left: 50px;
 }
 
 .button {

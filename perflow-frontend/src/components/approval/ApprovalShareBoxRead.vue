@@ -98,23 +98,26 @@ defineProps({
 .approval-type {
   font-weight: bold;
   padding: 4px 8px;
-  border-radius: 12px;
+  border-radius: 8px;
   color: white;
   font-size: 12px;
 }
 
 .approval-type.동의,
 .approval-type.합의 {
-  background-color: #28a745; /* 초록색 */
+  color: #28a745; /* 초록색 */
+  border: 1px solid #28a745;
 }
 
 .approval-type.참조 {
-  background-color: #ff8c00; /* 주황색 */
+  color: #ff8c00; /* 주황색 */
+  border: 1px solid #ff8c00; /* 주황색 */
 }
 
 .approval-type.병렬,
 .approval-type.병렬합의 {
-  background-color: #007bff; /* 파란색 */
+  color: #007bff; /* 파란색 */
+  border: 1px solid #007bff; /* 파란색 */
 }
 
 .approval-name {
@@ -133,7 +136,7 @@ defineProps({
 }
 
 .approval-type.공유 {
-  background-color: #bd76f8; /* 회색 배경 */
-  color: white;
+  color: #bd76f8; /* 회색 배경 */
+  border: 1px solid #bd76f8;
 }
 </style>

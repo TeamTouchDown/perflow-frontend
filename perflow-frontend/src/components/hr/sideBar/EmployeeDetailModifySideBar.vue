@@ -7,6 +7,7 @@ import SubmitButton from "@/components/hr/SubmitButton.vue";
 import api from "@/config/axios.js";
 import DateSearchBar from "@/components/common/DateSearchBar.vue";
 import {useStore} from "@/store/store.js";
+import Alert from "@/components/common/Alert.vue";
 
 const store = useStore();
 
@@ -62,17 +63,31 @@ const updateEmployee = async () => {
       joinDate: joinDate.value
     });
     store.hideLoading();
-    alert("정보 수정 성공!.")
-    location.reload(true);
+    updateSuccessModalVisible(true);
   } catch (error) {
     if (error.response.data.message){
-      alert(error.response.data.message);
+      updateFailModalVisible(true);
     } else {
-      alert("정보 수정 중 오류가 발생했습니다.")
+      updateFailModalVisible(true);
     }
     console.log(error)
   }
 
+}
+
+const successModalVisible = ref(false);
+const failModalVisible = ref(false);
+
+const updateSuccessModalVisible = (value) => {
+
+  successModalVisible.value = value;
+  if(value === false ){
+    location.reload();
+  }
+}
+const updateFailModalVisible = (value) => {
+
+  failModalVisible.value = value;
 }
 
 function closeSidebar() {
@@ -81,7 +96,9 @@ function closeSidebar() {
 </script>
 
 <template>
-<div class="modify-sidebar" :class="{ open: props.isSidebarOpen }">
+  <Alert :model-value=successModalVisible message="정보 수정 성공!" @update:modelValue="updateSuccessModalVisible"/>
+  <Alert :model-value=failModalVisible message="정보 수정 중 오류가 발생했습니다." @update:modelValue="updateFailModalVisible"/>
+  <div class="modify-sidebar" :class="{ open: props.isSidebarOpen }">
   <div id="side-header">
     <img src="../../../assets/image/arrow-right.png" @click="closeSidebar" id="close">
     <p id="title">{{props.title}}</p>

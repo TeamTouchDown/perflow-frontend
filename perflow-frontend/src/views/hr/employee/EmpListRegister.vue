@@ -7,9 +7,29 @@ import {ref} from "vue";
 import {useStore} from "@/store/store.js";
 import HeaderContainer from "@/components/hr/HeaderContainer.vue";
 import router from "@/router/router.js";
+import Alert from "@/components/common/Alert.vue";
 
 const selectedFile = ref([]);
 const store = useStore();
+
+const successModalVisible = ref(false);
+const failModalVisible = ref(false);
+
+const updateSuccessModalVisible = (value) => {
+
+  successModalVisible.value = value;
+  if( value === false ) {
+    router.push("/hr/employees");
+  }
+}
+const updateFailModalVisible = (value) => {
+
+  failModalVisible.value = value;
+  if(value === false ){
+    location.reload();
+  }
+}
+
 const fetchSelectedFile = (files) => {
   selectedFile.value = files
 }
@@ -49,8 +69,7 @@ const downloadCSV = async () => {
 
 const triggerFileInput = () => {
   if(selectedFile.value.length === 0) {
-    alert("선택된 파일이 없습니다.");
-    return;
+    updateFailModalVisible(true);
   }
   const confirmed = window.confirm('CSV 파일을 업로드 하시겠습니까?');
   if (confirmed) {
@@ -72,13 +91,15 @@ const uploadCSV = async (file) => {
         'Content-Type': 'multipart/form-data'
       }
     });
-    alert("업로드에 성공했습니다.");
-    await router.push("/hr/employees");
+    updateSuccessModalVisible(true)
   }catch (error){
-    if (error.response.data.message){
-      alert(error.response.data.message);
+    if(error instanceof TypeError){
+      alert("오류가 발생했습니다. 등록하신 파일을 확인해주세요.");
+      location.reload();
+    } if (error.response.data.message){
+      updateFailModalVisible(true);
     } else {
-      alert("사원 일괄 등록 중 오류가 발생했습니다.");
+      updateFailModalVisible(true);
     }
   }finally {
     store.hideLoading();
@@ -87,6 +108,8 @@ const uploadCSV = async (file) => {
 </script>
 
 <template>
+  <Alert :model-value=successModalVisible message="등록에 성공했습니다." @update:model-value="updateSuccessModalVisible"/>
+  <Alert :model-value=failModalVisible message="사원 일괄 등록 중 오류가 발생했습니다." @update:model-value="updateFailModalVisible"/>
   <div id="emp-list-register-container">
     <HeaderContainer
       title="구성원"

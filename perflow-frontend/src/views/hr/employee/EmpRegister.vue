@@ -11,6 +11,7 @@ import {useStore} from "@/store/store.js";
 import router from "@/router/router.js";
 import DateSearchBar from "@/components/common/DateSearchBar.vue";
 import HRButtonDropDown from "@/components/hr/HRButtonDropDown.vue";
+import Alert from "@/components/common/Alert.vue";
 
 const store = useStore();
 
@@ -63,16 +64,30 @@ const updateGender = (value) => {
 const updateJoinDate = (value) => {
   joinDate.value = value;
 }
+const successModalVisible = ref(false);
+const failModalVisible = ref(false);
 
+const updateSuccessModalVisible = (value) => {
+
+  successModalVisible.value = value;
+  if( value === false ) {
+    router.push("/hr/employees");
+  }
+}
+const updateFailModalVisible = (value) => {
+
+  failModalVisible.value = value;
+}
 
 const departments = ref([]);
 const jobs = ref();
 const positions = ref();
-const test = ref();
+
 const fetchDepts = async () => {
   const response = await api.get("/departments/list");
   departments.value = response.data.map(dept => ({ label: dept.name, id: dept.deptId }));
 }
+
 const fetchJobs = async () => {
   const response = (await api.get("/job", {
     params: {
@@ -92,9 +107,9 @@ const fetchPositions = async () => {
   positions.value = response.positions.map(position => ({ label: position.name, id: position.positionId }));
 }
 const registerEmp = async () => {
-  const totalAddress = address.value.postcode + " " + address.value.roadAddress + " " + address.value.extraAddress;
   try {
     store.showLoading();
+    const totalAddress = address.value.postcode + " " + address.value.roadAddress + " " + address.value.extraAddress;
     await api.post("/hr/employees",{
       empId: empId.value,
       name: name.value,
@@ -110,14 +125,15 @@ const registerEmp = async () => {
       joinDate: joinDate.value
     });
     store.hideLoading();
-    alert("사원 등록 성공!");
-    await router.push("/hr/employees");
+    updateSuccessModalVisible(true);
   } catch (error) {
     store.hideLoading();
-    if (error.response.data.message){
-      alert(error.response.data.message);
+    if(error instanceof TypeError){
+      alert("입력값이 정확하지 않습니다. 확인해주세요.");
+    } else if (error){
+      updateFailModalVisible(true);
     } else {
-      alert("사원 등록 중 오류가 발생했습니다.");
+      updateFailModalVisible(true);
     }
   }
 }
@@ -132,6 +148,8 @@ onMounted(async ()=>{
 </script>
 
 <template>
+  <Alert :model-value=successModalVisible message="사원 등록 성공!" @update:modelValue="updateSuccessModalVisible"/>
+  <Alert :model-value=failModalVisible message="사원 등록 중 오류가 발생했습니다." @update:modelValue="updateFailModalVisible"/>
   <div id="emp-register-container">
     <HeaderContainer
       title="구성원"

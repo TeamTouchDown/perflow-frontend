@@ -3,8 +3,22 @@ import { computed, onMounted, ref } from "vue";
 import { useAuthStore } from "@/store/authStore.js";
 import api from "@/config/axios.js";
 import router from "@/router/router.js";
+import Alert from "@/components/common/Alert.vue";
 
 const authStore = useAuthStore();
+
+const logoutModalVisible = ref(false);
+const extendModalVisible = ref(false);
+
+const updateLogoutModalVisible = (value) => {
+  logoutModalVisible.value = value;
+  if(!value) {
+    goTo("/login")
+  }
+}
+const updateExtendModalVisible = (value) => {
+  extendModalVisible.value = value;
+}
 
 // 상태 관리
 const msTime = computed(() => authStore.$state.remainingTime);
@@ -25,8 +39,8 @@ const fetchTimer = () => {
 // 유효시간 연장
 const refresh = async () => {
   await authStore.refreshAccessToken();
-  alert("로그인 시간이 연장되었습니다.");
-};
+  updateExtendModalVisible(true);
+}
 
 // 초기 닉네임 추출
 const initial = computed(() => {
@@ -49,7 +63,9 @@ function getRandomColor() {
 const logout = async () => {
   await api.post(`/logout`);
   authStore.logout();
-};
+
+  updateLogoutModalVisible(true);
+}
 
 // 페이지 이동
 const goTo = (url) => {
@@ -127,6 +143,8 @@ onMounted(() => {
 </script>
 
 <template>
+  <Alert :model-value=logoutModalVisible message="로그아웃 되었습니다." @update:modelValue="updateLogoutModalVisible"/>
+  <Alert :model-value=extendModalVisible message="로그인 시간이 연장되었습니다." @update:modelValue="updateExtendModalVisible"/>
   <div id="nav">
     <div id="nav-logo" @click="goTo('/main-page')">
       <img src="@/assets/image/logo.png" alt="로고" id="logo-image" />
