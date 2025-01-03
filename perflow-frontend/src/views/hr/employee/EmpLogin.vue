@@ -1,31 +1,59 @@
 <script setup>
-import {ref} from "vue";
+import { ref } from "vue";
 import api from "@/config/axios.js";
 import { useAuthStore } from '@/store/authStore.js';
 import router from "@/router/router.js";
+import { initFCMToken } from "@/config/notification/FcmService.js";
 
 const empId = ref("");
 const password = ref("")
 
-const login = async () => {
+// 기기 유형을 식별하는 함수
+const getDeviceType = () => {
+  let deviceType = 'OTHER';
+  const userAgent = navigator.userAgent;
+  if (userAgent.includes("Chrome") && !userAgent.includes("Edge") && !userAgent.includes("OPR")) { // Edge와 Opera 제외
+    deviceType = "CHROME";
+  } else if (userAgent.includes("Firefox")) {
+    deviceType = "FIREFOX";
+  } else if (userAgent.includes("Safari") && !userAgent.includes("Chrome")) { // Chrome 제외
+    deviceType = "SAFARI";
+  }
+  return deviceType;
+}
 
+const login = async () => {
   const authStore = useAuthStore();
 
-  const response = await api.post(
-      `/login`,
-      {
-        empId : empId.value,
-        password : password.value
-      }
-  );
+  try {
+    const response = await api.post(
+        `/login`,
+        {
+          empId: empId.value,
+          password: password.value
+        }
+    );
 
-  const accessToken = response.headers.get(`Authorization`);
-  const refreshToken = response.headers.get(`refreshToken`);
+    const accessToken = response.headers.get(`Authorization`);
+    const refreshToken = response.headers.get(`refreshToken`);
 
-  authStore.setTokens(accessToken, refreshToken);
+    authStore.setTokens(accessToken, refreshToken);
 
-  alert("로그인 되었습니다.")
-  await router.push("/main-page");
+    // 기기 유형 식별 및 설정
+    const deviceType = getDeviceType();
+    authStore.setDeviceType(deviceType);
+
+    // FCM 토큰 초기화 및 등록
+    await initFCMToken(authStore.empId, deviceType, (token) => {
+      authStore.setFcmToken(token);
+    });
+
+    alert("로그인 되었습니다.");
+    await router.push("/main-page");
+  } catch (error) {
+    console.error("로그인 실패:", error);
+    alert("로그인에 실패했습니다. 다시 시도해주세요.");
+  }
 }
 </script>
 
