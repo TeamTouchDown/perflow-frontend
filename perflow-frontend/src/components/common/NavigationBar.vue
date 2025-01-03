@@ -18,7 +18,7 @@ const updateLogoutModalVisible = (value) => {
   }
 }
 const updateExtendModalVisible = (value) => {
-  logoutModalVisible.value = value;
+  extendModalVisible.value = value;
 }
 
 const msTime = computed(() => {
