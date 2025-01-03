@@ -241,10 +241,6 @@ onMounted(() => {
               :width="tooltipWidth"
           />
         </div>
-        <ButtonBasic
-          label="결재"
-          size="medium"
-        />
       </div>
       <!-- 파일 업로드 컴포넌트 -->
       <div v-if="isFileUploadVisible" class="file-upload-modal">
