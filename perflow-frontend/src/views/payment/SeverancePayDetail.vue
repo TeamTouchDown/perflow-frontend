@@ -10,6 +10,7 @@ import Alert from "@/components/common/Alert.vue";
 import ButtonBack from "@/components/common/ButtonBack.vue";
 
 const severancePays = ref([]);
+const month = ref('');
 
 const route = useRoute();
 
@@ -42,6 +43,11 @@ const fetchPayrollDetail = async () => {
   try {
     const response = await api.get(`/hr/severance-pays/${severancePayId}`);
     severancePays.value = response.data.severancePays;
+
+    severancePays.value.forEach((severancePay) => {
+      month.value = severancePay.createDatetime.slice(5, 7);
+      console.log(`해당 급여의 생성 월: ${month}`);
+    });
   } catch (error) {
     console.error('퇴직금 상세 정보를 불러오는 중 에러가 발생했습니다. : ', error)
   }
@@ -146,7 +152,7 @@ onMounted(() => {
     <div class="header">
       <div class="header-btn">
         <ButtonBack />
-        <p>퇴직금 정산</p>
+        <p>{{ month }}월 퇴직금 정산</p>
       </div>
       <div class="btn">
         <div @mouseenter="tooltipVisible=true" @mouseleave="tooltipVisible=false">
