@@ -169,6 +169,7 @@ p {
   padding: 30px;
   font-size: 18px;
   border-radius: 10px;
+  overflow-y: auto;
 
 }
 #authority-list {
@@ -216,6 +217,7 @@ p {
   display: flex;
   width: 900px;
   margin-top: 20px;
+  overflow-y: auto; /* 스크롤이 필요할 때 스크롤바 표시 */
 }
 .menu-list {
   width: 400px;
@@ -223,5 +225,25 @@ p {
   text-align: left;
   font-size: 18px;
   font-weight: bold;
+}
+/* 스크롤바 전체 영역 */
+#emp-list::-webkit-scrollbar {
+  width: 3px; /* 스크롤바 너비 */
+}
+
+/* 스크롤바 트랙(바탕) 영역 */
+#emp-list::-webkit-scrollbar-track {
+  background: none; /* 트랙 배경색 */
+}
+
+/* 스크롤바 손잡이(thumb) 영역 */
+#emp-list::-webkit-scrollbar-thumb {
+  background: #D9D9D9; /* 손잡이 색상 */
+  border-radius: 4px; /* 모서리를 둥글게 */
+}
+
+/* 마우스를 손잡이 위에 올렸을 때 색상 변환 */
+#emp-list::-webkit-scrollbar-thumb:hover {
+  background: #555; /* 손잡이 호버 색상 */
 }
 </style>

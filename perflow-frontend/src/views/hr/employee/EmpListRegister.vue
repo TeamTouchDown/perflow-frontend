@@ -108,8 +108,8 @@ const uploadCSV = async (file) => {
 </script>
 
 <template>
-  <Alert :model-value=successModalVisible message="등록에 성공했습니다." @update:visible="updateSuccessModalVisible"/>
-  <Alert :model-value=failModalVisible message="사원 일괄 등록 중 오류가 발생했습니다." @update:visible="updateFailModalVisible"/>
+  <Alert :model-value=successModalVisible message="등록에 성공했습니다." @update:model-value="updateSuccessModalVisible"/>
+  <Alert :model-value=failModalVisible message="사원 일괄 등록 중 오류가 발생했습니다." @update:model-value="updateFailModalVisible"/>
   <div id="emp-list-register-container">
     <HeaderContainer
       title="구성원"

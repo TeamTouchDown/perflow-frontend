@@ -18,16 +18,29 @@ const pages = ref({
   currentPage: 0     // 초기값: 0
 });
 
+
+
 // 사원 목록 조회
 const fetchAppointList = async (page) => {
+
+  const typeToKorean = {
+    PROMOTION: "승진",
+    TRANSFER: "부서이동",
+    DEMOTION: "강등", // 추가 예시
+    CHANGE_JOB: "직책 변경", // 추가 예시
+    // 필요한 유형을 여기에 추가
+  };
 
   const response = (await api.get("/hr/appoint", {
     params: {
       page: page
     }
   })).data;
-  appoints.value = response.appointResponseList;
-
+  // appointResponseList의 type을 한글로 변환
+  appoints.value = response.appointResponseList.map(item => ({
+    ...item,
+    type: typeToKorean[item.type] || "알 수 없음" // 매핑이 없을 경우 기본값
+  }));
   pages.value = {
     currentPage: response.currentPage,
     pageSize: response.pageSize,

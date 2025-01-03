@@ -90,7 +90,6 @@ export const useAuthStore = defineStore('auth', {
             localStorage.setItem("accessToken", null);
             localStorage.setItem("refreshToken", null);
             clearInterval(this.timerInterval);
-            alert("로그아웃 되었습니다.")
             router.push('/login');
         },
 

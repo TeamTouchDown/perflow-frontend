@@ -71,7 +71,7 @@ const updateSuccessModalVisible = (value) => {
 
   successModalVisible.value = value;
   if( value === false ) {
-    router.push("/login");
+    router.push("/hr/employees");
   }
 }
 const updateFailModalVisible = (value) => {
