@@ -20,7 +20,7 @@ export default defineConfig({
         '__VITE_FCM_MESSAGINGSENDERID__': JSON.stringify(process.env.VITE_FCM_MESSAGINGSENDERID),
         '__VITE_FCM_APPID__': JSON.stringify(process.env.VITE_FCM_APPID)
       },
-      include: 'src/firebase-messaging-sw.js' // 대체할 파일 경로
+      include: 'src/config/firebase-messaging-sw.js' // 대체할 파일 경로
     })
   ],
   resolve: {
@@ -32,10 +32,10 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
-        sw: resolve(__dirname, 'src/firebase-messaging-sw.js') // 서비스 워커 파일을 입력으로 포함
+        sw: resolve(__dirname, 'src/config/firebase-messaging-sw.js') // 서비스 워커 파일을 입력으로 포함
       },
       output: {
-        entryFileNames: 'fcm.js',
+        entryFileNames: '[name].js',
         // 서비스 워커 파일이 루트에 위치하도록 설정
         // 다른 출력 옵션이 필요하면 추가
       }
