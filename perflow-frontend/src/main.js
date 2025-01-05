@@ -1,16 +1,16 @@
 // src/main.js
 
-import { createApp } from 'vue';
-import App from './App.vue';
+import { createApp } from 'vue'
+import App from './App.vue'
 import './assets/global.css';
-import router from './router/router.js';
+import router from './router/router.js'
 import { createPinia } from "pinia";
-import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import { useAuthStore } from "@/store/authStore.js";
 import { initFCMToken, initForegroundMessageHandler } from "@/config/notification/FcmService.js";
 
 const pinia = createPinia();
-pinia.use(piniaPluginPersistedstate);
+pinia.use(piniaPluginPersistedstate)
 const app = createApp(App);
 app.use(pinia);
 app.use(router);
@@ -18,9 +18,10 @@ app.use(router);
 // 서비스 워커 등록
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/firebase-messaging-sw.js') // 정확한 경로
+        navigator.serviceWorker.register('/firebase-messaging-sw.js')
             .then((registration) => {
                 console.log('Service Worker 등록 성공:', registration);
+                // 더 이상 postMessage로 초기화할 필요가 없습니다.
             })
             .catch((err) => {
                 console.error('Service Worker 등록 실패:', err);
