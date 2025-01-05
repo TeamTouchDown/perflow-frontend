@@ -679,6 +679,7 @@ const showAlert = (msg) => {
   padding: 10px;
   border-bottom: 2px solid #ff6600;
   border-top: 2px solid #ff6600;
+  text-align: right;
 }
 
 .dropdown-container {
