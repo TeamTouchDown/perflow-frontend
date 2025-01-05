@@ -81,7 +81,6 @@ const routes = [
 
     // 결재
     {path: '/approval', name: 'approval', component: ApprovalHome},
-    {path: '/approval/home', name: 'approvalHome', component: ApprovalHome},
     {path: '/approval/create', name: 'newDoc', component: TemplateBasic},
     {path: '/approval/waiting', name: 'waitingDoc', component: WaitingDoc},
     {path: '/approval/basic/detail', name: 'basicDetail', component: TemplateBasicRead},
