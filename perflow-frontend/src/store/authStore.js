@@ -7,7 +7,6 @@ import {deleteToken, getToken} from 'firebase/messaging';
 import {messaging, VAPID_KEY} from '@/config/notification/firebase';
 import {deleteTokenFromBackend, registerTokenToBackend} from "@/config/notification/FcmService.js";
 
-
 export const useAuthStore = defineStore('auth', {
     state: () => ({
         accessToken: ref(),
