@@ -92,58 +92,83 @@ const updateApproverId = (value) => {
 // ----------------------------
 // [7] 초과근무 신청 처리 함수
 // ----------------------------
+const convertToLocalDateTime = (inputValue) => {
+  try{
+    // 입력값이 12자리(YYYYMMDDHHMM) 형식일 경우
+    const datetimeRegex = /^\d{10}$/;
+
+    console.log("Received input:", inputValue); // 디버깅: 입력값 확인
+
+    if (datetimeRegex.test(inputValue)) {
+      // 입력값이 유효하면 년, 월, 일, 시, 분을 추출
+      const year = inputValue.slice(0, 2); // 첫 두 자리는 연도 (25 -> 2025)
+      const month = inputValue.slice(2, 4);
+      const day = inputValue.slice(4, 6);
+      const hour = inputValue.slice(6, 8);
+      const minute = inputValue.slice(8, 10);
+
+      // 디버깅: 추출한 값 확인
+      console.log("Year:", year, "Month:", month, "Day:", day, "Hour:", hour, "Minute:", minute);
+
+      // 자동으로 초를 00으로 설정하여 LocalDateTime 형식으로 변환
+      const formattedDate = `20${year}-${month}-${day}T${hour}:${minute}:00`;
+
+      // 변환된 날짜 확인
+      console.log("Formatted Date:", formattedDate); // 디버깅: 변환된 날짜
+
+      // dayjs를 사용하여 날짜 변환
+      const date = dayjs(formattedDate);
+      console.log("DayJS Date Object:", date); // 디버깅: dayjs 객체 확인
+
+      // 날짜가 유효한지 확인
+      if (!date.isValid()) {
+        console.error("Invalid date:", formattedDate); // 변환된 날짜가 유효하지 않음
+        return null;
+      }
+
+      return date.toISOString();
+    }
+  }
+  catch (error){
+    console.error("Invalid date format:", inputValue); // 잘못된 입력에 대한 로그
+    return null;
+  }
+}
+
+
+
 const handleApply = async () => {
   try {
-    // 현재 사용자 ID 가져오기
-    const empId = authStore.$state.empId;  // store에서 empId 가져오기
-    if (!empId) {
-      errorMessage.value = "사용자 정보가 없습니다. 로그인 상태를 확인해주세요.";
-      return;
-    }
+    // 필수 필드 검증 및 날짜 변환
+    const startDate = convertToLocalDateTime(overtimeStart.value);
+    const endDate = convertToLocalDateTime(overtimeEnd.value);
 
-    // 필수 필드 검증
-    if (
-        !overtimeStart.value ||
-        !overtimeEnd.value ||
-        !overtimeType.value ||
-        !overtimeReason.value ||
-        !approverId.value
-    ) {
-      errorMessage.value = "모든 필드를 채워주세요.";
-      return;
-    }
-
-    // 시간 형식 검증 (YYYY-MM-DDTHH:MM)
-    const datetimeRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/;
-    if (!datetimeRegex.test(overtimeStart.value)) {
+    if (!startDate) {
       errorMessage.value = "초과근무 시작일 형식이 올바르지 않습니다.";
       return;
     }
-    if (!datetimeRegex.test(overtimeEnd.value)) {
+    if (!endDate) {
       errorMessage.value = "초과근무 종료일 형식이 올바르지 않습니다.";
       return;
     }
 
     // 시작일이 종료일보다 앞서는지 확인
-    if (new Date(overtimeStart.value) >= new Date(overtimeEnd.value)) {
+    if (new Date(startDate) >= new Date(endDate)) {
       errorMessage.value = "초과근무 시작일이 종료일보다 앞서야 합니다.";
       return;
     }
 
     // 요청 데이터 구성
     const requestData = {
-      empId: empId,  // 현재 사용자 ID
+      empId: authStore.empId,  // 현재 사용자 ID
       approverId: approverId.value,
       overtimeType: overtimeType.value,
       enrollOvertime: dayjs().toISOString(), // 신청일 (현재 날짜)
-      overtimeStart: dayjs(overtimeStart.value).toISOString(),
-      overtimeEnd: dayjs(overtimeEnd.value).toISOString(),
+      overtimeStart: startDate,
+      overtimeEnd: endDate,
       isOvertimeRetroactive: false,  // 기본값으로 설정 (Retroactive 여부)
       overtimeRetroactiveReason: ""  // 기본값으로 설정
     };
-
-    // 요청 데이터 확인 (디버깅용)
-    console.log("Request Data:", requestData);
 
     // 서버 요청 (API 호출)
     store.showLoading();
@@ -151,20 +176,12 @@ const handleApply = async () => {
     store.hideLoading();
 
     // 성공 처리
-    console.log('초과근무 신청 성공:', response.data);
     alert('초과근무 신청이 완료되었습니다!');
     emit('overtime-success');
     emit('close');
   } catch (error) {
-    // 에러 처리
-    console.error('초과근무 신청 실패:', error);
     store.hideLoading();
-
-    if (error.response && error.response.data && error.response.data.message) {
-      errorMessage.value = error.response.data.message;
-    } else {
-      errorMessage.value = "초과근무 신청에 실패했습니다.";
-    }
+    errorMessage.value = error.response?.data?.message || "초과근무 신청에 실패했습니다.";
   }
 };
 
@@ -197,11 +214,11 @@ onMounted(async () => {
           <div class="form-container">
             <!-- 초과근무 시작일 -->
             <div class="form-group">
-              <label for="overtimeStart">초과근무 시작일 (YYYY-MM-DDTHH:MM) 형태로 작성</label>
+              <label for="overtimeStart">초과근무 시작일 (2501031500 형식으로 작성, 예: 2501031500)</label>
               <SearchGroupBar
                   id="overtimeStart"
                   v-model="overtimeStart"
-                  placeholder="예: 2025-01-01T20:19"
+                  placeholder="예: 2501031500"
                   type="text"
                   width="100%"
                   height="40px"
@@ -210,11 +227,11 @@ onMounted(async () => {
 
             <!-- 초과근무 종료일 -->
             <div class="form-group">
-              <label for="overtimeEnd">초과근무 종료일 (YYYY-MM-DDTHH:MM) 형태로 작성</label>
+              <label for="overtimeEnd">초과근무 종료일 (2501031500 형식으로 작성, 예: 2501031500)</label>
               <SearchGroupBar
                   id="overtimeEnd"
                   v-model="overtimeEnd"
-                  placeholder="예: 2025-01-01T22:19"
+                  placeholder="예: 2501031500"
                   type="text"
                   width="100%"
                   height="40px"
@@ -248,21 +265,10 @@ onMounted(async () => {
               />
             </div>
 
-            <!-- 결재자 ID -->
-<!--            <div class="form-group">
-              <label for="approverId">결재자 사번</label>
-              <SearchGroupBar
-                  id="approverId"
-                  v-model="approverId"
-                  placeholder="결재자 사번을 입력해주세요"
-                  type="text"
-                  width="100%"
-                  height="40px"
-              />
-            </div>-->
             <SearchButtonDropDown
                 default-option="결재자 사번을 입력해주세요"
-                width="300px" :options="empList"
+                width="300px"
+                :options="empList"
                 @select-id="updateApproverId" />
             <!-- 에러 메시지 -->
             <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
