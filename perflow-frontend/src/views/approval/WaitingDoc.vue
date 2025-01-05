@@ -17,6 +17,8 @@ const columns = [
   { label: "작성일", field: "createDatetime" }
 ];
 
+const columnWidths = ["300px", "90px", "200px"]; // 열 값
+
 const waitingDocs = ref([]);    // 문서 목록
 const totalPages = ref(0);      // 전체 페이지 수
 const totalItems = ref(0);      // 전체 아이템 수
@@ -256,6 +258,7 @@ onMounted(() => {
           :rows="waitingDocs"
           rowKey="docId"
           :showCheckbox="true"
+          :columnWidths="columnWidths"
           @row-selected="handleRowSelected"
       >
         <template #title="{ row }">
