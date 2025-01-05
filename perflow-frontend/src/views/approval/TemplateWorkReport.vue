@@ -2,7 +2,7 @@
 import ButtonBasic from "@/components/common/ButtonBasic.vue";
 import InputField from "@/components/common/InputField.vue";
 import ApprovalShareBox from "@/components/approval/ApprovalShareBox.vue";
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import {createNewDocument} from "@/config/approval.js";
 import router from "@/router/router.js";
 import SearchGroupBar from "@/components/common/SearchGroupBar.vue";
@@ -168,6 +168,16 @@ const showAlert = (msg) => {
   alertMsg.value = msg;
   alertVisible.value = true;
 }
+
+// 날짜 유효성 검사
+watch([fromDate, toDate], ([newFromDate, newToDate]) => {
+  if (newFromDate && newToDate && newFromDate > newToDate) {
+    showAlert("입력한 끝 날짜가 시작 날짜보다 빠릅니다.");
+
+    fromDate.value = '';
+    toDate.value = '';
+  }
+});
 </script>
 
 <template>
