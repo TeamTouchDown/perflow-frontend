@@ -33,11 +33,13 @@ export default defineConfig(({mode}) => {
         build: {
             rollupOptions: {
                 input: {
-                    main: resolve(__dirname, 'index.html'),
-                    'firebase-messaging-sw.js': resolve(__dirname, 'src/firebase-messaging-sw.js')
+                    main: resolve(__dirname, 'index.html'), // 메인 엔트리
+                    'firebase-messaging-sw': resolve(__dirname, 'src/firebase-messaging-sw.js'), // 서비스 워커 포함
                 },
                 output: {
-                    entryFileNames: '[name]'
+                    entryFileNames: '[name].js', // 확장자를 포함한 이름 설정
+                    chunkFileNames: 'assets/[name]-[hash].js',
+                    assetFileNames: 'assets/[name]-[hash].[ext]',
                 }
             }
         }
