@@ -78,7 +78,7 @@ export async function initFCMToken(empId, deviceType, setFcmTokenCallback) {
  * @param {String} token - FCM 토큰
  * @param {String} deviceType - 기기 유형
  */
-export async function registerTokenToBackend(empId, token, deviceType) {
+async function registerTokenToBackend(empId, token, deviceType) {
     console.log('[FCM] 백엔드에 토큰 등록:', { empId, token, deviceType });
     try {
         await api.post('/fcm/token', {
