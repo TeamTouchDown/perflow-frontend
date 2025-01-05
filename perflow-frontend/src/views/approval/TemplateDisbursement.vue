@@ -111,6 +111,11 @@ const totalAmount = computed(() => {
   return rows.value.reduce((sum, row) => sum + Number(row.amount || 0), 0);
 });
 
+// 합계에 , 추가
+const formatTotalAmount = computed(() => {
+
+  return totalAmount.value.toLocaleString();
+});
 
 // 행 추가
 const addRow = () => {
@@ -285,7 +290,7 @@ const showAlert = (msg) => {
 
         <!-- 합계 -->
         <div class="total">
-          <span>합계 {{ totalAmount }} 원 </span>
+          <span>합계 {{ formatTotalAmount }} 원 </span>
         </div>
       </div>
 
