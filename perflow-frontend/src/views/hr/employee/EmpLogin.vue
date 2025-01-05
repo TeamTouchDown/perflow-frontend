@@ -1,10 +1,9 @@
 <script setup>
-import { ref } from "vue";
+import {ref} from "vue";
 import api from "@/config/axios.js";
-import { useAuthStore } from '@/store/authStore.js';
+import {useAuthStore} from '@/store/authStore.js';
 import router from "@/router/router.js";
 import Alert from "@/components/common/Alert.vue";
-import { initFCMToken } from "@/config/notification/FcmService.js";
 
 const empId = ref("");
 const password = ref("")
