@@ -35,7 +35,7 @@ export default defineConfig({
         sw: resolve(__dirname, 'src/config/firebase-messaging-sw.js') // 서비스 워커 파일을 입력으로 포함
       },
       output: {
-        entryFileNames: '[name].js',
+        entryFileNames: 'firebase-messaging-sw.js',
         // 서비스 워커 파일이 루트에 위치하도록 설정
         // 다른 출력 옵션이 필요하면 추가
       }
