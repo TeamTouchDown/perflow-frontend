@@ -1,18 +1,18 @@
 // src/firebase-messaging-sw.js
-
-importScripts('https://www.gstatic.com/firebasejs/11.1.0/firebase-app-compat.js');
-importScripts('https://www.gstatic.com/firebasejs/11.1.0/firebase-messaging-compat.js');
+/* global __VITE_FCM_APIKEY__, __VITE_FCM_AUTHDOMAIN__, __VITE_FCM_PROJECTID__, __VITE_FCM_STORAGEBUCKET__, __VITE_FCM_MESSAGINGSENDERID__, __VITE_FCM_APPID__ */
+importScripts("https://www.gstatic.com/firebasejs/11.1.0/firebase-app-compat.js");
+importScripts("https://www.gstatic.com/firebasejs/11.1.0/firebase-messaging-compat.js");
 
 console.log("서비스 워커 로드됨");
 
 // Firebase 설정 (빌드 시점에 환경 변수로 대체)
 const firebaseConfig = {
-    apiKey: "__VITE_FCM_APIKEY__",
-    authDomain: "__VITE_FCM_AUTHDOMAIN__",
-    projectId: "__VITE_FCM_PROJECTID__",
-    storageBucket: "__VITE_FCM_STORAGEBUCKET__",
-    messagingSenderId: "__VITE_FCM_MESSAGINGSENDERID__",
-    appId: "__VITE_FCM_APPID__"
+    apiKey: __VITE_FCM_APIKEY__,
+    authDomain: __VITE_FCM_AUTHDOMAIN__,
+    projectId: __VITE_FCM_PROJECTID__,
+    storageBucket: __VITE_FCM_STORAGEBUCKET__,
+    messagingSenderId: __VITE_FCM_MESSAGINGSENDERID__,
+    appId: __VITE_FCM_APPID__
 };
 
 // Firebase 초기화
