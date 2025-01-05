@@ -142,13 +142,9 @@ const createNewDoc = async () => {
     const data = docData();
     const response = await createNewDocument(data);
     showAlert('문서를 상신했습니다.');
-    setTimeout(() => {
-      goTo("/approval/home");
-    }, 1500); // 1.5초 후 라우팅
-    goTo("/approval/home");
+    goTo("/approval/outbox");
   } catch (error) {
     showAlert('결재 문서 생성에 실패했습니다.');
-    // alert(`결재 문서 생성에 실패했습니다. 오류: ${error.message}`);
     console.error(error);
   }
 };

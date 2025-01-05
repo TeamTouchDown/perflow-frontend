@@ -181,10 +181,10 @@ const createNewDoc = async () => {
   try {
     const data = docData();
     const response = await createNewDocument(data);
-    showAlert('결재 문서 생성 완료');
-    goTo("/approval/home");
+    showAlert('문서를 상신했습니다.');
+    goTo("/approval/outbox");
   } catch (error) {
-    showAlert(`결재 문서 생성에 실패했습니다. 오류: ${error.message}`);
+    showAlert('결재 문서 생성에 실패했습니다.');
     console.error(error);
   }
 };
