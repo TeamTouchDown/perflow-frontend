@@ -54,12 +54,10 @@ const login = async () => {
     const deviceType = getDeviceType();
     authStore.setDeviceType(deviceType);
 
-    // FCM 토큰 초기화 및 등록
-    await initFCMToken(authStore.empId, deviceType, (token) => {
-      authStore.setFcmToken(token);
-    });
-
     authStore.setTokens(accessToken, refreshToken);
+
+    await authStore.afterLogin();
+
     updateModalVisible(true);
   } catch (error) {
     updateFailModalVisible(true);
