@@ -1,11 +1,13 @@
 <script setup>
-import {ref, defineProps, defineEmits, watch} from "vue";
+import {ref, defineProps, defineEmits, watch, onMounted} from "vue";
 import ButtonBasic from "@/components/common/ButtonBasic.vue";
 import ModalBasic from "@/components/common/ModalBasic.vue";
 import SearchGroupBar from "@/components/common/SearchGroupBar.vue";
 import ButtonDropDown from "@/components/common/ButtonDropDown.vue";
 import api from "@/config/axios.js";
 import {useStore} from "@/store/store.js";
+import SearchButtonDropDown from "@/components/common/SearchButtonDropDown.vue";
+import {useAuthStore} from "@/store/authStore.js";
 
 const store = useStore();
 // 부모에서 전달된 props 정의
@@ -23,6 +25,8 @@ const approver = ref("");   // 결재자
 const startDate = ref("");  // 기간 시작일
 const endDate = ref("");    // 기간 종료일
 const errorMessage = ref(""); // 에러 메시지
+const authStore = useAuthStore();
+const empList = ref([]);
 
 // 연차 구분 옵션
 const vacationTypeOptions = [
@@ -57,6 +61,7 @@ const handleApply = async () => {
   try {
     // 1. 입력값 가져오기
     const requestData = {
+      empId: authStore.empId,
       approver: approver.value, // 결재자 사번
       vacationStart: formatDate(startDate.value, "09:00:00"), // 시작 시간 반영
       vacationEnd: formatDate(endDate.value, "18:00:00"),     // 종료 시간 반영
@@ -103,6 +108,22 @@ const handleVacationTypeSelect = (selectedLabel) => {
   const option = vacationTypeOptions.find(opt => opt.label === selectedLabel);
   vacationType.value = option ? option.value : "";
 };
+const updateApproverId = (value) => {
+  approver.value = value
+}
+const fetchEmpList = async () => {
+
+  const response = (await api.get("/employees/lists", {
+    params: {
+      page: 1,
+      size: 10000
+    }
+  })).data;
+  empList.value = response.employeeList.map(emp => ({ label: emp.name, id: emp.empId }));
+}
+onMounted(async () => {
+  await fetchEmpList();
+})
 </script>
 
 <template>
@@ -126,11 +147,13 @@ const handleVacationTypeSelect = (selectedLabel) => {
             </div>
 
             <div class="form-group search-box">
-              <SearchGroupBar
-                  v-model="approver"
-                  placeholder="결재자 사번을 입력해주세요"
-                  type="text"
-              />
+              <div class="form-group">
+                <SearchButtonDropDown
+                    default-option="결재자 사번을 입력해주세요"
+                    width="300px"
+                    :options="empList"
+                    @select-id="updateApproverId" />
+              </div>
             </div>
             <div class="form-group">
               <ButtonDropDown
