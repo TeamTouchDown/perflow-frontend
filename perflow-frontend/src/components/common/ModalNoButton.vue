@@ -1,5 +1,6 @@
 <script setup>
-import ButtonBasic from "@/components/common/ButtonBasic.vue";
+import {ref} from "vue";
+import Tooltip from "@/components/common/ToolTip.vue";
 
 // 사용법
 // <ModalBasic
@@ -16,6 +17,12 @@ const props = defineProps({
   content: { type: String, default: "내용" }, // 모달 내용
   width: { type: String, default: "400px" }, // 모달 너비
   height: { type: String, default: "auto"}, // 모달 높이
+  tooltipText: { type: String, default: "" }, // 툴팁 내용
+  tooltipPosition: { // 툴팁 위치
+    type: Object,
+    default: () => ({ bottom: "20px", left: "0px" }),
+  },
+  tooltipWidth: { type:String, default: ""},  // 툴팁 폭
 });
 
 const emit = defineEmits(["close"]);
@@ -24,9 +31,8 @@ const closeModal = () => {
   emit("close");
 };
 
-const handleClick = (action) => {
-  if (action) action();
-};
+const tooltipVisible = ref(false);
+
 </script>
 
 <template>
@@ -36,7 +42,25 @@ const handleClick = (action) => {
       <!-- 모달 제목 -->
       <div class="modal-header">
         <slot name="header">
-          <h3 class="modal-title">{{ title }}</h3>
+          <div class="title-container">
+            <h3 class="modal-title">{{ title }}</h3>
+            <!-- 툴팁 -->
+            <img
+                v-if="tooltipText"
+                src="@/assets/icons/tooltip.png"
+                alt="툴팁"
+                class="tooltip-icon"
+                @mouseenter="tooltipVisible = true"
+                @mouseleave="tooltipVisible = false"
+            />
+            <Tooltip
+                v-if="tooltipText"
+                :text="tooltipText"
+                :visible="tooltipVisible"
+                :width="tooltipWidth"
+                :position="tooltipPosition"
+            />
+          </div>
         </slot>
         <button class="modal-close" @click="closeModal">✕</button>
       </div>
@@ -105,5 +129,17 @@ const handleClick = (action) => {
 /* 헤더와 푸터 회색 선 제거 */
 .modal-header {
   border: none; /* 회색 선 제거 */
+}
+
+.title-container {
+  display: flex;
+  align-items: center;
+  gap: 3px;  /* 제목-툴팁 아이콘 간격 */
+}
+
+.tooltip-icon {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
 }
 </style>

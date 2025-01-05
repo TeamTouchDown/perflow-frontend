@@ -58,5 +58,6 @@ defineProps({
   z-index: 10;
   transform: translateX(-50%); /* 툴팁 위치 중앙 정렬 */
   word-wrap: break-word; /* 긴 텍스트 줄바꿈 */
+  white-space: pre-line;  /* 텍스트 줄바꿈 */
 }
 </style>
