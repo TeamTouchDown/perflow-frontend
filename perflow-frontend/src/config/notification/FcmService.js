@@ -1,6 +1,6 @@
 // src/views/notification/FcmService.js
-import { getToken, onMessage } from 'firebase/messaging';
-import { messaging, VAPID_KEY } from './firebase';
+import {getToken, onMessage} from 'firebase/messaging';
+import {messaging, VAPID_KEY} from './firebase';
 import api from "@/config/axios.js";
 
 /**
@@ -28,7 +28,7 @@ export async function initFCMToken(empId, deviceType, setFcmTokenCallback) {
     // 2) FCM 토큰 가져오기
     let currentToken = null;
     try {
-        currentToken = await getToken(messaging, { vapidKey: VAPID_KEY });
+        currentToken = await getToken(messaging, {vapidKey: VAPID_KEY});
         console.log('[FCM] FCM 토큰 획득 시도:', currentToken);
         if (currentToken) {
             console.log('[FCM] FCM Token 획득 성공:', currentToken);
@@ -51,7 +51,7 @@ export async function initFCMToken(empId, deviceType, setFcmTokenCallback) {
     // 5) 주기적으로 토큰 확인 (예: 1시간마다)
     setInterval(async () => {
         try {
-            const newToken = await getToken(messaging, { vapidKey: VAPID_KEY });
+            const newToken = await getToken(messaging, {vapidKey: VAPID_KEY});
             console.log('[FCM] 주기적 토큰 확인:', newToken);
             if (newToken && newToken !== currentToken) {
                 console.log('[FCM] FCM Token 갱신 감지:', newToken);
@@ -78,7 +78,7 @@ export async function initFCMToken(empId, deviceType, setFcmTokenCallback) {
  * @param {String} deviceType - 기기 유형
  */
 export async function registerTokenToBackend(empId, token, deviceType) {
-    console.log('[FCM] 백엔드에 토큰 등록:', { empId, token, deviceType });
+    console.log('[FCM] 백엔드에 토큰 등록:', {empId, token, deviceType});
     try {
         await api.post('/fcm/token', {
             empId: empId,
@@ -120,10 +120,20 @@ export function initForegroundMessageHandler() {
     onMessage(messaging, (payload) => {
         console.log('포그라운드 메시지 수신:', payload);
         if (payload?.notification) {
-            const { title, body, icon } = payload.notification;
+            const {title, body, icon} = payload.notification;
+            const clickAction = payload.data?.click_action || '/';
+
             console.log('[FCM] 알림 제목:', title, ', 알림 본문:', body);
+
             // 포그라운드에서 알림 표시
-            new Notification(title, { body, icon: icon || '/default-icon.png' });
+            const notification = new Notification(title, {
+                body,
+                data: {click_action: clickAction}
+            });
+
+            notification.onclick = () => {
+                window.location.href = clickAction;
+            };
         } else if (payload?.data) {
             console.log('[FCM] 데이터 메시지:', payload.data);
             // 데이터 메시지 처리 로직 추가 (예: 사용자에게 UI 업데이트)

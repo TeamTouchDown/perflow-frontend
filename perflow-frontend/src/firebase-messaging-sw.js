@@ -26,7 +26,6 @@ messaging.onBackgroundMessage((payload) => {
     const notificationTitle = payload.notification?.title || "백그라운드 기본 제목";
     const notificationOptions = {
         body: payload.notification?.body || "백그라운드 기본 본문",
-        icon: payload.notification?.icon || "/default-icon.png",
         data: {
             click_action: payload.data?.click_action || '/' // 클릭 시 이동할 URL
         }
@@ -41,7 +40,7 @@ self.addEventListener('notificationclick', function(event) {
     event.notification.close(); // 알림 닫기
 
     // 클릭된 알림의 데이터에서 URL 추출
-    const clickAction = event.notification.data.click_action;
+    const clickAction = event.notification.data?.click_action;
 
     // URL이 지정되어 있지 않으면 기본 페이지로 이동
     const urlToOpen = new URL(clickAction || '/', self.location.origin).href;
