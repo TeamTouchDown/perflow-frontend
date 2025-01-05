@@ -1,12 +1,9 @@
-import {defineStore} from 'pinia';
+import { defineStore } from 'pinia';
 import api from "@/config/axios.js";
 import {ref} from "vue";
 import router from "@/router/router.js";
 import {jwtDecode} from "jwt-decode";
-import {deleteToken, getToken} from 'firebase/messaging';
-import {messaging, VAPID_KEY} from '@/config/notification/firebase';
-import {deleteTokenFromBackend, registerTokenToBackend} from "@/config/notification/FcmService.js";
-
+import { deleteTokenFromBackend } from "@/config/notification/FcmService.js";
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
@@ -17,14 +14,11 @@ export const useAuthStore = defineStore('auth', {
         isLogin: ref(false),
         authorities: ref(),
         timerInterval: null,
-        remainingTime: 0,
-
-        fcmToken: ref(null),
-        deviceType: ref(null),
+        remainingTime: 0
     }),
     actions: {
         // 로그인 후 토큰 저장
-        setTokens(newAccessToken, newRefreshToken) {
+        setTokens( newAccessToken, newRefreshToken ) {
             this.accessToken = newAccessToken;
             this.refreshToken = newRefreshToken;
             this.isLogin = true;
@@ -47,7 +41,7 @@ export const useAuthStore = defineStore('auth', {
         // 남은 시간 계산 및 실시간 업데이트
         startTimer() {
 
-            if (!this.isLogin) {
+            if(!this.isLogin){
                 return
             }
 
@@ -66,7 +60,7 @@ export const useAuthStore = defineStore('auth', {
                 const minutes = String(Math.floor((remaining % 3600) / 60)).padStart(2, '0');
                 const seconds = String(remaining % 60).padStart(2, '0');
 
-                this.remainingTime = minutes + '분 ' + seconds + '초';
+                this.remainingTime = minutes+'분 '+seconds+'초';
 
                 if (remaining <= 0) {
                     alert("로그인 유효기간이 지났습니다.")
@@ -78,8 +72,8 @@ export const useAuthStore = defineStore('auth', {
         // 토큰 갱신
         async refreshAccessToken() {
             try {
-                const response = await api.post('/reissue', {}, {
-                    headers: {refreshToken: this.refreshToken}
+                const response = await api.post('/reissue',{} , {
+                    headers : { refreshToken: this.refreshToken }
                 });
 
                 const newAccessToken = response.headers.get(`Authorization`);
@@ -91,52 +85,12 @@ export const useAuthStore = defineStore('auth', {
 
                 console.log(newAccessToken);
                 console.log(newRefreshToken);
-                this.setTokens(newAccessToken, newRefreshToken);
+                this.setTokens( newAccessToken, newRefreshToken );
                 return newAccessToken; // 갱신된 Access Token 반환
             } catch (error) {
                 console.error('Failed to refresh token:', error);
                 this.logout(); // 갱신 실패 시 로그아웃 처리
                 throw error;
-            }
-        },
-
-        async afterLogin() {
-            // 1) 기존 FCM 토큰이 있으면 클라이언트 & 서버에서 삭제
-            if (this.fcmToken) {
-                try {
-                    await deleteToken(messaging);
-                    console.log('[FCM] 기존 클라이언트 토큰 삭제 성공');
-                } catch (err) {
-                    console.error('[FCM] 기존 클라이언트 토큰 삭제 실패:', err);
-                }
-
-                try {
-                    if (this.empId && this.deviceType) {
-                        await deleteTokenFromBackend(this.empId, this.fcmToken, this.deviceType);
-                        console.log('[FCM] 기존 토큰 서버 삭제 성공');
-                    }
-                } catch (err) {
-                    console.error('[FCM] 기존 토큰 서버 삭제 실패:', err);
-                }
-            }
-
-            // 2) 새 토큰 발급
-            let currentToken = null;
-            try {
-                currentToken = await getToken(messaging, {vapidKey: VAPID_KEY});
-                console.log('[FCM] 새 토큰 발급 시도:', currentToken);
-
-                if (currentToken) {
-                    // 서버 등록
-                    await registerTokenToBackend(this.empId, currentToken, this.deviceType);
-                    console.log('[FCM] 새 토큰 서버 등록 완료');
-
-                    // 스토어에 저장
-                    this.fcmToken = currentToken;
-                    console.log('[FCM] fcmToken 업데이트 완료:', currentToken);
-                }
-            } catch (err) {
-                console.error('[FCM] 새 토큰 발급 실패:', err);
             }
         },
 
@@ -153,20 +107,11 @@ export const useAuthStore = defineStore('auth', {
                     await deleteTokenFromBackend(empId, fcmToken, deviceType);
                     console.log('[로그아웃] FCM 토큰 삭제 요청 성공');
                 } else {
-                    console.warn('[로그아웃] FCM 토큰 삭제 조건 미충족:', {empId, fcmToken, deviceType});
+                    console.warn('[로그아웃] FCM 토큰 삭제 조건 미충족:', { empId, fcmToken, deviceType });
                 }
             } catch (error) {
                 console.error('[FCM] 로그아웃 시 토큰 삭제 실패:', error);
             } finally {
-                try {
-                    if (fcmToken) {
-                        await deleteToken(messaging);
-                        console.log('[로그아웃] 클라이언트 토큰 삭제 성공');
-                    }
-                } catch (err) {
-                    console.error('[로그아웃] 클라이언트 토큰 삭제 실패:', err);
-                }
-
                 // 토큰 및 상태 초기화
                 this.accessToken = null;
                 this.refreshToken = null;
@@ -181,6 +126,7 @@ export const useAuthStore = defineStore('auth', {
                 router.push('/login');
             }
         },
+
     },
-    persist: true
+    persist:true
 });
