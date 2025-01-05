@@ -1,4 +1,5 @@
 // src/views/notification/FcmService.js
+
 import { getToken, onMessage } from 'firebase/messaging';
 import { messaging, VAPID_KEY } from './firebase';
 import api from "@/config/axios.js";
