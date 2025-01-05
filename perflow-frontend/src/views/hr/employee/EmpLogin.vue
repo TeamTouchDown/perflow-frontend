@@ -55,7 +55,7 @@ const login = async () => {
 
     authStore.setTokens(accessToken, refreshToken);
 
-    await authStore.afterLogin();
+    authStore.afterLogin();
 
     updateModalVisible(true);
   } catch (error) {
