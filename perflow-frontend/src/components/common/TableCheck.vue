@@ -134,7 +134,7 @@ const toggleAllSelection = (e) => {
 .table-container {
   border: 1px solid #AFA9A9; /* 바깥 테두리 색상 */
   border-radius: 10px;
-  height: 516px;
+  height: 510px;
   overflow: hidden; /* 테두리 안쪽 내용 잘림 방지 */
 }
 .table {
