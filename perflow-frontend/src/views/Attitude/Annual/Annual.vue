@@ -12,10 +12,18 @@ import AnnualModal from "@/views/Attitude/Annual/AnnualModal.vue";
 import AnnualUpdateModal from "@/views/Attitude/Annual/AnnualUpdateModal.vue";
 import TableCheck from "@/components/common/TableCheck.vue";
 import { useStore } from "@/store/store.js";
+import Alert from "@/components/common/Alert.vue";
 
 const store = useStore();
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
+
+const alertVisible = ref(false);
+const alertMsg = ref('');
+const showAlert = (msg) => {
+  alertMsg.value = msg;
+  alertVisible.value = true;
+}
 
 const today = dayjs(); // 현재 날짜와 시간
 console.log(today.format("YYYY-MM-DD"));
@@ -29,7 +37,7 @@ const selectedAnnual = ref(null);
 const onRowSelected = (selectedRows) => {
   if (selectedRows.length > 1) {
     // 2개 이상 선택 시 경고
-    alert("수정할 하나의 연차만 골라주세요.");
+    showAlert("수정할 하나의 연차만 골라주세요.");
     const updatedSelection = [selectedRows[0]];
     selectedAnnual.value = updatedSelection[0];
 
@@ -46,7 +54,7 @@ const onRowSelected = (selectedRows) => {
 
 const openUpdateModal = () => {
   if (!selectedAnnual.value) {
-    alert("수정할 연차를 체크박스로 선택해 주세요.");
+    showAlert("수정할 연차를 체크박스로 선택해 주세요.");
     return;
   }
   showUpdateModal.value = true;
@@ -311,6 +319,10 @@ onMounted(() => {
       />
 
     </div>
+    <Alert
+        v-model="alertVisible"
+        :message="alertMsg"
+    />
 
     <!-- 페이징 바 + 연차 신청 버튼을 같은 라인에 배치 -->
     <div class="paging-bar-and-button flex-between"
