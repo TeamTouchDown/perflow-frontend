@@ -17,6 +17,8 @@ const columns = [
   { label: "작성일", field: "createDatetime" }
 ];
 
+const columnWidths = ["300px", "90px", "200px"]; // 열 값
+
 const waitingDocs = ref([]);    // 문서 목록
 const totalPages = ref(0);      // 전체 페이지 수
 const totalItems = ref(0);      // 전체 아이템 수
@@ -256,6 +258,7 @@ onMounted(() => {
           :rows="waitingDocs"
           rowKey="docId"
           :showCheckbox="true"
+          :columnWidths="columnWidths"
           @row-selected="handleRowSelected"
       >
         <template #title="{ row }">
@@ -342,6 +345,12 @@ onMounted(() => {
 .clickable-title {
   color: #3C4651;
   cursor: pointer;
+  /* 제목이 길어지면 ... 로 표시 */
+  display: inline-block;
+  max-width: 100%; /* 부모 요소의 너비를 기준으로 조정 */
+  white-space: nowrap; /* 텍스트를 한 줄로 표시 */
+  overflow: hidden; /* 넘치는 텍스트를 숨김 */
+  text-overflow: ellipsis; /* 넘치는 텍스트에 ... 표시 */
 }
 .clickable-title:hover {
   color: #f37321;

@@ -646,6 +646,22 @@ onMounted(() => {
   border-radius: 10px;
   background-color: #fafafa;
   width: 500px;
-  height: auto;
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  word-break: break-word; /* 긴 단어 줄바꿈*/
+  white-space: pre-wrap;  /* 줄바꿈 */
+}
+
+.content-field .value::-webkit-scrollbar {
+  width: 5px;
+}
+.content-field .value::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+.content-field .value::-webkit-scrollbar-thumb {
+  background: #D9D9D9;
+  border-radius: 10px;
 }
 </style>

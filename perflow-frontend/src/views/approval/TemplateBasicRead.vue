@@ -395,14 +395,29 @@ onMounted(() => {
   align-items: flex-start;  /* 위쪽 끝 정렬 */
 }
 
-
 .content-field .value {
   padding: 10px;
   border: 1px solid #e0e0e0;
   border-radius: 10px;
   background-color: #fafafa;
   width: 500px;
-  height: 415px;
+  max-height: 575px; /* 최대 높이 */
+  overflow-y: auto;
+  overflow-x: hidden;
+  word-break: break-word; /* 긴 단어 줄바꿈*/
+  white-space: pre-wrap;  /* 줄바꿈 */
+}
+
+.content-field .value::-webkit-scrollbar {
+  width: 5px;
+}
+.content-field .value::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+.content-field .value::-webkit-scrollbar-thumb {
+  background: #D9D9D9;
+  border-radius: 10px;
 }
 
 #title {

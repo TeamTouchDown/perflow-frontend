@@ -4,6 +4,7 @@ import { ref, onMounted } from "vue";
 import OrgTreeNode from "@/components/approval/OrgTreeNode.vue";
 import {useAuthStore} from "@/store/authStore.js";
 import draggable from "vuedraggable";
+import Alert from "@/components/common/Alert.vue";
 
 const store = useStore();
 const authStore = useAuthStore();
@@ -50,13 +51,13 @@ const loadEmpsByDept = async (deptId) => {
 const handleApproval = (type) => {
 
   if (selectedEmps.value.length === 0) {
-    alert("사원을 선택해주세요.");
+    showAlert("사원을 선택해주세요.");
     return;
   }
 
   // 병렬, 병렬 합의 처리
   if ((type === "병렬" || type == "병렬합의") && selectedEmps.value.length < 2) {
-    alert("최소 2명 이상을 선택해주세요.");
+    showAlert("최소 2명 이상을 선택해주세요.");
     return;
   }
 
@@ -66,7 +67,7 @@ const handleApproval = (type) => {
   );
 
   if (duplicates.length > 0) {
-    alert("이미 결재 목록에 추가한 사원이 있습니다.");
+    showAlert("이미 결재 목록에 추가한 사원이 있습니다.");
     return;
   }
 
@@ -107,6 +108,13 @@ const deleteSelectedItems = () => {
   updateOrder();
 }
 
+const alertVisible = ref(false);
+const alertMsg = ref('');
+const showAlert = (msg) => {
+  alertMsg.value = msg;
+  alertVisible.value = true;
+}
+
 onMounted(() => {
   loadTopDepts();
 })
@@ -114,6 +122,10 @@ onMounted(() => {
 </script>
 
 <template>
+  <Alert
+     v-model="alertVisible"
+     :message="alertMsg"
+   />
   <div class="approval-container">
     <div class="org-tree">
 

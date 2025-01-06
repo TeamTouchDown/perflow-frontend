@@ -11,6 +11,7 @@ import Alert from "@/components/common/Alert.vue";
 import ButtonBack from "@/components/common/ButtonBack.vue";
 
 const payrolls = ref([]);
+const month = ref('');
 
 const route = useRoute();
 
@@ -41,8 +42,14 @@ const fetchPayrollDetail = async () => {
   try {
     const response = await api.get(`/hr/payrolls/${payrollId}`);
     payrolls.value = response.data.payrolls;
+
+    // createDatetime에서 월(Month) 추출
+    payrolls.value.forEach((payroll) => {
+      month.value = payroll.createDatetime.slice(5, 7);
+      console.log(`해당 급여의 생성 월: ${month}`);
+    });
   } catch (error) {
-    console.error('급여 상세 정보를 불러오는 중 에러가 발생했습니다. : ', error)
+    console.error('급여 상세 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -217,7 +224,7 @@ onMounted(() => {
   <div class="container">
     <div class="header">
       <ButtonBack />
-      <p>급여정산</p>
+      <p>{{ month }}월 급여정산</p>
       <div class="search-bar">
         <SearchBar
           placeholder="사번을 입력해주세요."
@@ -241,10 +248,6 @@ onMounted(() => {
               :width="tooltipWidth"
           />
         </div>
-        <ButtonBasic
-          label="결재"
-          size="medium"
-        />
       </div>
       <!-- 파일 업로드 컴포넌트 -->
       <div v-if="isFileUploadVisible" class="file-upload-modal">

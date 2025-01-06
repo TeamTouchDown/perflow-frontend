@@ -13,7 +13,7 @@ ChartJS.register(Title, Tooltip, Legend, LineElement, PointElement, CategoryScal
 // 3개월 급여 데이터 및 상태 관리
 const threeMonths = ref({ labels: [], values: [] });
 const growthRate = ref(0); // 증가율
-const recentMonth = ref(''); // 최근 달
+const recentYear = ref(''); // 최근 년
 
 // 3개월 간 급여 데이터 정보를 가져오는 함수
 const fetchThreeMonth = async () => {
@@ -37,8 +37,8 @@ const fetchThreeMonth = async () => {
 
       console.log("values : ",threeMonths.value.values);
 
-      // 최근 달 업데이트
-      recentMonth.value = threeMonths.value.labels[threeMonths.value.labels.length - 1];
+      // 최근 년도 업데이트 (createDatetime에서 'YYYY' 추출)
+      recentYear.value = payrollChart[payrollChart.length - 1].createDatetime.substring(0, 4);
 
       // 증가율 계산 (전달 대비)
       const [lastMonth, currentMonth] = threeMonths.value.values.slice(-2);
@@ -116,10 +116,10 @@ const chartOptions = ref({
 <template>
   <div>
     <!-- 차트 제목 -->
-    <h3>최근 3개월 총 급여</h3>
+    <h3>최근 1년간 총 급여</h3>
     <!-- 총 급여 변화율 -->
     <div v-if="threeMonths.values.length" class="growth-container">
-      <span class="salary-label">{{ recentMonth }}월 총 급여</span>
+      <span class="salary-label">{{ recentYear }}년 총 급여</span>
       <div
           class="growth-rate"
           :class="{
