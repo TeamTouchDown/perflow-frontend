@@ -14,6 +14,15 @@ const countingDateEnd = ref(null); // 집계 종료일
 const annualDateStart = ref(null); // 연차 수당 집계 시작일
 const annualDateEnd = ref(null); // 연차 수당 집계 종료일
 
+const alertVisible = ref(false);
+
+const alertMsg = ref('');
+
+const showAlert = (msg) => {
+  alertMsg.value = msg;
+  alertVisible.value = true;
+}
+
 // 퇴직 명세서를 가져오는 함수
 const fetchSeverancePayStub = async () => {
   try {
@@ -135,10 +144,17 @@ const printSection = () => {
   }, 1);  // 1초 대기 후 인쇄
 };
 
-onMounted(() => {
-  if(employee && employee.status === 'RESIGNED') {
-    fetchSeverancePayStub();
+const checkResigned = () => {
+  console.log("checkResigned 호출");
+
+  if (!employee || employee.status !== 'RESIGNED') {
+    showAlert('퇴직대상자가 아닙니다.');
+    history.back();
   }
+};
+
+onMounted(() => {
+  fetchSeverancePayStub();
   fetchEmp();
   fetchPayDate();
   // fetchOverTime();
@@ -146,7 +162,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="container" v-if="employee && employee.status === 'RESIGNED'">
+  <div class="container">
     <div class="head">
       <!-- 인쇄 버튼 추가 -->
       <MainPageButton
@@ -232,9 +248,6 @@ onMounted(() => {
         </div>
       </div>
     </div>
-  </div>
-  <div v-else>
-    <h1>퇴직금 대상자가 아닙니다.</h1>
   </div>
 </template>
 
