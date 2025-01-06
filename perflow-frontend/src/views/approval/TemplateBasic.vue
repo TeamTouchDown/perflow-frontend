@@ -142,13 +142,9 @@ const createNewDoc = async () => {
     const data = docData();
     const response = await createNewDocument(data);
     showAlert('문서를 상신했습니다.');
-    setTimeout(() => {
-      goTo("/approval/home");
-    }, 1500); // 1.5초 후 라우팅
-    goTo("/approval/home");
+    goTo("/approval/outbox");
   } catch (error) {
     showAlert('결재 문서 생성에 실패했습니다.');
-    // alert(`결재 문서 생성에 실패했습니다. 오류: ${error.message}`);
     console.error(error);
   }
 };
@@ -164,6 +160,15 @@ const showAlert = (msg) => {
   alertMsg.value = msg;
   alertVisible.value = true;
 }
+
+// 툴팁
+const tooltipText1 = "동의:  순서대로 결재를 진행합니다. \n " +
+    "합의:  순서대로 결재를 진행합니다. '동의'와 동일하나, 다른 부서의 사원의 결재가 필요할 때 '합의'로 지정합니다. \n " +
+    "참조:  해당 문서를 참조할 수 있는 사람을 지정합니다. 참조자는 해당 문서를 결재할 수 없습니다. \n" +
+    "병렬:  여러 명의 병렬 결재가 필요할 때 진행합니다. 한 명이라도 결재를 반려하면, 문서가 반려됩니다. \n" +
+    "병렬합의:  '병렬'과 동일하나, 다른 부서 사원의 결재가 필요할 때 '병렬합의'로 지정합니다. \n";
+const tooltipText2 = "공유자로 설정된 사원은 '수신함'에서 해당 문서를 볼 수 있습니다. \n" +
+    "하지만 해당 문서를 결재할 수는 없습니다.";
 </script>
 
 <template>
@@ -249,6 +254,9 @@ const showAlert = (msg) => {
 
       <ModalNoButton
           :isOpen="isApprovalModalOpen"
+          :tooltipText=tooltipText1
+          :tooltipPosition="{ bottom: '450px', left: '52%' }"
+          :tooptipWidth="'700px'"
           title="결재선 설정"
           width="900px"
           height="420px"
@@ -278,6 +286,9 @@ const showAlert = (msg) => {
       <ModalNoButton
           :isOpen="isShareModalOpen"
           title="공유 설정"
+          :tooltipText=tooltipText2
+          :tooltipPosition="{ bottom: '570px', left: '50%' }"
+          :tooltipWidth="'400px'"
           width="650px"
           height="450px"
           @close="closeShareModal"
