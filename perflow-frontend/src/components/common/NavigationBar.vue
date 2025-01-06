@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import { useAuthStore } from "@/store/authStore.js";
 import api from "@/config/axios.js";
 import router from "@/router/router.js";
@@ -9,6 +9,7 @@ const authStore = useAuthStore();
 
 const logoutModalVisible = ref(false);
 const extendModalVisible = ref(false);
+const refreshLogoutModal = ref(false);
 
 const updateLogoutModalVisible = (value) => {
   logoutModalVisible.value = value;
@@ -18,6 +19,13 @@ const updateLogoutModalVisible = (value) => {
 }
 const updateExtendModalVisible = (value) => {
   extendModalVisible.value = value;
+}
+const updateRefreshLogoutModal = (value) => {
+  refreshLogoutModal.value = value;
+  if(!value) {
+    logout();
+    goTo("/login");
+  }
 }
 
 // 상태 관리
@@ -132,6 +140,12 @@ const startPolling = () => {
   }, 5000); // 5초마다 알림 갱신
 };
 
+watch(msTime, (newVal) => {
+  if (newVal <= 1) {
+    updateRefreshLogoutModal(true);
+  }
+});
+
 onMounted(() => {
   fetchTimer();
   startPolling();
@@ -145,6 +159,7 @@ onMounted(() => {
 <template>
   <Alert :model-value=logoutModalVisible message="로그아웃 되었습니다." @update:modelValue="updateLogoutModalVisible"/>
   <Alert :model-value=extendModalVisible message="로그인 시간이 연장되었습니다." @update:modelValue="updateExtendModalVisible"/>
+  <Alert :model-value=refreshLogoutModal message="유효기간이 지나 로그아웃 됩니다.." @update:modelValue="updateRefreshLogoutModal"/>
   <div id="nav">
     <div id="nav-logo">
       <img src="@/assets/image/logo.png" alt="로고" id="logo-image" @click="goTo('/main-page')" />

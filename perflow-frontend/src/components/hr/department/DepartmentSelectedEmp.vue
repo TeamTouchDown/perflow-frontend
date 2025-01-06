@@ -1,7 +1,11 @@
 <script setup>
 import {useStore} from "@/store/store.js";
 import {onMounted} from "vue";
+import router from "@/router/router.js";
 const store = useStore()
+const goToDetail = (empId) => {
+  router.push({name:'EmpDetail', params : { empId : empId } });
+}
 onMounted(()=>{
   store.clearAll();
 });
@@ -17,7 +21,7 @@ onMounted(()=>{
   </div>
   <div v-for="empList in store.$state.allEmployee" class="emp-container">
     <div v-for="emp in empList">
-      <div v-for="detail in emp" class="item-list">
+      <div v-for="detail in emp" class="item-list" @click="goToDetail(detail.empId)">
         <p class="item">{{ detail.empId }}</p>
         <p class="item">{{ detail.position }}</p>
         <p class="item">{{ detail.name }}</p>
@@ -52,6 +56,9 @@ onMounted(()=>{
   grid-template-columns: 1fr 1fr 1fr 1fr;
   width: 500px;
   padding: 5px 40px;
+  cursor: pointer;
 }
-
+.item-list:hover {
+  background-color: #d9d9d9;
+}
 </style>

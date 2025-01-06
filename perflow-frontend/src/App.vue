@@ -4,6 +4,7 @@ import {computed, ref} from "vue";
 import NavigationBar from "@/components/common/NavigationBar.vue";
 import Loading from "@/components/common/Loading.vue";
 import {useAuthStore} from "@/store/authStore.js";
+import Alert from "@/components/common/Alert.vue";
 
 const authStore = useAuthStore();
 const isLogin = computed(()=>{
