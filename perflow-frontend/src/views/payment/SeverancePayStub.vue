@@ -136,7 +136,9 @@ const printSection = () => {
 };
 
 onMounted(() => {
-  fetchSeverancePayStub();
+  if(employee && employee.status === 'RESIGNED') {
+    fetchSeverancePayStub();
+  }
   fetchEmp();
   fetchPayDate();
   // fetchOverTime();
@@ -144,7 +146,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="container">
+  <div class="container" v-if="employee && employee.status === 'RESIGNED'">
     <div class="head">
       <!-- 인쇄 버튼 추가 -->
       <MainPageButton
@@ -230,6 +232,9 @@ onMounted(() => {
         </div>
       </div>
     </div>
+  </div>
+  <div v-else>
+    <h1>퇴직금 대상자가 아닙니다.</h1>
   </div>
 </template>
 
@@ -416,5 +421,10 @@ onMounted(() => {
 .all p {
   color: #afa9a9;
   margin: 0 0 0 10px;
+}
+
+div h1 {
+  align-items: center;
+  justify-content: center;
 }
 </style>
