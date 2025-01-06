@@ -257,7 +257,7 @@ const loadEvaQuestions = async () => {
       },
     });
     evaQuestions.value = resp.data;
-    console.log('동료 평가 문항 리스트:', evaQuestions.value);
+    // console.log('동료 평가 문항 리스트:', evaQuestions.value);
   } catch (err) {
     console.error('동료 평가 문항 리스트 조회 중 오류:', err);
     error.value = "동료 평가 문항을 불러오는 데 실패했습니다.";

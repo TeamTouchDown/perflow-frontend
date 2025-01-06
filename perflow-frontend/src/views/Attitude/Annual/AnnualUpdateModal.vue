@@ -100,7 +100,7 @@ const handleUpdate = async () => {
     const url = `/emp/annual/${annualId}`;
 
     const response = await api.put(url, requestData);
-    console.log("연차 수정 성공:", response.data);
+    // console.log("연차 수정 성공:", response.data);
 
     // 수정 완료 후 모달 닫기
     alert("연차 정보가 수정되었습니다.");

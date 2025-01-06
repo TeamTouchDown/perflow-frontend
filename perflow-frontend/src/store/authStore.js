@@ -112,7 +112,7 @@ export const useAuthStore = defineStore('auth', {
                 try {
                     if (this.empId && this.deviceType) {
                         await deleteTokenFromBackend(this.empId, this.fcmToken, this.deviceType);
-                        console.log('[FCM] 기존 토큰 서버 삭제 성공');
+                        // console.log('[FCM] 기존 토큰 서버 삭제 성공');
                     }
                 } catch (err) {
                     console.error('[FCM] 기존 토큰 서버 삭제 실패:', err);

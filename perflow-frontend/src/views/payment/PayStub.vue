@@ -40,7 +40,7 @@ const fetchPayStub = async (preMonth = month.value) => {
     };
 
   } catch (error) {
-    console.log('급여 명세서 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.log('급여 명세서 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -49,7 +49,7 @@ const updateMonth = (change) => {
   // 값 업데이트
   month.value = month.value + change;
 
-  console.log("현재 월: ", month.value); // 디버깅용, 값 업데이트 확인
+  // console.log("현재 월: ", month.value); // 디버깅용, 값 업데이트 확인
 
   // 업데이트된 값을 기반으로 데이터 요청
   fetchPayStub();
@@ -88,7 +88,7 @@ const fetchOverTime = async () => {
     const response = await api.get(`/emp/overtimes/monthly-summary`);
     overtime.value = response.data;
   } catch (error) {
-    console.log('초과근무 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.log('초과근무 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -173,9 +173,9 @@ const calculatePayStubDate = () => {
     formattedCountingDateEnd.value = formatDate(countingDateEnd);
 
     // 결과 출력
-    // console.log('급여 지급일:', payStubDate.value);
-    // console.log('집계 시작일:', formattedCountingDateStart.value);
-    // console.log('집계 종료일:', formattedCountingDateEnd.value);
+    // // console.log('급여 지급일:', payStubDate.value);
+    // // console.log('집계 시작일:', formattedCountingDateStart.value);
+    // // console.log('집계 종료일:', formattedCountingDateEnd.value);
 
   } else {
     console.error('company.value.paymentDatetime을 가져올 수 없습니다.');

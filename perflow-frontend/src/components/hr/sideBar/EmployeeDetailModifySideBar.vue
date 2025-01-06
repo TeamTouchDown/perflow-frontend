@@ -70,7 +70,7 @@ const updateEmployee = async () => {
     } else {
       updateFailModalVisible(true);
     }
-    console.log(error)
+    // console.log(error)
   }
 
 }

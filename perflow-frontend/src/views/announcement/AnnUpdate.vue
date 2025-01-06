@@ -66,7 +66,7 @@ const fetchFiles = async () => {
 
     // 파일 ID 로그 출력
     files.value.forEach((file) => {
-      console.log(`로드된 파일 ID: ${file.id}, 파일명: ${file.originName}`);
+      // console.log(`로드된 파일 ID: ${file.id}, 파일명: ${file.originName}`);
     });
   } catch (error) {
     console.error("파일 데이터 조회 실패", error);
@@ -80,14 +80,14 @@ const handleFilesSelected = (uploadedFiles) => {
 
 // 파일 삭제
 const removeFile = (fileId) => {
-  console.log("삭제 요청 파일 ID:", fileId); // 디버깅용 로그
+  // console.log("삭제 요청 파일 ID:", fileId); // 디버깅용 로그
 
   // 파일의 인덱스를 찾고 삭제 처리
   const fileIndex = files.value.findIndex((file) => file.id === fileId);
   if (fileIndex !== -1) {
     deletedFileIds.value.push(files.value[fileIndex].id); // 삭제 ID 추가
     files.value.splice(fileIndex, 1); // 파일 목록에서 제거
-    console.log("삭제된 파일 ID 목록:", deletedFileIds.value);
+    // console.log("삭제된 파일 ID 목록:", deletedFileIds.value);
   } else {
     console.warn(`파일 ID ${fileId}를 찾을 수 없습니다.`);
   }
@@ -128,9 +128,9 @@ const updateAnnouncement = async () => {
       deletedFileIds.value.forEach((fileId) => formData.append("deletedFileIds", fileId));
     }
 
-    console.log("전송 데이터 확인:");
+    // console.log("전송 데이터 확인:");
     formData.forEach((value, key) => {
-      console.log(`${key}:`, value);
+      // console.log(`${key}:`, value);
     });
 
     await api.put(`/announcements/${annId.value}`, formData, {

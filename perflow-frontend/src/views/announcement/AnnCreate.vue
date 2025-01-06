@@ -67,9 +67,9 @@ const saveAnnouncement = async () => {
       });
     }
 
-    console.log("FormData 데이터:");
+    // console.log("FormData 데이터:");
     formData.forEach((value, key) => {
-      console.log(`${key}:`, value);
+      // console.log(`${key}:`, value);
     });
 
     await api.post("/announcements", formData);

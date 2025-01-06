@@ -19,7 +19,7 @@ dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
 const today = dayjs();
-console.log(today.format("YYYY-MM-DD"));
+// console.log(today.format("YYYY-MM-DD"));
 
 /* ----------------------------
  * 출장 데이터 수정 모달 관련
@@ -98,7 +98,7 @@ const fetchTravelData = async () => {
     const response = await api.get("emp/travels");
     store.hideLoading();
 
-    console.log("API 응답 데이터:", response.data);
+    // console.log("API 응답 데이터:", response.data);
 
     // 데이터 변환 및 저장 (enrollTravel 제거)
     allDocs.value = response.data.map((item, index) => {
@@ -121,7 +121,7 @@ const fetchTravelData = async () => {
       };
     });
 
-    console.log("변환된 데이터:", allDocs.value);
+    // console.log("변환된 데이터:", allDocs.value);
     // 필터 초기화 및 페이징 적용
     applyFilter(true);
 
@@ -133,7 +133,7 @@ const fetchTravelData = async () => {
 
 // 필터 적용 및 데이터 갱신
 const applyFilter = (resetPage = true) => {
-  console.log("현재 검색 조건:", searchCriteria.value);
+  // console.log("현재 검색 조건:", searchCriteria.value);
 
   let filtered = [...allDocs.value];
 
@@ -163,7 +163,7 @@ const applyFilter = (resetPage = true) => {
         (item) => item.travelStatus === searchCriteria.value.status
     );
   }
-  console.log("필터 적용 후 데이터:", filtered);
+  // console.log("필터 적용 후 데이터:", filtered);
 
   // 필터링된 결과 저장 및 페이징 적용
   filteredDocs.value = filtered;
@@ -178,7 +178,7 @@ const applyFilter = (resetPage = true) => {
 watch(
     () => searchCriteria.value.status,
     (newVal, oldVal) => {
-      console.log("출장 상태 변경:", oldVal, "→", newVal);
+      // console.log("출장 상태 변경:", oldVal, "→", newVal);
       applyFilter(true);
     }
 );
@@ -206,7 +206,7 @@ const handleStatusSelect = (selectedLabel) => {
   const selectedStatus = statusOptions.find(option => option.label === selectedLabel)?.id || "";
   searchCriteria.value.status = selectedStatus; // 영문(enum) 값 저장
 
-  console.log("선택된 상태:", selectedStatus);
+  // console.log("선택된 상태:", selectedStatus);
 
   // 상태 변경 즉시 필터 적용 (첫 페이지로 리셋)
   applyFilter(true); // 첫 페이지로 리셋

@@ -97,7 +97,7 @@ const convertToLocalDateTime = (inputValue) => {
     // 입력값이 12자리(YYYYMMDDHHMM) 형식일 경우
     const datetimeRegex = /^\d{10}$/;
 
-    console.log("Received input:", inputValue); // 디버깅: 입력값 확인
+    // console.log("Received input:", inputValue); // 디버깅: 입력값 확인
 
     if (datetimeRegex.test(inputValue)) {
       // 입력값이 유효하면 년, 월, 일, 시, 분을 추출
@@ -108,17 +108,17 @@ const convertToLocalDateTime = (inputValue) => {
       const minute = inputValue.slice(8, 10);
 
       // 디버깅: 추출한 값 확인
-      console.log("Year:", year, "Month:", month, "Day:", day, "Hour:", hour, "Minute:", minute);
+      // console.log("Year:", year, "Month:", month, "Day:", day, "Hour:", hour, "Minute:", minute);
 
       // 자동으로 초를 00으로 설정하여 LocalDateTime 형식으로 변환
       const formattedDate = `20${year}-${month}-${day}T${hour}:${minute}:00`;
 
       // 변환된 날짜 확인
-      console.log("Formatted Date:", formattedDate); // 디버깅: 변환된 날짜
+      // console.log("Formatted Date:", formattedDate); // 디버깅: 변환된 날짜
 
       // dayjs를 사용하여 날짜 변환
       const date = dayjs(formattedDate);
-      console.log("DayJS Date Object:", date); // 디버깅: dayjs 객체 확인
+      // console.log("DayJS Date Object:", date); // 디버깅: dayjs 객체 확인
 
       // 날짜가 유효한지 확인
       if (!date.isValid()) {

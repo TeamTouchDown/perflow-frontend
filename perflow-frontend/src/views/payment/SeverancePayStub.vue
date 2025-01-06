@@ -58,7 +58,7 @@ const fetchSeverancePayStub = async () => {
     annualEndDate.setDate(annualEndDate.getDate() - 1); // 퇴직일의 하루 전
     annualDateEnd.value = `${annualEndDate.getFullYear()}.${(annualEndDate.getMonth() + 1).toString().padStart(2, '0')}.${annualEndDate.getDate().toString().padStart(2, '0')}`;
   } catch (error) {
-    console.log('퇴직 명세서 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.log('퇴직 명세서 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -93,7 +93,7 @@ const fetchOverTime = async () => {
     const response = await api.get(`/emp/overtimes/monthly-summary`);
       overtime.value = response.data;
   } catch (error) {
-    console.log('초과근무 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.log('초과근무 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -145,7 +145,7 @@ const printSection = () => {
 };
 
 const checkResigned = () => {
-  console.log("checkResigned 호출");
+  // console.log("checkResigned 호출");
 
   if (!employee || employee.status !== 'RESIGNED') {
     showAlert('퇴직대상자가 아닙니다.');

@@ -155,8 +155,8 @@ async function loadPerfo() {
       hrperfo.value.splice(index, 1);
     }
 
-    console.log("Last year eval:", lastYearEvaluation.value);
-    console.log("Other evals:", hrperfo.value);
+    // console.log("Last year eval:", lastYearEvaluation.value);
+    // console.log("Other evals:", hrperfo.value);
   } catch (error) {
     console.error(`평가 존재 여부 확인 중 오류: ${error}`);
   }

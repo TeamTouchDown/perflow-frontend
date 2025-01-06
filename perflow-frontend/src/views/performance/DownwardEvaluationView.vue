@@ -204,10 +204,10 @@ const isSaveDisabled = computed(() => {
       userAnswers.value.length !== allQuestions.value.length ||
       userAnswers.value.some(ans => ans.answer === null || typeof ans.answer !== 'string' || ans.answer.trim() === "")
   ) {
-    console.log("답변 갯수와 문제 갯수가 일치하지 않거나, 유효하지 않은 답변이 존재함");
+    // console.log("답변 갯수와 문제 갯수가 일치하지 않거나, 유효하지 않은 답변이 존재함");
     return true; // 저장 비활성화
   }
-  console.log("모든 답변이 유효하고, 갯수가 일치함");
+  // console.log("모든 답변이 유효하고, 갯수가 일치함");
   return false; // 저장 가능
 });
 
@@ -229,7 +229,7 @@ function saveCurrentAnswer() {
     // 기존 답변이 있으면 수정
     existing.answer = currentAnswer.value ? String(currentAnswer.value).trim() : "";
   }
-  console.log("Updated userAnswers:", userAnswers.value); // 디버깅용 로그
+  // console.log("Updated userAnswers:", userAnswers.value); // 디버깅용 로그
 }
 
 // 문제 이동 후 해당 문제의 답을 불러옴
@@ -319,7 +319,7 @@ async function loadAnswer(peerId) {
 async function openEditModal(peerId) {
   savetype.value = "put"
   await loadAnswer(peerId);
-  console.log(userAnswers.value);
+  // console.log(userAnswers.value);
   currentPeerId.value = peerId;
   isCreateModalOpen.value = true;
   currentQuestionIndex.value = 0; // 첫 번째 문제부터 시작
@@ -368,7 +368,7 @@ async function saveAnswers() {
       })),
     };
     // 서버 API 호출
-    console.log(payload);
+    // console.log(payload);
     if (savetype.value === "post"){
       await api.post(`leader/perfomances/downward/perfo/${MyInfo.value.empId}`, payload);
 
@@ -413,7 +413,7 @@ async function fetchPeerData() {
           evaluationsExist.value[peer.empId] = exists;
         })
     );
-    console.log(evaluationsExist.value);
+    // console.log(evaluationsExist.value);
 
   } catch (error) {
     console.error("Peer 데이터 로드 오류:", error);

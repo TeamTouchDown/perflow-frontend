@@ -32,7 +32,7 @@ const dropdownOptions = [
 
 // 드롭다운 선택 시 호출
 const handleDropdownSelect = (id) => {
-  console.log(`선택된 드롭다운 옵션 id: ${id}`);
+  // console.log(`선택된 드롭다운 옵션 id: ${id}`);
   router.push({ name: id }).catch((error) => {
     console.error("라우팅 에러: ", error);
   });
@@ -54,7 +54,7 @@ const updateApprovalList = (newList) => {
 
   approvalData.value = newList.map((item, index, array) => {
 
-    console.log("현재 항목 타입: ", item.type);
+    // console.log("현재 항목 타입: ", item.type);
 
     const isParallel = item.type === "병렬" || item.type === "병렬합의";
 
@@ -85,7 +85,7 @@ const updateApprovalList = (newList) => {
     currentOrder++;
   }
 
-  console.log("updateApprovalList - 업데이트 된 approvalData: ", approvalData.value);
+  // console.log("updateApprovalList - 업데이트 된 approvalData: ", approvalData.value);
 };
 
 // 공유 설정 업데이트
@@ -96,7 +96,7 @@ const updateShareList = (newList) => {
     name: item.name,
     position: item.position,
   }));
-  console.log("updateShareList - 업데이트 된 shareData: ", shareData.value);
+  // console.log("updateShareList - 업데이트 된 shareData: ", shareData.value);
 };
 
 

@@ -118,7 +118,7 @@ const submitInsuranceRates = async () => {
     closeModal();
     showAlert('보험료가 성공적으로 설정되었습니다.');
   } catch (error) {
-    console.log("보험료율을 등록하는 중 에러가 발생했습니다. : ", error);
+    // console.log("보험료율을 등록하는 중 에러가 발생했습니다. : ", error);
     showAlert('보험료율 등록 중 오류가 발생했습니다.');
   }
 };
@@ -196,7 +196,7 @@ const handleFileUpload = async () => {
         'Content-Type': 'multipart/form-data',
       },
     });
-    console.log("업로드 성공:", response.data);
+    // console.log("업로드 성공:", response.data);
     showAlert("파일이 성공적으로 업로드되었습니다.");
     isFileUploadVisible.value = false; // 모달 닫기
   } catch (error) {

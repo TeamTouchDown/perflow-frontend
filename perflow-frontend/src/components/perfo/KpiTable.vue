@@ -265,7 +265,7 @@ function closeUpdateModal() {
 }
 
 function updateKPI() {
-  console.log("updateKPI():", KPIForm.value);
+  // console.log("updateKPI():", KPIForm.value);
   emit("updateKpi", {...KPIForm.value});
   closeUpdateModal();
 }
@@ -282,7 +282,7 @@ function closeDeleteModal() {
 }
 
 function confirmDelete() {
-  console.log("confirmDelete => kpiIdToDelete:", kpiIdToDelete.value);
+  // console.log("confirmDelete => kpiIdToDelete:", kpiIdToDelete.value);
   emit("deleteKpi", kpiIdToDelete.value);
   closeDeleteModal();
 }
@@ -298,7 +298,7 @@ function closeAddModal() {
 }
 
 function addKPI() {
-  console.log("addKPI():", KPIForm.value);
+  // console.log("addKPI():", KPIForm.value);
   emit("addKpi", {...KPIForm.value});
   closeAddModal();
 }

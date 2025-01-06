@@ -16,7 +16,7 @@ const store = useStore();
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 const today = dayjs(); // 현재 날짜와 시간
-console.log(today.format("YYYY-MM-DD"));
+// console.log(today.format("YYYY-MM-DD"));
 
 
 const showUpdateModal = ref(false);
@@ -140,7 +140,7 @@ const fetchAnnualData = async () => {
   try {
     store.showLoading();
     const response = await api.get("leader/annual/team");
-    console.log("API 응답 데이터:", response.data);
+    // console.log("API 응답 데이터:", response.data);
     store.hideLoading();
 
     // 데이터 변환 및 저장
@@ -168,7 +168,7 @@ const fetchAnnualData = async () => {
 
 // 필터 적용 및 데이터 갱신
 const applyFilter = (resetPage = true) => {
-  console.log("현재 검색 조건:", searchCriteria.value);
+  // console.log("현재 검색 조건:", searchCriteria.value);
 
   let filtered = [...allDocs.value];
 
@@ -215,10 +215,10 @@ const handlePageChange = (page) => {
 
 // 상태 드롭다운 변경 시
 /*const handleStatusSelect = (selectedLabel) => {
-  console.log("선택된 상태:", selectedLabel);
+  // console.log("선택된 상태:", selectedLabel);
   const selectedStatus = statusOptions.find(
       option => option.label === selectedLabel)?.id || "";
-  console.log("적용된 상태 ID:", searchCriteria.value.status);
+  // console.log("적용된 상태 ID:", searchCriteria.value.status);
   searchCriteria.value.status = selectedStatus;
   applyFilter(true);
 };*/
