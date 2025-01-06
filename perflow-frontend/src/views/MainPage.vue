@@ -242,7 +242,7 @@ const goToAnnouncement = () => {
 };
 
 const goToApproval = () => {
-  router.push(`/approval/home`)
+  router.push(`/approval`)
 };
 
 const goToWaiting = () => {
