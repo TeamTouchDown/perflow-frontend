@@ -1,5 +1,9 @@
 <!-- src/views/OvertimeManagePage.vue -->
 <template>
+  <Alert
+      v-model="alertVisible"
+      :message="alertMsg"
+  />
   <div id="header-div">
     <div id="header-top" class="flex-between">
       <p id="title">초과근무 관리</p>
@@ -113,6 +117,14 @@ import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import { useStore } from "@/store/store.js";
 import {useAuthStore} from "@/store/authStore.js";
+import Alert from "@/components/common/Alert.vue";
+
+const alertVisible = ref(false);
+const alertMsg = ref('');
+const showAlert = (msg) => {
+  alertMsg.value = msg;
+  alertVisible.value = true;
+}
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
@@ -338,7 +350,7 @@ const handlePageChange = (page) => {
 // ----------------------------
 const onRowSelected = (selectedRows) => {
   if (selectedRows.length > 1) {
-    alert("수정할 초과근무는 하나만 선택해주세요.");
+    showAlert("수정할 초과근무는 하나만 선택해주세요.");
     const updatedSelection = [selectedRows[0]];
     selectedOvertime.value = updatedSelection[0];
 
@@ -373,7 +385,7 @@ const handleApplySuccess = () => {
 // ----------------------------
 const openUpdateModal = () => {
   if (!selectedOvertime.value) {
-    alert("수정할 초과근무를 선택해주세요.");
+    showAlert("수정할 초과근무를 선택해주세요.");
     return;
   }
   showUpdateModal.value = true;

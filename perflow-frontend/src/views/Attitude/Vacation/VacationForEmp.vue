@@ -12,12 +12,20 @@ import VacationModal from "@/views/Attitude/Vacation/VacationModal.vue";
 import VacationUpdateModal from "@/views/Attitude/Vacation/VacationUpdateModal.vue";
 import TableCheck from "@/components/common/TableCheck.vue";
 import { useStore } from "@/store/store.js";
+import Alert from "@/components/common/Alert.vue";
 
 const store = useStore();
 
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
+
+const alertVisible = ref(false);
+const alertMsg = ref('');
+const showAlert = (msg) => {
+  alertMsg.value = msg;
+  alertVisible.value = true;
+}
 
 const today = dayjs(); // 현재 날짜와 시간
 console.log(today.format("YYYY-MM-DD"));
@@ -211,7 +219,7 @@ const handleStatusSelect = (selectedLabel) => {
 // 행 선택 함수
 const onRowSelected = (selectedRows) => {
   if (selectedRows.length > 1) {
-    alert("수정할 하나의 휴가만 골라주세요.");
+    showAlert("수정할 하나의 휴가만 골라주세요.");
     const updatedSelection = [selectedRows[0]];
     selectedVacation.value = updatedSelection[0];
 
@@ -234,7 +242,7 @@ const closeModal = () => {
 };
 const openUpdateModal = () => {
   if (!selectedVacation.value) {
-    alert("수정할 휴가를 체크박스로 선택해 주세요.");
+    showAlert("수정할 휴가를 체크박스로 선택해 주세요.");
     return;
   }
   showUpdateModal.value = true;
@@ -248,6 +256,10 @@ onMounted(() => {
 </script>
 
 <template>
+  <Alert
+      v-model="alertVisible"
+      :message="alertMsg"
+  />
   <div id="header-div">
     <div id="header-top" class="flex-between">
       <p id="title">휴가 관리</p>
