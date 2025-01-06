@@ -85,7 +85,7 @@ const fetchPayDate = async () => {
 // 초과근무 정보를 가져오는 함수
 const fetchOverTime = async () => {
   try {
-    const response = await api.get(`/emp/overtimes`);
+    const response = await api.get(`/emp/overtimes/monthly-summary`);
     overtime.value = response.data;
   } catch (error) {
     console.log('초과근무 정보를 불러오는 중 에러가 발생했습니다. : ', error);
@@ -186,7 +186,7 @@ onMounted(() => {
   fetchPayStub();
   fetchEmp();
   fetchPayDate();
-  fetchOverTime();
+  // fetchOverTime();
 });
 </script>
 
@@ -244,32 +244,32 @@ onMounted(() => {
         <p>{{ formatCurrency(payStub?.totalOver ) }}원</p>
       </div>
       <div class="over-list">
-        <div class="all" v-for="overtimeItem in overtime" :key="overtimeItem.overtimeId">
-          <div v-if="overtimeItem.overtimeType === 'EXTENDED' && overtimeItem.overtimeStart && overtimeItem.overtimeEnd">
+        <div>
+          <div class="all" v-if="payStub?.extendLaborAllowance > 0">
             <div class="allowance">
               <div>연장근무수당</div>
               <img src="../../assets/image/allowance.png" alt="allowance" />
-              <p>{{ calculateOvertimeHours(overtimeItem.overtimeStart, overtimeItem.overtimeEnd) }}시간</p>
+<!--              <p>{{ calculateOvertimeHours(overtimeItem.overtimeStart, overtimeItem.overtimeEnd) }}시간</p>-->
             </div>
-            <div>{{ formatCurrency(overtimeItem.totalExtendLaborAllowance) }}원</div>
+            <div>{{ formatCurrency(payStub?.extendLaborAllowance) }}원</div>
           </div>
 
-          <div v-if="overtimeItem.overtimeType === 'NIGHT' && overtimeItem.overtimeStart && overtimeItem.overtimeEnd">
+          <div class="all" v-if="payStub?.nightLaborAllowance > 0">
             <div class="allowance">
               <div>야간근무수당</div>
               <img src="../../assets/image/allowance.png" alt="allowance" />
-              <p>{{ calculateOvertimeHours(overtimeItem.overtimeStart, overtimeItem.overtimeEnd) }}시간</p>
+<!--              <p>{{ calculateOvertimeHours(overtimeItem.overtimeStart, overtimeItem.overtimeEnd) }}시간</p>-->
             </div>
-            <div>{{ formatCurrency(overtimeItem.totalNightLaborAllowance) }}원</div>
+            <div>{{ formatCurrency(payStub?.nightLaborAllowance) }}원</div>
           </div>
 
-          <div v-if="overtimeItem.overtimeType === 'HOLIDAY' && overtimeItem.overtimeStart && overtimeItem.overtimeEnd">
+          <div class="all" v-if="payStub?.holidayLaborAllowance > 0">
             <div class="allowance">
               <div>휴일근무수당</div>
               <img src="../../assets/image/allowance.png" alt="allowance" />
-              <p>{{ calculateOvertimeHours(overtimeItem.overtimeStart, overtimeItem.overtimeEnd) }}시간</p>
+<!--              <p>{{ calculateOvertimeHours(overtimeItem.overtimeStart, overtimeItem.overtimeEnd) }}시간</p>-->
             </div>
-            <div>{{ formatCurrency(overtimeItem.totalHolidayLaborAllowance) }}원</div>
+            <div>{{ formatCurrency(payStub?.holidayLaborAllowance) }}원</div>
           </div>
         </div>
         <div class="all" v-if="payStub?.annualAllowance > 0">
@@ -486,7 +486,7 @@ onMounted(() => {
   display: flex;
 }
 
-.allowance h5 {
+.allowance div {
   color: #3C4651;
   font-size: 15px;
   margin: 0 20px 0 0 !important;
