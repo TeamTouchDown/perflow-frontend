@@ -160,7 +160,6 @@ const errorMessage = ref("");
 const columns = [
   { label: "초과근무 유형", field: "overtimeType" },      // 초과근무 유형
   { label: "신청자 이름", field: "empName" },              // 신청자 ID
-  { label: "결재자 이름", field: "approverName" },              // 신청자 ID
   { label: "신청일", field: "enrollOvertime" },          // 신청일
   { label: "시작일", field: "overtimeStart" },            // 시작일
   { label: "종료일", field: "overtimeEnd" },              // 종료일

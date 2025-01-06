@@ -92,10 +92,10 @@ const searchCriteria = ref({
 });
 
 const statusOptions = [
-  { label: "전체", id: "" },
-  { label: "대기", id: "PENDING" },
-  { label: "승인", id: "CONFIRMED" },
-  { label: "반려", id: "REJECTED" }
+  { label: "전체", value: "" },
+  { label: "대기", value: "PENDING" },
+  { label: "승인", value: "CONFIRMED" },
+  { label: "반려", value: "REJECTED" }
 ];
 /*import OvertimeModal from "@/views/Attitude/Overtime/OvertimeModal.vue";
 import OvertimeUpdateModal from "@/views/Attitude/Overtime/OvertimeUpdateModal.vue";*/
@@ -209,7 +209,7 @@ const handlePageChange = (page) => {
   applyFilter(false);
 };
 
-const handleStatusSelect = (selectedLabel) => {
+/*const handleStatusSelect = (selectedLabel) => {
   // 선택된 상태 라벨을 영문(enum) 값으로 변환
   const selectedStatus = statusOptions.find(option => option.label === selectedLabel)?.id || "";
   searchCriteria.value.status = selectedStatus; // 영문(enum) 값 저장
@@ -218,7 +218,7 @@ const handleStatusSelect = (selectedLabel) => {
 
   // 상태 변경 즉시 필터 적용 (첫 페이지로 리셋)
   applyFilter(true); // 첫 페이지로 리셋
-};
+};*/
 
 // 행 선택 함수
 const onRowSelected = (selectedRows) => {

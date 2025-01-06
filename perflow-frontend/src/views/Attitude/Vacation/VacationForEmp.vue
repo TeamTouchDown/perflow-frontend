@@ -99,10 +99,10 @@ const searchCriteria = ref({
 
 
 const statusOptions = [
-  { label: "전체", id: "" },         // 기본값: 전체 (필터 해제)
-  { label: "대기", id: "PENDING" },  // 대기
-  { label: "승인", id: "CONFIRMED" }, // 승인
-  { label: "반려", id: "REJECTED" }  // 반려
+  { label: "전체", value: "" },         // 기본값: 전체 (필터 해제)
+  { label: "대기", value: "PENDING" },  // 대기
+  { label: "승인", value: "CONFIRMED" }, // 승인
+  { label: "반려", value: "REJECTED" }  // 반려
 ];
 
 // API 데이터 호출 (전체 조회)

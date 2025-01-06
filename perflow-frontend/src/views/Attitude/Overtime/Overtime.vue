@@ -102,7 +102,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import {ref, onMounted, computed, watch} from "vue";
 import SearchGroupBar from "@/components/common/SearchGroupBar.vue";
 import ButtonBasic from "@/components/common/ButtonBasic.vue";
 import ButtonDropDown from "@/components/common/ButtonDropDown.vue";
@@ -125,6 +125,7 @@ const showAlert = (msg) => {
   alertMsg.value = msg;
   alertVisible.value = true;
 }
+
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
@@ -154,10 +155,10 @@ const overtimeStatusMap = {
 
 // 상태 옵션
 const statusOptions = [
-  { label: "전체", id: "" },
-  { label: "대기", id: "PENDING" },
-  { label: "승인", id: "CONFIRMED" },
-  { label: "반려", id: "REJECTED" },
+  { label: "전체", value: "" },
+  { label: "대기", value: "PENDING" },
+  { label: "승인", value: "CONFIRMED" },
+  { label: "반려", value: "REJECTED" },
 ];
 
 // ----------------------------
@@ -174,9 +175,18 @@ const pageSize = 10;
 const searchCriteria = ref({
   title: "",
   createUser: "",
-  fromDate: null,
-  toDate: null,
+  fromDate: "",
+  toDate: "",
+  status:""
 });
+watch(
+    () => searchCriteria.value.status,
+    (newVal, oldVal) => {
+
+      applyFilter(true);
+    }
+);
+
 
 // 선택된 초과근무 데이터
 const selectedOvertime = ref(null);
