@@ -68,7 +68,6 @@ export const useAuthStore = defineStore('auth', {
                 this.remainingTime = minutes + '분 ' + seconds + '초';
 
                 if (remaining <= 0) {
-                    alert("로그인 유효기간이 지났습니다.")
                     this.logout(); // 남은 시간이 0이면 로그아웃
                 }
             }, 1000);
@@ -88,8 +87,6 @@ export const useAuthStore = defineStore('auth', {
                     throw new Error("토큰 갱신 응답에 토큰이 없습니다.");
                 }
 
-                console.log(newAccessToken);
-                console.log(newRefreshToken);
                 this.setTokens(newAccessToken, newRefreshToken);
                 return newAccessToken; // 갱신된 Access Token 반환
             } catch (error) {
@@ -104,7 +101,6 @@ export const useAuthStore = defineStore('auth', {
             if (this.fcmToken) {
                 try {
                     await deleteToken(messaging);
-                    console.log('[FCM] 기존 클라이언트 토큰 삭제 성공');
                 } catch (err) {
                     console.error('[FCM] 기존 클라이언트 토큰 삭제 실패:', err);
                 }
@@ -123,16 +119,13 @@ export const useAuthStore = defineStore('auth', {
             let currentToken = null;
             try {
                 currentToken = await getToken(messaging, {vapidKey: VAPID_KEY});
-                console.log('[FCM] 새 토큰 발급 시도:', currentToken);
 
                 if (currentToken) {
                     // 서버 등록
                     await registerTokenToBackend(this.empId, currentToken, this.deviceType);
-                    console.log('[FCM] 새 토큰 서버 등록 완료');
 
                     // 스토어에 저장
                     this.fcmToken = currentToken;
-                    console.log('[FCM] fcmToken 업데이트 완료:', currentToken);
                 }
             } catch (err) {
                 console.error('[FCM] 새 토큰 발급 실패:', err);
@@ -145,12 +138,9 @@ export const useAuthStore = defineStore('auth', {
             const fcmToken = this.fcmToken;
             const deviceType = this.deviceType;
 
-            console.log('[로그아웃] empId:', empId, 'fcmToken:', fcmToken, 'deviceType:', deviceType);
-
             try {
                 if (fcmToken && empId && deviceType) {
                     await deleteTokenFromBackend(empId, fcmToken, deviceType);
-                    console.log('[로그아웃] FCM 토큰 삭제 요청 성공');
                 } else {
                     console.warn('[로그아웃] FCM 토큰 삭제 조건 미충족:', {empId, fcmToken, deviceType});
                 }
@@ -160,7 +150,6 @@ export const useAuthStore = defineStore('auth', {
                 try {
                     if (fcmToken) {
                         await deleteToken(messaging);
-                        console.log('[로그아웃] 클라이언트 토큰 삭제 성공');
                     }
                 } catch (err) {
                     console.error('[로그아웃] 클라이언트 토큰 삭제 실패:', err);
@@ -176,7 +165,6 @@ export const useAuthStore = defineStore('auth', {
                 localStorage.setItem("accessToken", null);
                 localStorage.setItem("refreshToken", null);
                 clearInterval(this.timerInterval);
-                alert("로그아웃 되었습니다.");
                 router.push('/login');
             }
         },
