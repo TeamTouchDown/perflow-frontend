@@ -27,7 +27,7 @@ const fetchDepartments = async () => {
       name: dept.name,
     }));
   } catch (error) {
-    console.error("부서 목록 조회 실패", error);
+    // console.error("부서 목록 조회 실패", error);
   }
 };
 
@@ -43,7 +43,7 @@ const fetchAnnouncement = async () => {
       content: data.content,
     };
   } catch (error) {
-    console.error("공지사항 데이터 조회 실패", error);
+    // console.error("공지사항 데이터 조회 실패", error);
     alert("공지사항 데이터를 불러오는 데 실패했습니다.");
     router.push("/announcements");
   }
@@ -69,7 +69,7 @@ const fetchFiles = async () => {
       // console.log(`로드된 파일 ID: ${file.id}, 파일명: ${file.originName}`);
     });
   } catch (error) {
-    console.error("파일 데이터 조회 실패", error);
+    // console.error("파일 데이터 조회 실패", error);
   }
 };
 
@@ -140,7 +140,7 @@ const updateAnnouncement = async () => {
     alert("공지사항이 성공적으로 수정되었습니다.");
     router.push("/announcements");
   } catch (error) {
-    console.error("공지사항 수정 실패:", error);
+    // console.error("공지사항 수정 실패:", error);
     alert("공지사항 수정 중 문제가 발생했습니다.");
   }
 };

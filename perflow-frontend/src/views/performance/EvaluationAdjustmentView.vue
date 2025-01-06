@@ -171,7 +171,7 @@ async function loadAiSummary(empId, type) {
     // resp.data = { summary: "...", perfoType: "COL" }
     return resp.data.summary;
   } catch (error) {
-    console.error(`AI 요약(${type}) 조회 오류(empId=${empId}):`, error);
+    // console.error(`AI 요약(${type}) 조회 오류(empId=${empId}):`, error);
     return ""; // 오류 시 빈 문자열 반환 (또는 예외 던지기)
   }
 }
@@ -189,7 +189,7 @@ async function loadAllAiSummaries(empId) {
     const downSummary = await loadAiSummary(empId, "DOWN");
     downwardSummary.value = downSummary;
   } catch (error) {
-    console.error("동료/하향 평가 요약 로드 중 오류:", error);
+    // console.error("동료/하향 평가 요약 로드 중 오류:", error);
   }
 }
 
@@ -314,7 +314,7 @@ async function loadDept() {
     extractDepartments(data);
     dept.value = departmentList;
   } catch (error) {
-    console.error("부서 목록 로드 오류:", error);
+    // console.error("부서 목록 로드 오류:", error);
   }
 }
 
@@ -334,7 +334,7 @@ async function loadEmployee(departmentId) {
     // 병합
     employee.value = mergeEmployeeWithHrperfo();
   } catch (error) {
-    console.error("직원 데이터 로드 오류:", error);
+    // console.error("직원 데이터 로드 오류:", error);
   }
 }
 
@@ -420,7 +420,7 @@ async function loadadjustmentList(empId) {
     // console.log("hrperfo =>", hrperfo.value);
     return hrperfo.value;
   } catch (error) {
-    console.error("조정내역 로드 오류:", error);
+    // console.error("조정내역 로드 오류:", error);
     throw error;
   }
 }

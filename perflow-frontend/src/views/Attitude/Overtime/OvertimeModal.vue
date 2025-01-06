@@ -122,7 +122,7 @@ const convertToLocalDateTime = (inputValue) => {
 
       // 날짜가 유효한지 확인
       if (!date.isValid()) {
-        console.error("Invalid date:", formattedDate); // 변환된 날짜가 유효하지 않음
+        // console.error("Invalid date:", formattedDate); // 변환된 날짜가 유효하지 않음
         return null;
       }
 
@@ -130,7 +130,7 @@ const convertToLocalDateTime = (inputValue) => {
     }
   }
   catch (error){
-    console.error("Invalid date format:", inputValue); // 잘못된 입력에 대한 로그
+    // console.error("Invalid date format:", inputValue); // 잘못된 입력에 대한 로그
     return null;
   }
 }

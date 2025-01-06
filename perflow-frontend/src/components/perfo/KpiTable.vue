@@ -244,7 +244,7 @@ async function openRejectModal(kpiId) {
     rejectReason.value = response.reason || "반려 사유를 불러올 수 없습니다.";
     emit("rejectKpi", kpiId);
   } catch (error) {
-    console.error("반려 사유 불러오기 실패:", error);
+    // console.error("반려 사유 불러오기 실패:", error);
   }
   isRejectModalOpen.value = true;
 }

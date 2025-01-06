@@ -145,7 +145,7 @@ const loadGrade = async () => {
       grades.value.D = data.dratio || 0;
     }
   } catch (error) {
-    console.error(`등급 비율 조회 중 오류: ${error}`);
+    // console.error(`등급 비율 조회 중 오류: ${error}`);
     showAlert("등급 비율 조회 중 오류가 발생했습니다.");
   }
 };
@@ -167,7 +167,7 @@ const uploadGradeRatio = async () => {
     // console.log("등급 비율 저장 응답:", resp.data);
     showAlert("등급 비율이 저장되었습니다!");
   } catch (error) {
-    console.error(`등급 비율 저장 오류: ${error}`);
+    // console.error(`등급 비율 저장 오류: ${error}`);
     const errorMessage = error.response?.data?.message || "등급 비율 저장에 실패했습니다.";
     showAlert(errorMessage);
     throw error;

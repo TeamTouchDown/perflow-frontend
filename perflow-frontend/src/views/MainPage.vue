@@ -52,7 +52,7 @@ const fetchEmp = async () => {
     const response = await api.get(`/employees`);
     employee.value = response.data;
   } catch (error) {
-    console.error('사원 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.error('사원 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -71,7 +71,7 @@ const fetchAttendance = async () => {
       console.warn('서버에서 유효한 데이터가 반환되지 않았습니다.', attendance.value);
     }
   } catch (error) {
-    console.error('일주일 총 근무시간 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.error('일주일 총 근무시간 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -81,7 +81,7 @@ const fetchAnnual = async () => {
     const response = await api.get(`/emp/annual/balance`);
     annual.value = response.data;
   } catch (error) {
-    console.error('연차 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.error('연차 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -113,7 +113,7 @@ const fetchPayDate = async () => {
     diffDays.value = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;  // 결과를 diffDays에 저장
 
   } catch (error) {
-    console.error('회사 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.error('회사 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -123,7 +123,7 @@ const fetchVacation = async () => {
     const response = await api.get(`/emp/vacation/usage`);
     vacation.value = response.data;
   } catch (error) {
-    console.error('휴가 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.error('휴가 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -154,7 +154,7 @@ const fetchPreAnnual = async () => {
           };
         });
   } catch (error) {
-    console.error('예정 연차를 불러오는 중 에러가 발생했습니다: ', error);
+    // console.error('예정 연차를 불러오는 중 에러가 발생했습니다: ', error);
   }
 };
 
@@ -164,7 +164,7 @@ const fetchTeamKPI = async () => {
     const response = await api.get(`/perfomances/kpi/team/period/current/${empId}/${year.value}`);
     teamKPI.value = response.data.kpiLists;
   } catch (error) {
-    console.error('팀 kpi 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.error('팀 kpi 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -174,7 +174,7 @@ const fetchPersonalKPI = async () => {
     const response = await api.get(`perfomances/kpi/personal/period/current/${empId}/${year.value}`);
     personalKPI.value = response.data.kpiLists;
   } catch (error) {
-    console.error('개인 kpi 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.error('개인 kpi 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -208,7 +208,7 @@ const fetchAnnouncement = async () => {
     });
 
   } catch (error) {
-    console.error('공지사항 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.error('공지사항 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -220,7 +220,7 @@ const fetchWaitingApproval = async () => {
     // docId의 개수를 셈
     waitingApprovalCount.value = waitingApproval.value.filter(doc => doc.docId).length;
   } catch (error) {
-    console.error('대기 문서 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.error('대기 문서 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -232,7 +232,7 @@ const fetchProcessedApproval = async () => {
     // docId의 개수를 셈
     processedApprovalCount.value = processedApproval.value.filter(doc => doc.docId).length;
   } catch (error) {
-    console.error('처리 문서 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.error('처리 문서 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 

@@ -166,7 +166,7 @@ async function fetchKpiList() {
     KPIs.value = response.data.kpiLists;
     KPILists.value = response.data;
   } catch (error) {
-    console.error("Failed to fetch KPI data:", error);
+    // console.error("Failed to fetch KPI data:", error);
   }
 }
 
@@ -189,7 +189,7 @@ async function handleAddKpi(kpiData) {
     // console.log("KPI 추가 성공:", response.data);
     fetchKpiList(); // 추가 후 다시 목록 갱신
   } catch (error) {
-    console.error("KPI 추가 실패:", error);
+    // console.error("KPI 추가 실패:", error);
   }
 }
 
@@ -212,7 +212,7 @@ async function handleUpdateKpi(kpiData) {
     // console.log("KPI 수정 성공:", response.data);
     fetchKpiList();
   } catch (error) {
-    console.error("KPI 수정 실패:", error);
+    // console.error("KPI 수정 실패:", error);
   }
 }
 
@@ -225,7 +225,7 @@ async function handleDeleteKpi(kpiId) {
     // console.log("KPI 삭제 성공:", response.data);
     fetchKpiList();
   } catch (error) {
-    console.error("KPI 삭제 실패:", error);
+    // console.error("KPI 삭제 실패:", error);
   }
 }
 </script>

@@ -107,7 +107,7 @@ const handleUpdate = async () => {
     emit("update-success");
     emit("close");
   } catch (error) {
-    console.error("연차 수정 실패:", error);
+    // console.error("연차 수정 실패:", error);
     if (error.response) {
       alert(`연차 수정 실패: ${error.response.data.message || "알 수 없는 오류"}`);
     } else {

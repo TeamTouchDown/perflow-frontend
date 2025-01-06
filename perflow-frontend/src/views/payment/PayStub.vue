@@ -66,7 +66,7 @@ const fetchEmp = async () => {
       rrn: `${emp.rrn.slice(0, 2)}.${emp.rrn.slice(2, 4)}.${emp.rrn.slice(4, 6)}`,
     }));
   } catch (error) {
-    console.error('사원 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.error('사원 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -78,7 +78,7 @@ const fetchPayDate = async () => {
 
     calculatePayStubDate();
   } catch (error) {
-    console.error('회사 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.error('회사 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -178,7 +178,7 @@ const calculatePayStubDate = () => {
     // // console.log('집계 종료일:', formattedCountingDateEnd.value);
 
   } else {
-    console.error('company.value.paymentDatetime을 가져올 수 없습니다.');
+    // console.error('company.value.paymentDatetime을 가져올 수 없습니다.');
   }
 };
 

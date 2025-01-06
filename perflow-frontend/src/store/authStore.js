@@ -94,7 +94,7 @@ export const useAuthStore = defineStore('auth', {
                 this.setTokens(newAccessToken, newRefreshToken);
                 return newAccessToken; // 갱신된 Access Token 반환
             } catch (error) {
-                console.error('Failed to refresh token:', error);
+                // // console.error('Failed to refresh token:', error);
                 this.logout(); // 갱신 실패 시 로그아웃 처리
                 throw error;
             }
@@ -106,7 +106,7 @@ export const useAuthStore = defineStore('auth', {
                 try {
                     await deleteToken(messaging);
                 } catch (err) {
-                    console.error('[FCM] 기존 클라이언트 토큰 삭제 실패:', err);
+                    // console.error('[FCM] 기존 클라이언트 토큰 삭제 실패:', err);
                 }
 
                 try {
@@ -115,7 +115,7 @@ export const useAuthStore = defineStore('auth', {
                         // console.log('[FCM] 기존 토큰 서버 삭제 성공');
                     }
                 } catch (err) {
-                    console.error('[FCM] 기존 토큰 서버 삭제 실패:', err);
+                    // console.error('[FCM] 기존 토큰 서버 삭제 실패:', err);
                 }
             }
 
@@ -132,7 +132,7 @@ export const useAuthStore = defineStore('auth', {
                     this.fcmToken = currentToken;
                 }
             } catch (err) {
-                console.error('[FCM] 새 토큰 발급 실패:', err);
+                // console.error('[FCM] 새 토큰 발급 실패:', err);
             }
         },
 
@@ -149,14 +149,14 @@ export const useAuthStore = defineStore('auth', {
                     console.warn('[로그아웃] FCM 토큰 삭제 조건 미충족:', {empId, fcmToken, deviceType});
                 }
             } catch (error) {
-                console.error('[FCM] 로그아웃 시 토큰 삭제 실패:', error);
+                // console.error('[FCM] 로그아웃 시 토큰 삭제 실패:', error);
             } finally {
                 try {
                     if (fcmToken) {
                         await deleteToken(messaging);
                     }
                 } catch (err) {
-                    console.error('[로그아웃] 클라이언트 토큰 삭제 실패:', err);
+                    // console.error('[로그아웃] 클라이언트 토큰 삭제 실패:', err);
                 }
 
                 // 토큰 및 상태 초기화

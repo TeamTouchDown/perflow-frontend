@@ -177,7 +177,7 @@ const loadLimit = async (departmentId) => {
       scores.value.team.max = data.teammaxKpis || 0;
     }
   } catch (error) {
-    console.error(`KPI Limit 조회 중 오류: ${error}`);
+    // console.error(`KPI Limit 조회 중 오류: ${error}`);
     showAlert("KPI Limit 조회 중 오류가 발생했습니다.");
   }
 }
@@ -197,7 +197,7 @@ const uploadKpiLimit = async (departmentId) => {
     // console.log("KPI 제한 저장 응답:", resp.data);
     showAlert("KPI 제한이 저장되었습니다!");
   } catch (error) {
-    console.error(`KPI 제한 저장 오류: ${error}`);
+    // console.error(`KPI 제한 저장 오류: ${error}`);
     const errorMessage = error.response?.data?.message || "KPI 제한 저장에 실패했습니다.";
     showAlert(errorMessage);
     throw error; // 상위 catch로 전달
@@ -221,7 +221,7 @@ const uploadRatio = async (departmentId) => {
     // console.log("가중치 비율 저장 응답:", resp.data);
     showAlert("가중치 비율이 저장되었습니다!");
   } catch (error) {
-    console.error(`가중치 비율 저장 오류: ${error}`);
+    // console.error(`가중치 비율 저장 오류: ${error}`);
     const errorMessage = error.response?.data?.message || "가중치 비율 저장에 실패했습니다.";
     showAlert(errorMessage);
     throw error; // 상위 catch로 전달
@@ -245,7 +245,7 @@ const loadRatio = async (departmentId) => {
     weights.value.down = data.downWeight || 0;
     weights.value.attendance = data.attendanceWeight || 0;
   } catch (error) {
-    console.error(`비율 데이터 조회 중 오류: ${error}`);
+    // console.error(`비율 데이터 조회 중 오류: ${error}`);
     showAlert("비율 데이터 조회 중 오류가 발생했습니다.");
   }
 }
@@ -266,7 +266,7 @@ const loadGrade = async () => {
       grades.value.D = data.dratio || 0;
     }
   } catch (error) {
-    console.error(`등급 비율 조회 중 오류: ${error}`);
+    // console.error(`등급 비율 조회 중 오류: ${error}`);
     showAlert("등급 비율 조회 중 오류가 발생했습니다.");
   }
 };
@@ -305,7 +305,7 @@ const loadDept = async () => {
       await loadRatio(selectedDepartmentId.value);
     }
   } catch (error) {
-    console.error(`부서 로드 오류: ${error}`);
+    // console.error(`부서 로드 오류: ${error}`);
     showAlert("부서 로드 중 오류가 발생했습니다.");
   }
 }

@@ -72,7 +72,7 @@ const fetchEmp = async () => {
       rrn: `${emp.rrn.slice(0, 2)}.${emp.rrn.slice(2, 4)}.${emp.rrn.slice(4, 6)}`,
     }));
   } catch (error) {
-    console.error('사원 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.error('사원 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -83,7 +83,7 @@ const fetchPayDate = async () => {
     company.value = response.data;  // 급여 지급일 (Unix timestamp)
 
   } catch (error) {
-    console.error('회사 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.error('회사 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 

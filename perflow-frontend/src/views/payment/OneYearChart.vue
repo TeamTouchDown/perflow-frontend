@@ -68,10 +68,10 @@ const fetchThreeMonth = async () => {
         ]
       };
     } else {
-      console.error('API 응답 데이터 형식이 예상과 다릅니다.');
+      // console.error('API 응답 데이터 형식이 예상과 다릅니다.');
     }
   } catch (error) {
-    console.error('3개월 간 급여 데이터 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.error('3개월 간 급여 데이터 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 

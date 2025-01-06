@@ -32,7 +32,7 @@ api.interceptors.response.use(
     async (error) => {
 
         const { errorCode, message } = error.response.data;
-        console.error(`ErrorCode: ${errorCode}, Message: ${message}`);
+        // console.error(`ErrorCode: ${errorCode}, Message: ${message}`);
 
         // console.log(`response interceptor 시작!`)
 

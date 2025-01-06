@@ -58,7 +58,7 @@ const fetchWaitingDocs = async (page = 1) => {
     currentPage.value = response.data.number + 1; // Vue는 1부터 시작
 
   } catch (error) {
-    console.error("대기 문서 목록 조회 실패", error);
+    // console.error("대기 문서 목록 조회 실패", error);
     waitingDocs.value = [];
   }
 }
@@ -92,7 +92,7 @@ const bulkApproveDocs = async () => {
     await fetchWaitingDocs(currentPage.value);  // 목록 새로 고침
     selectedRows.value = [];  // 선택 초기화
   } catch (error) {
-    console.error("일괄 승인 실패", error);
+    // console.error("일괄 승인 실패", error);
     showAlert("일괄 승인에 실패하였습니다.")
   }
 }
@@ -159,7 +159,7 @@ const fetchWaitingDocsWithCriteria = async (page = 1) => {
 
     // console.log("검색 결과: ", response.data.content);
   } catch (error) {
-    console.error("검색 실패", error);
+    // console.error("검색 실패", error);
     waitingDocs.value = [];
   }
 }

@@ -34,7 +34,7 @@ const approveAnnualLeave = async () => {
     alert("연차가 승인되었습니다.");
     await fetchAnnualData();  // 승인 후 연차 데이터 새로고침
   } catch (error) {
-    console.error("연차 승인 실패:", error);
+    // console.error("연차 승인 실패:", error);
     alert("연차 승인에 실패했습니다.");
   }
 };
@@ -51,7 +51,7 @@ const rejectAnnualLeave = async () => {
     alert("연차가 반려되었습니다.");
     await fetchAnnualData();  // 반려 후 연차 데이터 새로고침
   } catch (error) {
-    console.error("연차 반려 실패:", error);
+    // console.error("연차 반려 실패:", error);
     alert("연차 반려에 실패했습니다.");
   }
 };
@@ -161,7 +161,7 @@ const fetchAnnualData = async () => {
     // 필터 초기화 및 페이징 적용
     applyFilter(true);
   } catch (error) {
-    console.error("연차 데이터 조회 실패:", error);
+    // console.error("연차 데이터 조회 실패:", error);
     allDocs.value = [];
   }
 };
@@ -258,7 +258,7 @@ const approveSelectedAnnualLeaves = async () => {
     alert("선택된 연차가 모두 승인되었습니다.");
     await fetchAnnualData();  // 승인 후 연차 데이터 새로고침
   } catch (error) {
-    console.error("연차 승인 실패:", error);
+    // console.error("연차 승인 실패:", error);
     alert("연차 승인에 실패했습니다.");
   }
 };
@@ -280,7 +280,7 @@ const rejectSelectedAnnualLeaves = async () => {
     alert("선택된 연차가 모두 반려되었습니다.");
     await fetchAnnualData();  // 반려 후 연차 데이터 새로고침
   } catch (error) {
-    console.error("연차 반려 실패:", error);
+    // console.error("연차 반려 실패:", error);
     alert("연차 반려에 실패했습니다.");
   }
 };

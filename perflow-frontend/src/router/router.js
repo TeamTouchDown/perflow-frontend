@@ -58,17 +58,13 @@ import KPIConfirmView from "@/views/performance/KPIConfirmView.vue";
 import QuestionManagementView from "@/views/performance/QuestionManagementView.vue";
 import DeptRatioView from "@/views/performance/DeptRatioView.vue";
 import GradeRatioView from "@/views/performance/GradeRatioView.vue";
-import InquiryManagementView from "@/views/performance/InquiryManagementView.vue";
 import Outbox from "@/views/approval/Outbox.vue";
 import Inbox from "@/views/approval/Inbox.vue";
 
 import EmpDetailPage from "@/views/hr/employee/EmpDetailPage.vue";
-import AnnDetail from "@/views/announcement/AnnDetail.vue";
-import AnnUpdate from "@/views/announcement/AnnUpdate.vue";
 import {useAuthStore} from "@/store/authStore.js";
 import AnnDetail from "@/views/announcement/AnnDetail.vue";
 import AnnUpdate from "@/views/announcement/AnnUpdate.vue";
-import {useAuthStore} from "@/store/authStore.js";
 import PerformanceView from "@/views/performance/PerformanceView.vue";
 
 

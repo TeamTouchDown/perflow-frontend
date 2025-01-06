@@ -97,7 +97,7 @@ const fetchOvertimeData = async () => {
     // 필터 초기화 및 페이징 적용
     applyFilter(true);
   } catch (error) {
-    console.error("초과근무 데이터 조회 실패:", error);
+    // console.error("초과근무 데이터 조회 실패:", error);
     allDocs.value = [];
   }
 };

@@ -55,7 +55,7 @@ const fetchWeeklyAttendance = async (page = 1) => {
       updateFilteredData();
     }
   } catch (error) {
-    console.error("주차별 데이터 호출 실패:", error.response?.data || error.message);
+    // console.error("주차별 데이터 호출 실패:", error.response?.data || error.message);
   }
 };
 
@@ -74,7 +74,7 @@ const fetchMonthlyAttendance = async (page = 1) => {
       updateFilteredData();
     }
   } catch (error) {
-    console.error("월별 데이터 호출 실패:", error.response?.data || error.message);
+    // console.error("월별 데이터 호출 실패:", error.response?.data || error.message);
   }
 };
 

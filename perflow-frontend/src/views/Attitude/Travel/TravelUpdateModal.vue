@@ -196,7 +196,7 @@ const handleUpdate = async () => {
     emit("update-success");
     emit("close");
   } catch (error) {
-    console.error("출장 수정 실패:", error);
+    // console.error("출장 수정 실패:", error);
     if (error.response) {
       alert(
           `출장 수정 실패: ${error.response.data.message || "알 수 없는 오류"}`
