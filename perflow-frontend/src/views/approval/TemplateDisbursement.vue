@@ -111,6 +111,11 @@ const totalAmount = computed(() => {
   return rows.value.reduce((sum, row) => sum + Number(row.amount || 0), 0);
 });
 
+// 합계에 , 추가
+const formatTotalAmount = computed(() => {
+
+  return totalAmount.value.toLocaleString();
+});
 
 // 행 추가
 const addRow = () => {
@@ -181,10 +186,10 @@ const createNewDoc = async () => {
   try {
     const data = docData();
     const response = await createNewDocument(data);
-    showAlert('결재 문서 생성 완료');
-    goTo("/approval/home");
+    showAlert('문서를 상신했습니다.');
+    goTo("/approval/outbox");
   } catch (error) {
-    showAlert(`결재 문서 생성에 실패했습니다. 오류: ${error.message}`);
+    showAlert('결재 문서 생성에 실패했습니다.');
     console.error(error);
   }
 };
@@ -285,7 +290,7 @@ const showAlert = (msg) => {
 
         <!-- 합계 -->
         <div class="total">
-          <span>합계 {{ totalAmount }} 원 </span>
+          <span>합계 {{ formatTotalAmount }} 원 </span>
         </div>
       </div>
 
@@ -679,6 +684,7 @@ const showAlert = (msg) => {
   padding: 10px;
   border-bottom: 2px solid #ff6600;
   border-top: 2px solid #ff6600;
+  text-align: right;
 }
 
 .dropdown-container {

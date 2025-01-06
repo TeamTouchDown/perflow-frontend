@@ -146,9 +146,9 @@ onMounted(() => {
   <Alert :model-value=logoutModalVisible message="로그아웃 되었습니다." @update:modelValue="updateLogoutModalVisible"/>
   <Alert :model-value=extendModalVisible message="로그인 시간이 연장되었습니다." @update:modelValue="updateExtendModalVisible"/>
   <div id="nav">
-    <div id="nav-logo" @click="goTo('/main-page')">
-      <img src="@/assets/image/logo.png" alt="로고" id="logo-image" />
-      <span id="logo-text">Perflow</span>
+    <div id="nav-logo">
+      <img src="@/assets/image/logo.png" alt="로고" id="logo-image" @click="goTo('/main-page')" />
+      <span id="logo-text" @click="goTo('/main-page')">Perflow</span>
     </div>
 
     <div class="nav-right" v-if="isLogin">
@@ -190,26 +190,26 @@ onMounted(() => {
 #nav {
   display: flex;
   height: 81px;
-  justify-content: space-between;
   align-items: center;
+  justify-content: center;
   width: 100%;
   border-bottom: 1px solid #817F7F;
 }
 
-#nav-logo, .nav-right {
-  display: flex;
-  align-items: flex-end;
-  margin: 0 auto;
-  cursor: pointer;
-}
 #nav-logo {
-  margin-right: 300px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
 }
 
 #logo-image {
   width: 50px;
   height: 50px;
   margin-right: 5px;
+  cursor: pointer;
 }
 
 #logo-text {
@@ -217,17 +217,18 @@ onMounted(() => {
   font-size: 30px;
   font-family: Inter;
   margin-left: 5px;
+  cursor: pointer;
 }
 
 .nav-right {
-  position: relative;
-  text-align: right;
+  position: absolute;
   right: 0;
+  text-align: right;
   padding-right: 30px;
   align-items: center;
   display: flex;
   gap: 20px;
-  margin: 0;
+  margin: 0 auto;
 }
 
 #timer {

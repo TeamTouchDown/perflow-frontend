@@ -1,10 +1,9 @@
 <script setup>
-import { ref } from "vue";
+import {ref} from "vue";
 import api from "@/config/axios.js";
-import { useAuthStore } from '@/store/authStore.js';
+import {useAuthStore} from '@/store/authStore.js';
 import router from "@/router/router.js";
 import Alert from "@/components/common/Alert.vue";
-import { initFCMToken } from "@/config/notification/FcmService.js";
 
 const empId = ref("");
 const password = ref("")
@@ -54,12 +53,10 @@ const login = async () => {
     const deviceType = getDeviceType();
     authStore.setDeviceType(deviceType);
 
-    // FCM 토큰 초기화 및 등록
-    await initFCMToken(authStore.empId, deviceType, (token) => {
-      authStore.setFcmToken(token);
-    });
-
     authStore.setTokens(accessToken, refreshToken);
+
+    authStore.afterLogin();
+
     updateModalVisible(true);
   } catch (error) {
     updateFailModalVisible(true);
