@@ -17,7 +17,6 @@ export const useAuthStore = defineStore('auth', {
         authorities: ref(),
         timerInterval: null,
         remainingTime: 0,
-
         fcmToken: ref(null),
         deviceType: ref(null),
     }),
@@ -29,6 +28,7 @@ export const useAuthStore = defineStore('auth', {
             this.isLogin = true;
             localStorage.setItem("accessToken", newAccessToken);
             localStorage.setItem("refreshToken", newRefreshToken);
+            localStorage.setItem("isLogin", "true");
             const decoded = jwtDecode(newAccessToken);
             this.empId = decoded.empId;
             this.empName = decoded.name;
@@ -59,6 +59,10 @@ export const useAuthStore = defineStore('auth', {
 
             // 1초마다 남은 시간 갱신
             this.timerInterval = setInterval(() => {
+                if(localStorage.getItem("isLogin") === "false"){
+                    this.isLogin = false;
+                    this.logout();
+                }
                 const currentTime = Date.now();
                 const remaining = Math.max(0, Math.floor((expiryTime - currentTime) / 1000)); // 초 단위 남은 시간
 
@@ -161,9 +165,13 @@ export const useAuthStore = defineStore('auth', {
                 this.fcmToken = null;
                 this.deviceType = null;
                 this.isLogin = false;
+                this.empId = null;
+                this.empName = null;
+                this.authorities = null;
                 this.remainingTime = 0;
                 localStorage.setItem("accessToken", null);
                 localStorage.setItem("refreshToken", null);
+                localStorage.setItem("isLogin", "false");
                 clearInterval(this.timerInterval);
                 router.push('/login');
             }
