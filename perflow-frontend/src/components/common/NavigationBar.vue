@@ -229,7 +229,6 @@ onMounted(() => {
   display: flex;
   gap: 20px;
   margin: 0 auto;
-  overflow: hidden;
 }
 
 #timer {
