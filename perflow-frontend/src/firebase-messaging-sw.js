@@ -1,18 +1,18 @@
 // src/firebase-messaging-sw.js
-
-importScripts('https://www.gstatic.com/firebasejs/11.1.0/firebase-app-compat.js');
-importScripts('https://www.gstatic.com/firebasejs/11.1.0/firebase-messaging-compat.js');
+/* global __VITE_FCM_APIKEY__, __VITE_FCM_AUTHDOMAIN__, __VITE_FCM_PROJECTID__, __VITE_FCM_STORAGEBUCKET__, __VITE_FCM_MESSAGINGSENDERID__, __VITE_FCM_APPID__ */
+importScripts("https://www.gstatic.com/firebasejs/11.1.0/firebase-app-compat.js");
+importScripts("https://www.gstatic.com/firebasejs/11.1.0/firebase-messaging-compat.js");
 
 console.log("서비스 워커 로드됨");
 
 // Firebase 설정 (빌드 시점에 환경 변수로 대체)
 const firebaseConfig = {
-    apiKey: "__VITE_FCM_APIKEY__",
-    authDomain: "__VITE_FCM_AUTHDOMAIN__",
-    projectId: "__VITE_FCM_PROJECTID__",
-    storageBucket: "__VITE_FCM_STORAGEBUCKET__",
-    messagingSenderId: "__VITE_FCM_MESSAGINGSENDERID__",
-    appId: "__VITE_FCM_APPID__"
+    apiKey: __VITE_FCM_APIKEY__,
+    authDomain: __VITE_FCM_AUTHDOMAIN__,
+    projectId: __VITE_FCM_PROJECTID__,
+    storageBucket: __VITE_FCM_STORAGEBUCKET__,
+    messagingSenderId: __VITE_FCM_MESSAGINGSENDERID__,
+    appId: __VITE_FCM_APPID__
 };
 
 // Firebase 초기화
@@ -26,7 +26,6 @@ messaging.onBackgroundMessage((payload) => {
     const notificationTitle = payload.notification?.title || "백그라운드 기본 제목";
     const notificationOptions = {
         body: payload.notification?.body || "백그라운드 기본 본문",
-        icon: payload.notification?.icon || "/default-icon.png",
         data: {
             click_action: payload.data?.click_action || '/' // 클릭 시 이동할 URL
         }
@@ -41,7 +40,7 @@ self.addEventListener('notificationclick', function(event) {
     event.notification.close(); // 알림 닫기
 
     // 클릭된 알림의 데이터에서 URL 추출
-    const clickAction = event.notification.data.click_action;
+    const clickAction = event.notification.data?.click_action;
 
     // URL이 지정되어 있지 않으면 기본 페이지로 이동
     const urlToOpen = new URL(clickAction || '/', self.location.origin).href;
