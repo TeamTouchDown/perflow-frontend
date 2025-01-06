@@ -30,7 +30,7 @@ const showAlert = (msg) => {
   alertVisible.value = true;
 }
 
-// console.log("severancePayId : ",severancePayId);
+console.log("severancePayId : ",severancePayId);
 
 // 금액 포맷 함수
 const formatCurrency = (value) => {
@@ -46,10 +46,10 @@ const fetchPayrollDetail = async () => {
 
     severancePays.value.forEach((severancePay) => {
       month.value = severancePay.createDatetime.slice(5, 7);
-      // console.log(`해당 급여의 생성 월: ${month}`);
+      console.log(`해당 급여의 생성 월: ${month}`);
     });
   } catch (error) {
-    // console.error('퇴직금 상세 정보를 불러오는 중 에러가 발생했습니다. : ', error)
+    console.error('퇴직금 상세 정보를 불러오는 중 에러가 발생했습니다. : ', error)
   }
 };
 
@@ -83,7 +83,7 @@ const menuItem = [
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url); // URL 객체를 해제합니다.
       } catch (error) {
-        // console.error('파일 다운로드 중 오류 발생:', error);
+        console.error('파일 다운로드 중 오류 발생:', error);
         showAlert('파일 다운로드에 실패했습니다.');
       }
     }
@@ -120,11 +120,11 @@ const handleFileUpload = async () => {
         'Content-Type': 'multipart/form-data',
       },
     });
-    // console.log("업로드 성공:", response.data);
+    console.log("업로드 성공:", response.data);
     showAlert("파일이 성공적으로 업로드되었습니다.");
     isFileUploadVisible.value = false; // 모달 닫기
   } catch (error) {
-    // console.error("업로드 실패:", error);
+    console.error("업로드 실패:", error);
     showAlert("파일 업로드 중 오류가 발생했습니다.");
   }
 };

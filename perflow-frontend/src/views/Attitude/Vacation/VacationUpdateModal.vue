@@ -104,14 +104,14 @@ const handleUpdate = async () => {
     const url = `/emp/vacation/${vacationId}`;
 
     const response = await api.put(url, requestData);
-    // console.log("휴가 수정 성공:", response.data);
+    console.log("휴가 수정 성공:", response.data);
 
     // 수정 완료 후 모달 닫기
     alert("휴가 정보가 수정되었습니다.");
     emit("update-success");
     emit("close");
   } catch (error) {
-    // console.error("휴가 수정 실패:", error);
+    console.error("휴가 수정 실패:", error);
     if (error.response) {
       alert(`휴가 수정 실패: ${error.response.data.message || "알 수 없는 오류"}`);
     } else {

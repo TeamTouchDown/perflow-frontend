@@ -74,7 +74,7 @@ const fetchOvertimeData = async () => {
   try {
     store.showLoading();
     const response = await api.get("hr/overtimes/all");  // 초과근무 데이터 API 호출
-    // console.log("API 응답 데이터:", response.data);
+    console.log("API 응답 데이터:", response.data);
     store.hideLoading();
 
     // 데이터 변환 및 저장
@@ -97,7 +97,7 @@ const fetchOvertimeData = async () => {
     // 필터 초기화 및 페이징 적용
     applyFilter(true);
   } catch (error) {
-    // console.error("초과근무 데이터 조회 실패:", error);
+    console.error("초과근무 데이터 조회 실패:", error);
     allDocs.value = [];
   }
 };

@@ -92,7 +92,7 @@ const updateAuthority = async (checked, authId) => {
     const errorMessage = error.response.data.message;
     // "ExceptionHandlerExceptionResolver" 오류를 무시
     if (errorMessage.includes("The given")) {
-      // console.warn("ExceptionHandlerExceptionResolver 오류는 무시되었습니다.");
+      console.warn("ExceptionHandlerExceptionResolver 오류는 무시되었습니다.");
       return; // 오류 무시
     }
     if (errorMessage){

@@ -94,7 +94,7 @@ const fetchNotifications = async () => {
     });
     notifications.value = response.data; // 서버에서 받은 알림 데이터 저장
   } catch (error) {
-    // console.error("알림 목록을 가져오는 데 실패했습니다.", error);
+    console.error("알림 목록을 가져오는 데 실패했습니다.", error);
   }
 };
 
@@ -105,10 +105,10 @@ const handleNotificationClick = async (url, notiId) => {
       await deleteNotification(notiId); // 알림 삭제
       isNotificationVisible.value = false; // 알림 팝업 닫기
     } else {
-      // console.error("URL이 없습니다.");
+      console.error("URL이 없습니다.");
     }
   } catch (error) {
-    // console.error("알림 처리 중 오류 발생:", error);
+    console.error("알림 처리 중 오류 발생:", error);
   }
 };
 
@@ -124,7 +124,7 @@ const deleteNotification = async (notiId) => {
         (notification) => notification.notiId !== notiId
     );
   } catch (error) {
-    // console.error("알림 삭제 실패:", error);
+    console.error("알림 삭제 실패:", error);
   }
 };
 
@@ -137,7 +137,7 @@ const deleteAllNotifications = async () => {
     });
     notifications.value = []; // 알림 목록 초기화
   } catch (error) {
-    // console.error("전체 알림 삭제 실패:", error);
+    console.error("전체 알림 삭제 실패:", error);
   }
 };
 

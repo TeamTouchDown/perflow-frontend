@@ -196,7 +196,7 @@ const fetchOvertimeData = async () => {
     });
     store.hideLoading();
 
-    // console.log("초과근무 조회 전체 응답 데이터: ", response.data); // 전체 데이터 로그
+    console.log("초과근무 조회 전체 응답 데이터: ", response.data); // 전체 데이터 로그
 
     // 데이터 변환 및 저장
     const content = response.data; // API 응답이 배열임
@@ -217,7 +217,7 @@ const fetchOvertimeData = async () => {
 
         // 필드 누락 시 경고 로그 출력
         if (!item.enrollOvertime || !item.overtimeStart || !item.overtimeEnd) {
-          // console.warn(`Item at index ${index} is missing date fields:`, item);
+          console.warn(`Item at index ${index} is missing date fields:`, item);
         }
 
         return {
@@ -234,16 +234,16 @@ const fetchOvertimeData = async () => {
         };
       });
 
-      // console.log("변환된 데이터:", allDocs.value);
+      console.log("변환된 데이터:", allDocs.value);
 
       // 필터 초기화 및 페이징 적용
       applyFilter(true);
     } else {
-      // console.error("필터링 가능한 데이터가 아닙니다:", response.data);
+      console.error("필터링 가능한 데이터가 아닙니다:", response.data);
       allDocs.value = [];
     }
   } catch (error) {
-    // console.error("초과근무 데이터 조회 실패:", error);
+    console.error("초과근무 데이터 조회 실패:", error);
     allDocs.value = [];
     store.hideLoading();
   }
@@ -253,7 +253,7 @@ const fetchOvertimeData = async () => {
 // [4] 필터 적용 및 데이터 갱신
 // ----------------------------
 const applyFilter = (resetPage = true) => {
-  // console.log("현재 검색 조건:", searchCriteria.value);
+  console.log("현재 검색 조건:", searchCriteria.value);
 
   let filtered = [...allDocs.value];
 
@@ -295,7 +295,7 @@ const applyFilter = (resetPage = true) => {
     );
   }
 
-  // console.log("필터 적용 후 데이터:", filtered);
+  console.log("필터 적용 후 데이터:", filtered);
 
   // 필터링된 결과 저장 및 페이징 적용
   filteredDocs.value = filtered;
@@ -321,7 +321,7 @@ const paginatedDocs = computed(() => {
 // [6] 검색 처리
 // ----------------------------
 const handleSearch = () => {
-  // console.log("검색 조건: ", searchCriteria.value);
+  console.log("검색 조건: ", searchCriteria.value);
   currentPage.value = 1;  // 검색 시 페이지를 처음으로 초기화
   applyFilter(true);
 };

@@ -24,7 +24,7 @@ const fetchDepartments = async () => {
       name: dept.name,
     }));
   } catch (error) {
-    // console.error("부서 목록 조회 실패", error);
+    console.error("부서 목록 조회 실패", error);
   }
 };
 
@@ -67,9 +67,9 @@ const saveAnnouncement = async () => {
       });
     }
 
-    // console.log("FormData 데이터:");
+    console.log("FormData 데이터:");
     formData.forEach((value, key) => {
-      // console.log(`${key}:`, value);
+      console.log(`${key}:`, value);
     });
 
     await api.post("/announcements", formData);
@@ -77,7 +77,7 @@ const saveAnnouncement = async () => {
     alert("공지사항이 성공적으로 생성되었습니다.");
     await router.push("/announcements");
   } catch (error) {
-    // console.error("공지사항 생성 실패", error);
+    console.error("공지사항 생성 실패", error);
     alert("공지사항 생성 중 문제가 발생했습니다.");
   }
 };

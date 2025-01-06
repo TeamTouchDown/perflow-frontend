@@ -62,7 +62,7 @@ const downloadCSV = async () => {
     document.body.removeChild(link); // 링크 제거
 
   } catch (error) {
-    // console.error('CSV 다운로드 실패:', error);
+    console.error('CSV 다운로드 실패:', error);
   }
 };
 

@@ -115,7 +115,7 @@ const fetchEmp = async () => {
     const response = await api.get(`/employees`);
     employee.value = response.data;
   } catch (error) {
-    // console.log('사원 정보를 불러오는 중 에러가 발생했습니다. : ',error);
+    console.log('사원 정보를 불러오는 중 에러가 발생했습니다. : ',error);
   }
 };
 

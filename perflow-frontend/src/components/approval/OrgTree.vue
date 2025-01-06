@@ -25,7 +25,7 @@ const emit = defineEmits(["updateApprovalList", "closeModal"]);
 
 // 부모로 데이터 전달
 const saveSelection = () => {
-  // console.log("[OrgTree] 선택된 데이터: ", selectedApprovalList.value);
+  console.log("[OrgTree] 선택된 데이터: ", selectedApprovalList.value);
   emit("updateApprovalList", [...selectedApprovalList.value]);
   emit("closeModal");
 }

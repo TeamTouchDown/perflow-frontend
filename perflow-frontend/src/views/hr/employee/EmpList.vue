@@ -88,7 +88,7 @@ const goTo = (url) => {
   router.push(url);
 }
 const goToDetail = (empId) => {
-  // console.log(empId+"이거다");
+  console.log(empId+"이거다");
   router.push({name:'EmpDetail', params : { empId : empId } });
 }
 

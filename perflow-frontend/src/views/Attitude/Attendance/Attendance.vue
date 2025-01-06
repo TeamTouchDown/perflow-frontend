@@ -37,7 +37,7 @@ const categories = ref([
 
 const navigateToDetail = (category) => {
   // 각 카테고리별 상세 페이지로 이동하는 로직
-  // console.log(`Navigating to ${category} page`);
+  console.log(`Navigating to ${category} page`);
   if (category === '연차 관리') {
     router.push({ name: 'annual' });  // 연차 관리 페이지로 이동
   } else if (category === '휴가 관리') {

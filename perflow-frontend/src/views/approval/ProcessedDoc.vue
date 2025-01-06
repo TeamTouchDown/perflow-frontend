@@ -49,14 +49,14 @@ const fetchProcessedDocs = async (page = 1) => {
         size: pageSize,
       }
     }));
-    // console.log("처리 문서 조회 결과: ", response.data.content);
+    console.log("처리 문서 조회 결과: ", response.data.content);
 
     processedDocs.value = response.data.content;
     totalPages.value = response.data.totalPages;
     totalItems.value = response.data.totalElements;
     currentPage.value = response.data.number + 1;
   } catch (error) {
-    // console.error("처리 문서 목록 조회 실패: ", error);
+    console.error("처리 문서 목록 조회 실패: ", error);
     processedDocs.value = [];
   }
 };
@@ -81,7 +81,7 @@ const handleTitleClick = (row) => {
 
 // 검색 조건 변경 처리
 const handleSearch = () => {
-  // console.log("검색 조건: ", searchCriteria.value);
+  console.log("검색 조건: ", searchCriteria.value);
   currentPage.value = 1;  // 검색 시 페이지를 처음으로 초기화
   fetchProcessedDocsWithCriteria();
 };
@@ -114,9 +114,9 @@ const fetchProcessedDocsWithCriteria = async(page = 1) => {
     totalItems.value = response.data.totalElements;
     currentPage.value = response.data.number + 1;
 
-    // console.log("검색 결과: ", response.data.content);
+    console.log("검색 결과: ", response.data.content);
   } catch (error) {
-    // console.error("검색 실패: ", error);
+    console.error("검색 실패: ", error);
     processedDocs.value = [];
   }
 };

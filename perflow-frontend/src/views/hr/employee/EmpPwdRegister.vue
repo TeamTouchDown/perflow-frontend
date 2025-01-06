@@ -44,7 +44,7 @@ const pwdRegister = async (token) => {
   } catch (error) {
 
     updateFailModalVisible(true);
-    // console.log(error)
+    console.log(error)
   }
 
 }

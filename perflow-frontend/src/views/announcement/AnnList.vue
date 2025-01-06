@@ -61,7 +61,7 @@ const fetchAnnouncements = async (page = 1) => {
 
     isSearching.value = false; // 검색 상태 초기화
   } catch (error) {
-    // console.error("공지사항 리스트 조회 실패", error);
+    console.error("공지사항 리스트 조회 실패", error);
   }
 };
 
@@ -95,7 +95,7 @@ const fetchSearchResults = async (page = 1) => {
 
     isSearching.value = true; // 검색 상태 활성화
   } catch (error) {
-    // console.error("검색 결과 조회 실패", error);
+    console.error("검색 결과 조회 실패", error);
   }
 };
 
@@ -132,7 +132,7 @@ const fetchDepartments = async () => {
     const response = await api.get("/departments/list");
     departments.value = response.data.map((dept) => dept.name);
   } catch (error) {
-    // console.error("부서 목록 조회 실패", error);
+    console.error("부서 목록 조회 실패", error);
   }
 };
 

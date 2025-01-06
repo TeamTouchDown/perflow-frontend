@@ -141,14 +141,14 @@ watch(selectedPeriod, (newVal) => {
 
 // watch selected => fetch KPI list
 watch(selected, (newVal) => {
-  // console.log("selected changed => fetch KPI list:", newVal);
+  console.log("selected changed => fetch KPI list:", newVal);
   fetchKpiList();
 }, {deep: true});
 
 // KPI 데이터 가져오기
 async function fetchKpiList() {
   try {
-    // console.log("fetchKpiList with selected:", selected.value);
+    console.log("fetchKpiList with selected:", selected.value);
     const requestData = {
       quarter: selected.value.period === "QUARTER" ? selected.value.quarter : null,
       month: selected.value.period === "MONTH" ? selected.value.month : null,
@@ -157,11 +157,11 @@ async function fetchKpiList() {
         `/perfomances/kpi/personal/period/new/${authStore.empId}/${selected.value.year}`,
         {params: requestData}
     );
-    // console.log("KPI List Response:", response);
+    console.log("KPI List Response:", response);
     KPIs.value = response.data.kpiLists;
     KPILists.value = response.data;
   } catch (error) {
-    // console.error("Failed to fetch KPI data:", error);
+    console.error("Failed to fetch KPI data:", error);
   }
 }
 
@@ -171,46 +171,46 @@ onMounted(() => {
 
 // 이벤트 핸들러
 function handleRejectKpi(kpiId) {
-  // console.log("Reject KPI:", kpiId);
+  console.log("Reject KPI:", kpiId);
   // ... 반려 사유 로직
 }
 
 async function handleAddKpi(kpiData) {
-  // console.log("Add KPI:", kpiData);
+  console.log("Add KPI:", kpiData);
   // 모달에서 emit('addKpi', KPIForm.value) => 여기서 받음
   // -> 실제 API post -> 성공 시 다시 fetchKpiList()
   try {
     const response = await api.post(`/perfomances/kpi/personal/${authStore.empId}`, kpiData);
-    // console.log("KPI 추가 성공:", response.data);
+    console.log("KPI 추가 성공:", response.data);
     fetchKpiList(); // 추가 후 다시 목록 갱신
   } catch (error) {
-    // console.error("KPI 추가 실패:", error);
+    console.error("KPI 추가 실패:", error);
   }
 }
 
 async function handleUpdateKpi(kpi) {
-  // console.log("Update KPI:", kpi);
+  console.log("Update KPI:", kpi);
   // 수정 로직
   // ... API put -> 성공 시 fetchKpiList()
   try {
     const response = await api.put(`/perfomances/kpi/personal/${kpi.kpiId}`, kpi);
-    // console.log("KPI 수정 성공:", response.data);
+    console.log("KPI 수정 성공:", response.data);
     fetchKpiList();
   } catch (error) {
-    // console.error("KPI 수정 실패:", error);
+    console.error("KPI 수정 실패:", error);
   }
 }
 
 async function handleDeleteKpi(kpiId) {
-  // console.log("Delete KPI:", kpiId);
+  console.log("Delete KPI:", kpiId);
   // 삭제 로직
   // ... API delete -> 성공 시 fetchKpiList()
   try {
     const response = await api.delete(`/perfomances/kpi/personal/${kpiId}/${authStore.empId}`);
-    // console.log("KPI 삭제 성공:", response.data);
+    console.log("KPI 삭제 성공:", response.data);
     fetchKpiList();
   } catch (error) {
-    // console.error("KPI 삭제 실패:", error);
+    console.error("KPI 삭제 실패:", error);
   }
 }
 </script>

@@ -33,7 +33,7 @@ const fetchAnnouncement = async () => {
       updateDatetime: data.updateDatetime,
     };
   } catch (error) {
-    // console.error("공지사항 데이터를 불러오는 데 실패했습니다.", error);
+    console.error("공지사항 데이터를 불러오는 데 실패했습니다.", error);
   }
 };
 
@@ -53,7 +53,7 @@ const fetchAnnouncementsList = async () => {
     // 이전글/다음글 계산
     calculatePrevAndNext();
   } catch (error) {
-    // console.error("공지사항 리스트를 불러오는 데 실패했습니다.", error);
+    console.error("공지사항 리스트를 불러오는 데 실패했습니다.", error);
   }
 };
 
@@ -82,7 +82,7 @@ const fetchFiles = async () => {
     const response = await api.get(`/files/announcement/${annId.value}`);
     files.value = response.data;
   } catch (error) {
-    // console.error("파일 데이터를 불러오는 데 실패했습니다.", error);
+    console.error("파일 데이터를 불러오는 데 실패했습니다.", error);
   }
 };
 
@@ -115,7 +115,7 @@ const deleteAnnouncement = async () => {
       alert("삭제되었습니다.");
       goToList(); // 삭제 후 목록으로 이동
     } catch (error) {
-      // console.error("공지사항 삭제 실패:", error);
+      console.error("공지사항 삭제 실패:", error);
 
       // 토큰 만료나 인증 관련 에러 처리
       if (error.response?.status === 401) {
@@ -145,7 +145,7 @@ const downloadFile = async (fileId, fileName) => {
     link.click();
     document.body.removeChild(link);
   } catch (error) {
-    // console.error("파일 다운로드 실패:", error);
+    console.error("파일 다운로드 실패:", error);
     alert("파일 다운로드 중 문제가 발생했습니다.");
   }
 };

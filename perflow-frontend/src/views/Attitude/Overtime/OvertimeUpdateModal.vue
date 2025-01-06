@@ -167,7 +167,7 @@ const fetchEmpList = async () => {
       id: emp.empId,
     }));
   } catch (error) {
-    // console.error("결재자 목록 조회 실패:", error);
+    console.error("결재자 목록 조회 실패:", error);
     // 에러 처리 로직 추가 가능
   }
 };
@@ -263,7 +263,7 @@ const handleUpdate = async () => {
     };
 
     // 요청 데이터 확인 (디버깅용)
-    // console.log("Request Data:", requestData);
+    console.log("Request Data:", requestData);
 
     // 서버 요청 (API 호출)
     store.showLoading();
@@ -272,13 +272,13 @@ const handleUpdate = async () => {
     store.hideLoading();
 
     // 성공 처리
-    // console.log("초과근무 수정 성공:", response.data);
+    console.log("초과근무 수정 성공:", response.data);
     alert("초과근무 정보가 수정되었습니다.");
     emit("update-success");
     emit("close");
   } catch (error) {
     // 에러 처리
-    // console.error("초과근무 수정 실패:", error);
+    console.error("초과근무 수정 실패:", error);
     store.hideLoading();
 
     if (error.response && error.response.data && error.response.data.message) {

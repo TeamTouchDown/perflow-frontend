@@ -55,7 +55,7 @@ const fetchSeverancePays = async (page = 1) => {
     state.totalItems = response.data.totalItems;
     state.pageSize = response.data.pageSize;
   } catch (error) {
-    // console.error('급여대장 목록을 불러오는 중 에러가 발생했습니다. : ', error);
+    console.error('급여대장 목록을 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -89,7 +89,7 @@ const menuItem = [
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url); // URL 객체를 해제합니다.
       } catch (error) {
-        // console.error('파일 다운로드 중 오류 발생:', error);
+        console.error('파일 다운로드 중 오류 발생:', error);
         showAlert('파일 다운로드에 실패했습니다.');
       }
     }
@@ -126,11 +126,11 @@ const handleFileUpload = async () => {
         'Content-Type': 'multipart/form-data',
       },
     });
-    // console.log("업로드 성공:", response.data);
+    console.log("업로드 성공:", response.data);
     showAlert("파일이 성공적으로 업로드되었습니다.");
     isFileUploadVisible.value = false; // 모달 닫기
   } catch (error) {
-    // console.error("업로드 실패:", error);
+    console.error("업로드 실패:", error);
     showAlert("파일 업로드 중 오류가 발생했습니다.");
   }
 };

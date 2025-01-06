@@ -25,10 +25,10 @@ const props = defineProps({
 
 // 행 클릭 시 부모에게 전달
 const handleRowClick = (row) => {
-  // console.log(row);
-  // console.log(props.rowKey);
+  console.log(row);
+  console.log(props.rowKey);
   const rowId = row[props.rowKey]; // 고유 키를 이용해 ID를 가져옴
-  // console.log('Row clicked, ID:', rowId); // 확인을 위한 로그
+  console.log('Row clicked, ID:', rowId); // 확인을 위한 로그
   emit('row-selected', rowId); // 부모 컴포넌트로 클릭한 행의 ID를 전달
 };
 </script>

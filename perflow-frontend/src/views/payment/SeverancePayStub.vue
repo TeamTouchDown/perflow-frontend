@@ -49,7 +49,7 @@ const fetchSeverancePayStub = async () => {
     annualEndDate.setDate(annualEndDate.getDate() - 1); // 퇴직일의 하루 전
     annualDateEnd.value = `${annualEndDate.getFullYear()}.${(annualEndDate.getMonth() + 1).toString().padStart(2, '0')}.${annualEndDate.getDate().toString().padStart(2, '0')}`;
   } catch (error) {
-    // console.log('퇴직 명세서 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    console.log('퇴직 명세서 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -63,7 +63,7 @@ const fetchEmp = async () => {
       rrn: `${emp.rrn.slice(0, 2)}.${emp.rrn.slice(2, 4)}.${emp.rrn.slice(4, 6)}`,
     }));
   } catch (error) {
-    // console.error('사원 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    console.error('사원 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -74,7 +74,7 @@ const fetchPayDate = async () => {
     company.value = response.data;  // 급여 지급일 (Unix timestamp)
 
   } catch (error) {
-    // console.error('회사 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    console.error('회사 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -84,7 +84,7 @@ const fetchOverTime = async () => {
     const response = await api.get(`/emp/overtimes/monthly-summary`);
       overtime.value = response.data;
   } catch (error) {
-    // console.log('초과근무 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    console.log('초과근무 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 

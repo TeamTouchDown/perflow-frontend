@@ -92,7 +92,7 @@ const empId = authStore.empId;
 
 // 모달 열기
 const openUpdateModal = (kpi) => {
-  // console.log("모달을 엽니다. 선택된 KPI:", kpi); // 디버그 로그
+  console.log("모달을 엽니다. 선택된 KPI:", kpi); // 디버그 로그
   selectedKpi.value = { ...kpi };
   progressValue.value = kpi.currentValue || 0; // 현재 진척도 초기화
   updateReason.value = ""; // 업데이트 근거 초기화
@@ -135,7 +135,7 @@ const submitUpdate = async (empId, kpiId) => {
     // 모달 닫기
     closeModal();
   } catch (error) {
-    // console.error("진척도 업데이트에 실패했습니다.", error);
+    console.error("진척도 업데이트에 실패했습니다.", error);
     alert("진척도 업데이트 중 오류가 발생했습니다. 다시 시도해주세요.");
   }
 };

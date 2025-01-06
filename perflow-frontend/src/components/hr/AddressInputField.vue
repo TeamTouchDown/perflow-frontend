@@ -63,12 +63,12 @@ onMounted(() => {
     script.src = '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js'
     script.async = true
     script.onload = () => {
-      // console.log('다음 우편번호 스크립트가 로드되었습니다.')
+      console.log('다음 우편번호 스크립트가 로드되었습니다.')
       // 스크립트 로드 완료 후 실행할 코드
     }
     document.head.appendChild(script)
   } else {
-    // console.log('다음 우편번호 스크립트가 이미 로드되어 있습니다.')
+    console.log('다음 우편번호 스크립트가 이미 로드되어 있습니다.')
   }
 })
 

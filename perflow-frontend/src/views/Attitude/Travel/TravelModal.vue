@@ -79,7 +79,7 @@ const handleApply = async () => {
     };
 
     // 요청 데이터 확인
-    // console.log("Request Data:", requestData);
+    console.log("Request Data:", requestData);
 
     // 2. 서버 요청 (API 호출)
     store.showLoading();
@@ -87,17 +87,17 @@ const handleApply = async () => {
     store.hideLoading();
 
     // 3. 성공 처리
-    // console.log('출장 신청 성공:', response);
+    console.log('출장 신청 성공:', response);
     alert('출장 신청이 완료되었습니다!');
     emit('close');
     emit('travel-success');
   } catch (error) {
     // 4. 에러 처리
-    // console.error('출장 신청 실패:', error);
+    console.error('출장 신청 실패:', error);
     store.hideLoading();
 
     if (error.response) {
-      // console.error('서버 응답 데이터:', error.response.data); // 서버 에러 메시지 출력
+      console.error('서버 응답 데이터:', error.response.data); // 서버 에러 메시지 출력
       alert(`출장 신청 실패: ${error.response.data.message || '알 수 없는 오류'}`);
     } else {
       alert('올바르지 않은 값이 입력되었습니다.');
