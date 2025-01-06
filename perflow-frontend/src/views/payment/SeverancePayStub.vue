@@ -81,12 +81,29 @@ const fetchPayDate = async () => {
 // 초과근무 정보를 가져오는 함수
 const fetchOverTime = async () => {
   try {
-    const response = await api.get(`/emp/overtime/summary`);
+    const response = await api.get(`/emp/overtimes/monthly-summary`);
       overtime.value = response.data;
   } catch (error) {
     console.log('초과근무 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
+
+// 초과근무 시간을 계산하는 함수
+const calculateOvertimeHours = (start, end) => {
+  if (start && end) {
+    return getDurationInHours(start, end)
+  }
+  return 0
+}
+
+// 초과근무 시간 계산 (시작 시간과 종료 시간의 차이 계산)
+const getDurationInHours = (start, end) => {
+  const startTime = new Date(start)
+  const endTime = new Date(end)
+  const durationInSeconds = (endTime - startTime) / 1000 // 초 단위로 차이 계산
+   // 시간 단위로 변환
+  return Math.floor(durationInSeconds / 3600)
+}
 
 // 금액 포맷 함수
 const formatCurrency = (value) => {
@@ -122,7 +139,7 @@ onMounted(() => {
   fetchSeverancePayStub();
   fetchEmp();
   fetchPayDate();
-  fetchOverTime();
+  // fetchOverTime();
 });
 </script>
 
@@ -176,42 +193,37 @@ onMounted(() => {
         <div>{{ formatCurrency(severancePayStub?.totalAllowance) }}원</div>
       </div>
       <div class="over-list">
-        <div class="all" v-if="severancePayStub?.totalAnnulAllowance > 0">
+        <div class="all">
           <div class="date">
             <div>연차수당</div>
             <p>{{ annualDateStart }} ~ {{ annualDateEnd }} 내 집계</p>
           </div>
           <div>{{ formatCurrency(severancePayStub?.totalAnnulAllowance) }}원</div>
         </div>
-        <div class="all" v-if="severancePayStub?.totalOverTimeAllowance > 0">
-            <div class="date">
-              <div>초과수당</div>
-              <p>{{ countingDateStart }} ~ {{ countingDateEnd }} 내 집계</p>
-            </div>
-            <div>{{ formatCurrency(severancePayStub?.totalOverTimeAllowance ) }}원</div>
-        </div>
-        <div class="all-list">
-          <div class="all" v-if="overtime?.extendedHours > 0">
+        <div class="all-list" >
+          <div class="all" v-if="severancePayStub?.totalExtendLaborAllowance > 0">
             <div class="allowance">
               <div>연장근무수당</div>
               <img src="../../assets/image/allowance.png" alt="allowance" />
-              <p>{{ overtime?.extendedHours }}시간</p>
+<!--              <p>{{ calculateOvertimeHours(overtimeItem.overtimeStart, overtimeItem.overtimeEnd) }}시간</p>-->
             </div>
             <div>{{ formatCurrency(severancePayStub?.totalExtendLaborAllowance) }}원</div>
           </div>
-          <div class="all" v-if="overtime?.nightHours > 0">
+
+          <div class="all" v-if="severancePayStub?.totalNightLaborAllowance > 0">
             <div class="allowance">
               <div>야간근무수당</div>
               <img src="../../assets/image/allowance.png" alt="allowance" />
-              <p>{{ overtime?.nightHours }}시간</p>
+<!--              <p>{{ calculateOvertimeHours(overtimeItem.overtimeStart, overtimeItem.overtimeEnd) }}시간</p>-->
             </div>
             <div>{{ formatCurrency(severancePayStub?.totalNightLaborAllowance) }}원</div>
           </div>
-          <div class="all" v-if="overtime?.holidayHours > 0">
+
+          <div class="all" v-if="severancePayStub?.totalHolidayLaborAllowance > 0">
             <div class="allowance">
               <div>휴일근무수당</div>
               <img src="../../assets/image/allowance.png" alt="allowance" />
-              <p>{{ overtime?.holidayHours }}시간</p>
+<!--              <p>{{ calculateOvertimeHours(overtimeItem.overtimeStart, overtimeItem.overtimeEnd) }}시간</p>-->
             </div>
             <div>{{ formatCurrency(severancePayStub?.totalHolidayLaborAllowance) }}원</div>
           </div>
