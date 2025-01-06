@@ -98,12 +98,46 @@ const fetchNotifications = async () => {
   }
 };
 
-const handleNotificationClick = (url) => {
-  if (url) {
-    router.push(url);
-    isNotificationVisible.value = false;
-  } else {
-    console.error("URL이 없습니다.");
+const handleNotificationClick = async (url, notiId) => {
+  try {
+    if (url) {
+      router.push(url); // 페이지 이동
+      await deleteNotification(notiId); // 알림 삭제
+      isNotificationVisible.value = false; // 알림 팝업 닫기
+    } else {
+      console.error("URL이 없습니다.");
+    }
+  } catch (error) {
+    console.error("알림 처리 중 오류 발생:", error);
+  }
+};
+
+const deleteNotification = async (notiId) => {
+  try {
+    await api.delete(`/notifications/${notiId}`, {
+      headers: {
+        Authorization: `Bearer ${authStore.$state.accessToken}`, // JWT 토큰 포함
+      },
+    });
+    // 삭제 후 notifications 목록 갱신
+    notifications.value = notifications.value.filter(
+        (notification) => notification.notiId !== notiId
+    );
+  } catch (error) {
+    console.error("알림 삭제 실패:", error);
+  }
+};
+
+const deleteAllNotifications = async () => {
+  try {
+    await api.delete("/notifications/delete", {
+      headers: {
+        Authorization: `Bearer ${authStore.$state.accessToken}`, // JWT 토큰 포함
+      },
+    });
+    notifications.value = []; // 알림 목록 초기화
+  } catch (error) {
+    console.error("전체 알림 삭제 실패:", error);
   }
 };
 
@@ -162,14 +196,17 @@ onMounted(() => {
 
       <!-- 알림 팝업 -->
       <div v-if="isNotificationVisible" class="notification-popup">
-        <h3>알림</h3>
+        <div class="notification-header">
+          <h3>알림</h3>
+          <button class="delete-all-button" @click="deleteAllNotifications">전체삭제</button>
+        </div>
         <!-- 알림 목록 -->
         <div class="notification-list">
           <div
               v-for="notification in notifications"
               :key="notification.notiId"
               class="notification-item"
-              @click="handleNotificationClick(notification.url)"
+              @click="handleNotificationClick(notification.url, notification.notiId)"
           >
             <div class="notification-content">
               <h4 class="notification-title">{{ notification.title }}</h4>
@@ -279,6 +316,7 @@ onMounted(() => {
   font-size: 16px;
   font-weight: bold;
   background-color: #f5f5f5;
+  text-align: left;
 }
 
 .notification-list {
@@ -321,6 +359,29 @@ onMounted(() => {
   margin: 4px 0 0;
   color: #555;
   text-align: left; /* 왼쪽 정렬 */
+}
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  background-color: #f5f5f5;
+}
+
+.delete-all-button {
+  background-color: #f44336; /* 빨간색 버튼 */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.delete-all-button:hover {
+  background-color: #d32f2f; /* hover 시 어두운 빨간색 */
 }
 
 .user-icon {
