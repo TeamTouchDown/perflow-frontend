@@ -61,7 +61,6 @@ export const useAuthStore = defineStore('auth', {
             this.timerInterval = setInterval(() => {
                 if(localStorage.getItem("isLogin") === "false"){
                     this.isLogin = false;
-                    this.logout();
                 }
                 const currentTime = Date.now();
                 const remaining = Math.max(0, Math.floor((expiryTime - currentTime) / 1000)); // 초 단위 남은 시간
@@ -173,7 +172,6 @@ export const useAuthStore = defineStore('auth', {
                 localStorage.setItem("refreshToken", null);
                 localStorage.setItem("isLogin", "false");
                 clearInterval(this.timerInterval);
-                router.push('/login');
             }
         },
     },
