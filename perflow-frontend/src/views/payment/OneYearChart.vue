@@ -18,7 +18,7 @@ const recentYear = ref(''); // 최근 년
 // 3개월 간 급여 데이터 정보를 가져오는 함수
 const fetchThreeMonth = async () => {
   try {
-    const response = await api.get(`/hr/payrolls/chart/last-three-months`);
+    const response = await api.get(`/hr/payrolls/chart/last-months`);
     console.log(response.data); // API 응답 확인
 
     const payrollChart = response.data;
