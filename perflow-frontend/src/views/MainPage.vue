@@ -183,7 +183,7 @@ const fetchAnnouncement = async () => {
   try {
     // 1. 첫 번째 요청으로 페이지 정보만 가져옵니다 (페이지 번호와 전체 데이터 수)
     const pageResponse = await api.get(`/announcements`, {
-      params: { size: 10 }  // 한 페이지에 표시할 데이터 수
+      params: { size: 5 }  // 한 페이지에 표시할 데이터 수
     });
 
     // 2. 마지막 페이지 번호 가져오기
@@ -193,12 +193,15 @@ const fetchAnnouncement = async () => {
     const response = await api.get(`/announcements`, {
       params: {
         page: lastPage,  // 마지막 페이지
-        size: 10         // 한 페이지에 표시할 데이터 수
+        size: 5         // 한 페이지에 표시할 데이터 수
       }
     });
 
-    // 4. 최신순으로 정렬 (만약 이미 최신순으로 가져오지 않았다면)
-    announcement.value = response.data.content.sort((a, b) => {
+    // 4. status가 'DELETED'가 아닌 항목만 필터링
+    const filteredAnnouncements = response.data.content.filter(item => item.status !== 'DELETED');
+
+    // 5. 최신순으로 정렬
+    announcement.value = filteredAnnouncements.sort((a, b) => {
       const dateA = new Date(a.createDatetime);
       const dateB = new Date(b.createDatetime);
       return dateB - dateA; // 내림차순 정렬
