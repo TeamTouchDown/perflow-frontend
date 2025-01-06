@@ -90,7 +90,7 @@ watch(() => props.modelValue, (newVal) => {
 // Compute the label of the selected option
 const selectedOptionLabel = computed(() => {
   const found = props.options.find(option => option.value === selectedOption.value);
-  return found ? found.label : "선택하세요";
+  return found ? found.label : "선택";
 });
 
 const toggleMenu = () => {

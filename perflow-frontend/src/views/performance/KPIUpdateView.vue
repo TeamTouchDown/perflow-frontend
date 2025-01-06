@@ -37,7 +37,7 @@
 
 <script setup>
 import { onMounted, ref, computed, watch } from "vue";
-import KpiSection from "@/components/common/KpiSection.vue";
+import KpiSection from "@/components/perfo/KpiSection.vue";
 import ButtonDropDown from "@/components/common/ButtonDropDown.vue";
 import api from "@/config/axios.js";
 import { useAuthStore } from "@/store/authStore.js";

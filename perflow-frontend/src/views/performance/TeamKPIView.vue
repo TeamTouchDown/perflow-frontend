@@ -44,7 +44,7 @@ import {ref, computed, watch, onMounted} from "vue";
 import {useAuthStore} from "@/store/authStore.js";
 import api from "@/config/axios.js";
 import ButtonDropDown from "@/components/common/ButtonDropDown.vue";
-import KpiTable from "@/components/common/KpiTable.vue";
+import KpiTable from "@/components/perfo/KpiTable.vue";
 
 const authStore = useAuthStore();
 

@@ -69,7 +69,7 @@
 
 <script setup>
 import { ref, computed, defineEmits } from "vue";
-import ButtonBasic from "./ButtonBasic.vue";
+import ButtonBasic from "../common/ButtonBasic.vue";
 import api from "@/config/axios.js";
 import { useAuthStore } from "@/store/authStore.js"; // API 요청을 위한 axios 인스턴스
 
