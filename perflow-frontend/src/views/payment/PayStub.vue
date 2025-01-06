@@ -173,9 +173,9 @@ const calculatePayStubDate = () => {
     formattedCountingDateEnd.value = formatDate(countingDateEnd);
 
     // 결과 출력
-    console.log('급여 지급일:', payStubDate.value);
-    console.log('집계 시작일:', formattedCountingDateStart.value);
-    console.log('집계 종료일:', formattedCountingDateEnd.value);
+    // console.log('급여 지급일:', payStubDate.value);
+    // console.log('집계 시작일:', formattedCountingDateStart.value);
+    // console.log('집계 종료일:', formattedCountingDateEnd.value);
 
   } else {
     console.error('company.value.paymentDatetime을 가져올 수 없습니다.');
