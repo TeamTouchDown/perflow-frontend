@@ -88,7 +88,7 @@ import { computed, onMounted, ref, watch } from "vue";
 import ButtonDropDown from "@/components/common/ButtonDropDown.vue";
 import api from "@/config/axios.js";
 import { useAuthStore } from "@/store/authStore.js";
-import KpiRecordSection from "@/components/common/KpiRecordSection.vue";
+import KpiRecordSection from "@/components/perfo/KpiRecordSection.vue";
 
 /* ---------------------------------------
    예시) 로그인한 직원 정보에서 가져온다 가정

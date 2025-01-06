@@ -13,9 +13,9 @@
     </div>
     <div id="header-top" class="flex-between">
       <p id="title">
-        {{ selectedYear }}년
-        <span v-if="selectedPeriod === 'QUARTER'">{{ selectedQuarter }}분기</span>
-        <span v-if="selectedPeriod === 'MONTH'">{{ selectedMonth }}월</span>
+        <span v-if="selectedPeriod === 'YEAR'">{{ selectedYear }}년</span>
+        <span v-if="selectedPeriod === 'QUARTER'">{{ selectedYear }}년 {{ selectedQuarter }}분기</span>
+        <span v-if="selectedPeriod === 'MONTH'">{{ selectedYear }}년 {{ selectedMonth }}월</span>
         개인 KPI 제출
       </p>
       <p id="expiredays">개인 KPI 제출 기한이 {{ day.expiredays }}일 남았습니다.</p>
@@ -44,7 +44,7 @@ import {computed, onMounted, ref, watch} from "vue";
 import {useAuthStore} from "@/store/authStore.js";
 import api from "@/config/axios.js";
 import ButtonDropDown from "@/components/common/ButtonDropDown.vue";
-import KpiTable from "@/components/common/KpiTable.vue";
+import KpiTable from "@/components/perfo/KpiTable.vue";
 
 const authStore = useAuthStore();
 
@@ -85,7 +85,8 @@ function getNextPeriod(periodType) {
     month = 1;
     year++;
   }
-  return {year, quarter, month};
+  const year2 = year+1;
+  return {year,year2, quarter, month};
 }
 
 const nextPeriod = getNextPeriod(selectedPeriod.value);
@@ -132,8 +133,12 @@ const selected = computed(() => ({
 
 // 선택된 기간 watch
 watch(selectedPeriod, (newVal) => {
-  const {year, quarter, month} = getNextPeriod(newVal);
-  selectedYear.value = year;
+  const {year, year2, quarter, month} = getNextPeriod(newVal);
+  if(selectedPeriod.value === "YEAR"){
+    selectedYear.value = year2;
+  }else{
+    selectedYear.value = year;
+  }
   selectedQuarter.value = quarter;
   selectedMonth.value = month;
   day.value.expiredays = calculateDaysLeft(newVal);
@@ -188,12 +193,22 @@ async function handleAddKpi(kpiData) {
   }
 }
 
-async function handleUpdateKpi(kpi) {
-  console.log("Update KPI:", kpi);
+async function handleUpdateKpi(kpiData) {
+  console.log("Update KPI:", kpiData)
+
+  const kpi ={
+    status : "WAIT",
+    goal : kpiData.goal,
+    goalValue : kpiData.goalValue,
+    goalValueUnit : kpiData.goalValueUnit,
+    goalDetail : kpiData.goalDetail,
+    period : kpiData.period
+  }
+  console.log(kpi);
   // 수정 로직
   // ... API put -> 성공 시 fetchKpiList()
   try {
-    const response = await api.put(`/perfomances/kpi/personal/${kpi.kpiId}`, kpi);
+    const response = await api.put(`/perfomances/kpi/personal/${kpiData.kpiId}`, kpi);
     console.log("KPI 수정 성공:", response.data);
     fetchKpiList();
   } catch (error) {

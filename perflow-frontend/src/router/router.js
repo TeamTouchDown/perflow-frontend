@@ -50,6 +50,15 @@ import Attendance from "@/views/Attitude/Attendance/Attendance.vue";
 import AnnCreate from "@/views/announcement/AnnCreate.vue";
 import SeverancePayStub from "@/views/payment/SeverancePayStub.vue";
 import Calculator from "@/views/payment/Calculator.vue";
+import EvaluationView from "@/views/performance/EvaluationView.vue";
+import PeerEvaluationView from "@/views/performance/PeerEvaluationView.vue";
+import DownwardEvaluationView from "@/views/performance/DownwardEvaluationView.vue";
+import EvaluationAdjustmentView from "@/views/performance/EvaluationAdjustmentView.vue";
+import KPIConfirmView from "@/views/performance/KPIConfirmView.vue";
+import QuestionManagementView from "@/views/performance/QuestionManagementView.vue";
+import DeptRatioView from "@/views/performance/DeptRatioView.vue";
+import GradeRatioView from "@/views/performance/GradeRatioView.vue";
+import InquiryManagementView from "@/views/performance/InquiryManagementView.vue";
 import Outbox from "@/views/approval/Outbox.vue";
 import Inbox from "@/views/approval/Inbox.vue";
 
@@ -57,6 +66,10 @@ import EmpDetailPage from "@/views/hr/employee/EmpDetailPage.vue";
 import AnnDetail from "@/views/announcement/AnnDetail.vue";
 import AnnUpdate from "@/views/announcement/AnnUpdate.vue";
 import {useAuthStore} from "@/store/authStore.js";
+import AnnDetail from "@/views/announcement/AnnDetail.vue";
+import AnnUpdate from "@/views/announcement/AnnUpdate.vue";
+import {useAuthStore} from "@/store/authStore.js";
+import PerformanceView from "@/views/performance/PerformanceView.vue";
 
 
 const routes = [
@@ -100,10 +113,20 @@ const routes = [
     {path: '/approval/outbox', name: 'outbox', component: Outbox},
     {path: '/approval/inbox', name: 'inbox', component: Inbox},
 
+    // 인사 평가
+    {path: '/performance', name: 'perfohome', component: PerformanceView},
     {path: '/performance/personal-kpi', name: 'personalKPI', component: PersonalKPIView},
     {path: '/performance/team-kpi', name: 'teamKPI', component: TeamKPIView},
     {path: '/performance/kpi-current', name: 'KPIUpdate', component: KPIUpdateView},
     {path: '/performance/kpi-past', name: 'KPIRecord', component: KPIRecordView},
+    {path: '/performance/peer-evaluation', name: 'peerEvaluation', component: PeerEvaluationView},
+    {path: '/performance/downward-evaluation', name: 'downwardEvaluation', component: DownwardEvaluationView},
+    {path: '/performance/hr-evaluation', name: 'evaluationList', component: EvaluationView},
+    {path: '/hr/performance/adjustment', name: 'evaluationAdjustment', component: EvaluationAdjustmentView},
+    {path: '/hr/performance/kpi-confirm', name: 'kpiConfirm', component: KPIConfirmView},
+    {path: '/hr/performance/question-management', name: 'questionManagement', component: QuestionManagementView},
+    {path: '/hr/performance/dept-ratio', name: 'deptRatio', component: DeptRatioView},
+    {path: '/hr/performance/grade-ratio', name: 'gradeRatio', component: GradeRatioView},
 
     // 급여
     {path: '/payment/payroll', name: 'Payroll', component: PayrollList},

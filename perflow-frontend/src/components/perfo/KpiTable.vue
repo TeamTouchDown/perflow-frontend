@@ -182,6 +182,7 @@ import {ref, defineProps, defineEmits} from "vue";
 import ButtonBasic from "@/components/common/ButtonBasic.vue";
 import {useAuthStore} from "@/store/authStore.js";
 import ButtonDropDown from "@/components/common/ButtonDropDown.vue";
+import api from "@/config/axios.js";
 
 // Props
 const props = defineProps({
@@ -203,6 +204,7 @@ const emit = defineEmits(["rejectKpi", "updateKpi", "deleteKpi", "addKpi"]);
 
 // 반응형 데이터
 const authStore = useAuthStore();
+const empId = authStore.empId;
 const isRejectModalOpen = ref(false);
 const isUpdateModalOpen = ref(false);
 const isDeleteModalOpen = ref(false);
@@ -226,12 +228,12 @@ const kpiIdToDelete = ref(null);
 const periodOptions = [
   {label: `${props.selected.year}년`, value: `${props.selected.year}_YEAR`},
   {
-    label: `${props.selected.year}년 ${props.selected.quarter}분기`,
-    value: `${props.selected.year}_QUARTER${props.selected.quarter}`
+    label: `${props.selected.year-1}년 ${props.selected.quarter}분기`,
+    value: `${props.selected.year-1}_QUARTER${props.selected.quarter}`
   },
   {
-    label: `${props.selected.year}년 ${props.selected.month}월`,
-    value: `${props.selected.year}_MONTH${props.selected.month}`
+    label: `${props.selected.year-1}년 ${props.selected.month}월`,
+    value: `${props.selected.year-1}_MONTH${props.selected.month}`
   }
 ];
 
@@ -315,10 +317,10 @@ function resetKPIForm() {
 
 // 반려 사유 조회
 async function fetchRejectReason(kpiId) {
-  // 필요 시 API 호출
-  // 예) const response = await api.get(`/perfomances/kpi/reject/${empId}/${kpiId}`);
-  // return response.data;
-  return {reason: "반려 사유 예시"};
+
+  const response = await api.get(`/perfomances/kpi/reject/${empId}/${kpiId}`);
+  return response.data;
+
 }
 
 // 상태 변환 함수
