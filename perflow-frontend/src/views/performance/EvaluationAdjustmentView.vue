@@ -417,7 +417,7 @@ async function loadadjustmentList(empId) {
       }
     }
 
-    console.log("hrperfo =>", hrperfo.value);
+    // console.log("hrperfo =>", hrperfo.value);
     return hrperfo.value;
   } catch (error) {
     console.error("조정내역 로드 오류:", error);

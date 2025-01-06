@@ -9,7 +9,7 @@ const api = axios.create({
 // 요청 인터셉터: Access Token 자동 추가
 api.interceptors.request.use((config) => {
 
-    console.log(`request interceptor 시작!`)
+    // console.log(`request interceptor 시작!`)
 
     if(config.url.includes('/reissue')){
         if(localStorage.getItem("accessToken")){
@@ -34,7 +34,7 @@ api.interceptors.response.use(
         const { errorCode, message } = error.response.data;
         console.error(`ErrorCode: ${errorCode}, Message: ${message}`);
 
-        console.log(`response interceptor 시작!`)
+        // console.log(`response interceptor 시작!`)
 
         const authStore = useAuthStore();
         const originalRequest = error.config;

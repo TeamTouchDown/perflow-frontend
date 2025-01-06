@@ -168,7 +168,7 @@ const loadLimit = async (departmentId) => {
     const resp = await api.get(`/perfomances/kpi/limit/${departmentId}`);
     const data = resp.data;
 
-    console.log('KPI Limit Data:', data); // 데이터 구조 확인
+    // console.log('KPI Limit Data:', data); // 데이터 구조 확인
 
     if (data) {
       scores.value.personal.min = data.personalminKpis || 0;
@@ -194,7 +194,7 @@ const uploadKpiLimit = async (departmentId) => {
 
   try {
     const resp = await api.post(`/perfomances/kpi/limit/${departmentId}/${empId}`, requestBody);
-    console.log("KPI 제한 저장 응답:", resp.data);
+    // console.log("KPI 제한 저장 응답:", resp.data);
     showAlert("KPI 제한이 저장되었습니다!");
   } catch (error) {
     console.error(`KPI 제한 저장 오류: ${error}`);
@@ -218,7 +218,7 @@ const uploadRatio = async (departmentId) => {
 
   try {
     const resp = await api.post(`/hr/perfomances/ratio/perfo/${empId}/${departmentId}`, requestBody);
-    console.log("가중치 비율 저장 응답:", resp.data);
+    // console.log("가중치 비율 저장 응답:", resp.data);
     showAlert("가중치 비율이 저장되었습니다!");
   } catch (error) {
     console.error(`가중치 비율 저장 오류: ${error}`);
@@ -234,9 +234,9 @@ const loadRatio = async (departmentId) => {
   try {
     const resp = await api.get(`/hr/perfomances/ratio/perfo/${departmentId}`);
     const data = resp.data;
-    console.log('Ratio Data:', data);
+    // console.log('Ratio Data:', data);
     ratio.value = data;
-    console.log('Ratio:', ratio.value);
+    // console.log('Ratio:', ratio.value);
 
     // API 응답 데이터를 가중치에 반영
     weights.value.personal = data.personalKpiWeight || 0;
@@ -255,7 +255,7 @@ const loadGrade = async () => {
     const resp = await api.get(`/hr/perfomances/ratio/grade/${empId}`);
     const data = resp.data;
 
-    console.log('불러온 등급 비율 데이터:', data);
+    // console.log('불러온 등급 비율 데이터:', data);
 
     if (data) {
       // 백엔드에서 받아온 값들을 각 등급 입력값에 할당
@@ -296,7 +296,7 @@ const loadDept = async () => {
 
     // 평탄화된 리스트를 dept.value에 할당
     dept.value = departmentList;
-    console.log('Departments:', dept.value);
+    // console.log('Departments:', dept.value);
 
     // 기본 선택 부서 설정 (첫 번째 부서로 설정)
     if (dept.value.length > 0) {

@@ -79,7 +79,7 @@ const fetchWaitingDocs = async () => {
       params: { size: 10 },
     });
     waitingDocs.value = response.data.content;
-    console.log("waitingDocs.value: ", waitingDocs.value);
+    // console.log("waitingDocs.value: ", waitingDocs.value);
   } catch (error) {
     console.error("대기 문서 데이터를 가져오는 중 오류 발생:", error);
   }
@@ -91,7 +91,7 @@ const fetchProcessedDocs = async () => {
       params: { size: 10 },
     });
     processedDocs.value = response.data.content;
-    console.log("processedDocs.value: ", processedDocs);
+    // console.log("processedDocs.value: ", processedDocs);
   } catch (error) {
     console.error("처리 문서 데이터를 가져오는 중 오류 발생:", error);
   }
@@ -103,7 +103,7 @@ const fetchInboxDocs = async () => {
       params: { size: 10 },
     });
     inboxDocs.value = response.data.content;
-    console.log("inboxDocs.value: ", inboxDocs.value);
+    // console.log("inboxDocs.value: ", inboxDocs.value);
   } catch (error) {
     console.error("수신함 문서 데이터를 가져오는 중 오류 발생:", error);
   }
@@ -115,7 +115,7 @@ const fetchOutboxDocs = async () => {
       params: { size: 10 },
     });
     outboxDocs.value = response.data.content;
-    console.log("outboxDocs.value: ", outboxDocs.value);
+    // console.log("outboxDocs.value: ", outboxDocs.value);
   } catch (error) {
     console.error("발신함 문서 데이터를 가져오는 중 오류 발생:", error);
   }

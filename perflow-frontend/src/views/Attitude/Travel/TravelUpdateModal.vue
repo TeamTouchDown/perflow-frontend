@@ -184,12 +184,12 @@ const handleUpdate = async () => {
     };
 
     // 요청 데이터 확인
-    console.log("Request Data:", requestData);
+    // console.log("Request Data:", requestData);
 
     // 서버 요청 (API 호출)
     const url = `/emp/approval/travel/${travelId}`;
     const response = await api.put(url, requestData);
-    console.log("출장 수정 성공:", response.data);
+    // console.log("출장 수정 성공:", response.data);
 
     // 수정 완료 후 모달 닫기 및 부모에게 성공 이벤트 전달
     alert("출장 정보가 수정되었습니다.");

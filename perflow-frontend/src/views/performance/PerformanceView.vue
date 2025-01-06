@@ -71,7 +71,7 @@ const categories = ref([
 
 const navigateToDetail = (category) => {
   // 각 카테고리별 상세 페이지로 이동하는 로직
-  console.log(`Navigating to ${category} page`);
+  // console.log(`Navigating to ${category} page`);
   if (category === '개인 KPI 제출') {
     router.push({name: 'personalKPI'});  // 연차 관리 페이지로 이동
   } else if (category === '팀 KPI 제출') {

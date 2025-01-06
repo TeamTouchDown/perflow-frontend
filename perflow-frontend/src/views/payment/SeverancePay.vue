@@ -126,7 +126,7 @@ const handleFileUpload = async () => {
         'Content-Type': 'multipart/form-data',
       },
     });
-    console.log("업로드 성공:", response.data);
+    // console.log("업로드 성공:", response.data);
     showAlert("파일이 성공적으로 업로드되었습니다.");
     isFileUploadVisible.value = false; // 모달 닫기
   } catch (error) {

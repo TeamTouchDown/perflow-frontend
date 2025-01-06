@@ -20,7 +20,7 @@ if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('/firebase-messaging-sw.js') // 정확한 경로
             .then((registration) => {
-                console.log('Service Worker 등록 성공:', registration);
+                // console.log('Service Worker 등록 성공:', registration);
             })
             .catch((err) => {
                 console.error('Service Worker 등록 실패:', err);
@@ -51,11 +51,11 @@ app.mount('#app').$nextTick(async () => {
         // FCM 토큰 초기화 및 등록
         await initFCMToken(authStore.empId, deviceType, (token) => {
             authStore.setFcmToken(token);
-            console.log("FCM 토큰 초기화 완료:", token);
+            // console.log("FCM 토큰 초기화 완료:", token);
         });
     }
 
     // 포그라운드 메시지 핸들러 초기화
     initForegroundMessageHandler();
-    console.log("포그라운드 메시지 핸들러 초기화 완료");
+    // console.log("포그라운드 메시지 핸들러 초기화 완료");
 });

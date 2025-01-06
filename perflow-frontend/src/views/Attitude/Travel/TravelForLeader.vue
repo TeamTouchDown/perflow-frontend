@@ -78,7 +78,7 @@ const fetchTravelData = async () => {
     const response = await api.get("leader/travels/pending");
     store.hideLoading();
 
-    console.log("API 응답 데이터:", response.data);
+    // console.log("API 응답 데이터:", response.data);
 
     // 데이터 변환 및 저장
     allDocs.value = response.data
@@ -108,7 +108,7 @@ const fetchTravelData = async () => {
           };
         });
 
-    console.log("변환된 데이터:", allDocs.value);
+    // console.log("변환된 데이터:", allDocs.value);
     // 필터 초기화 및 페이징 적용
     applyFilter(true);
 
@@ -121,7 +121,7 @@ const fetchTravelData = async () => {
 
 // 필터 적용 및 데이터 갱신
 const applyFilter = (resetPage = true) => {
-  console.log("현재 검색 조건:", searchCriteria.value);
+  // console.log("현재 검색 조건:", searchCriteria.value);
 
   let filtered = [...allDocs.value];
 
@@ -151,11 +151,11 @@ const applyFilter = (resetPage = true) => {
 
   // 상태 필터 (대기 상태만 표시)
   if (searchCriteria.value.status) {
-    console.log("상태 필터 조건:", searchCriteria.value.status);
+    // console.log("상태 필터 조건:", searchCriteria.value.status);
     filtered = filtered.filter(item => item.travelStatus === searchCriteria.value.status);
   }
 
-  console.log("필터 적용 후 데이터:", filtered);
+  // console.log("필터 적용 후 데이터:", filtered);
 
   // 필터링 결과 적용
   filteredDocs.value = filtered;
@@ -189,7 +189,7 @@ const handlePageChange = (page) => {
 // 행 선택 함수
 const onRowSelected = (selectedRows) => {
   selectedTravels.value = selectedRows;  // 선택된 모든 항목을 배열로 저장
-  console.log("선택된 출장 데이터:", selectedTravels.value);
+  // console.log("선택된 출장 데이터:", selectedTravels.value);
 };
 
 // 승인 함수

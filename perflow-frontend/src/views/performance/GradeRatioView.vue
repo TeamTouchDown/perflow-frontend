@@ -134,7 +134,7 @@ const loadGrade = async () => {
     const resp = await api.get(`/hr/perfomances/ratio/grade/${empId}`);
     const data = resp.data;
 
-    console.log('불러온 등급 비율 데이터:', data);
+    // console.log('불러온 등급 비율 데이터:', data);
 
     if (data) {
       // 백엔드에서 받아온 값들을 각 등급 입력값에 할당
@@ -164,7 +164,7 @@ const uploadGradeRatio = async () => {
   try {
     // 백엔드 엔드포인트에 POST 요청
     const resp = await api.post(`/hr/perfomances/ratio/grade/${empId}`, requestBody);
-    console.log("등급 비율 저장 응답:", resp.data);
+    // console.log("등급 비율 저장 응답:", resp.data);
     showAlert("등급 비율이 저장되었습니다!");
   } catch (error) {
     console.error(`등급 비율 저장 오류: ${error}`);

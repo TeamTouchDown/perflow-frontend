@@ -124,7 +124,7 @@ const formatWorkTime = (hours, minutes) => {
 
 // 초기 데이터 로드
 onMounted(() => {
-  console.log("마운트 완")
+  // console.log("마운트 완")
   fetchWeeklyAttendance();
   fetchMonthlyAttendance();
 });

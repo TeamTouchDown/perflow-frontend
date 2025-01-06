@@ -78,7 +78,7 @@ const fetchVacationData = async () => {
   try {
     store.showLoading();
     const response = await api.get("/leader/vacation/team"); // 백엔드 API URL에 맞게 수정
-    console.log("API 응답 데이터:", response.data);
+    // console.log("API 응답 데이터:", response.data);
     store.hideLoading();
 
     // 데이터 변환 및 저장
@@ -111,7 +111,7 @@ const fetchVacationData = async () => {
 
 // 필터 적용 및 데이터 갱신
 const applyFilter = (resetPage = true) => {
-  console.log("현재 검색 조건:", searchCriteria.value);
+  // console.log("현재 검색 조건:", searchCriteria.value);
 
   let filtered = [...allDocs.value];
 
@@ -164,7 +164,7 @@ const handlePageChange = (page) => {
 // 행 선택 함수
 const onRowSelected = (selectedRows) => {
   selectedVacations.value = selectedRows;  // 선택된 모든 항목을 배열로 저장
-  console.log("선택된 휴가 데이터:", selectedVacations.value);
+  // console.log("선택된 휴가 데이터:", selectedVacations.value);
 };
 
 // 승인 함수
