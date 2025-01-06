@@ -78,7 +78,7 @@ const generateQRCode = async () => {
 
     const response = await api.post(endpoint);
 
-    console.log('API 응답 데이터:', response.data);
+    // console.log('API 응답 데이터:', response.data);
 
     const base64String = response.data;
 
@@ -96,7 +96,7 @@ const generateQRCode = async () => {
       isTimerActive = true; // 타이머 활성화
     }
   } catch (error) {
-    console.error('QR 코드 생성 실패:', error);
+    // console.error('QR 코드 생성 실패:', error);
     alert('QR 코드 생성 실패: ' + error.message);
   }
 };
@@ -135,7 +135,7 @@ const handleSubmit = async () => {
     const response = await api.post(endpoint, null, {
       params: { qrCode: inputCode.value },
     });
-    console.log('서버 응답:', response.data); // 응답 데이터 로깅
+    // console.log('서버 응답:', response.data); // 응답 데이터 로깅
 /*    // 상태 코드가 200번대일 때만 성공 처리
     // 상태 업데이트
     if (props.type === 'on') {
@@ -156,7 +156,7 @@ const handleSubmit = async () => {
       throw new Error('서버 응답 오류'); // 실패 처리 강제 실행
     }
   } catch (error) {
-    console.error('처리 실패:', error);
+    // console.error('처리 실패:', error);
     alert('처리 실패. 다시 시도하세요.');
   }
 };

@@ -3,7 +3,7 @@
 importScripts("https://www.gstatic.com/firebasejs/11.1.0/firebase-app-compat.js");
 importScripts("https://www.gstatic.com/firebasejs/11.1.0/firebase-messaging-compat.js");
 
-console.log("서비스 워커 로드됨");
+// console.log("서비스 워커 로드됨");
 
 // Firebase 설정 (빌드 시점에 환경 변수로 대체)
 const firebaseConfig = {
@@ -22,7 +22,7 @@ const messaging = firebase.messaging();
 
 // 백그라운드 메시지 수신 핸들러
 messaging.onBackgroundMessage((payload) => {
-    console.log('[SW] 백그라운드 메시지 수신 성공:', payload);
+    // console.log('[SW] 백그라운드 메시지 수신 성공:', payload);
     const notificationTitle = payload.notification?.title || "백그라운드 기본 제목";
     const notificationOptions = {
         body: payload.notification?.body || "백그라운드 기본 본문",
@@ -31,12 +31,12 @@ messaging.onBackgroundMessage((payload) => {
         }
     };
     self.registration.showNotification(notificationTitle, notificationOptions);
-    console.log('[SW] 알림 표시 완료:', notificationTitle, notificationOptions);
+    // console.log('[SW] 알림 표시 완료:', notificationTitle, notificationOptions);
 });
 
 // 알림 클릭 이벤트 핸들러
 self.addEventListener('notificationclick', function(event) {
-    console.log('[SW] 알림 클릭 이벤트 수신:', event);
+    // console.log('[SW] 알림 클릭 이벤트 수신:', event);
     event.notification.close(); // 알림 닫기
 
     // 클릭된 알림의 데이터에서 URL 추출

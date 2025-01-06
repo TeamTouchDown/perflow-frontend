@@ -50,7 +50,7 @@ const fetchDocumentDetail = async () => {
     approveLines.value = docData.approveLines || []; // 결재선 데이터
     shares.value = docData.shares || [];  // 공유 데이터
   } catch (error) {
-    console.error("문서 상세 조회 실패:", error);
+    // console.error("문서 상세 조회 실패:", error);
     showAlert("문서 데이터를 불러오지 못했습니다.");
   }
 };
@@ -128,7 +128,7 @@ const handleApproval = async (status) => {
     // alert(`문서가 ${status === "APPROVED" ? "승인" : "반려"}되었습니다.`);
     router.push("/approval/waiting");
   } catch (error) {
-    console.error("결재 처리 실패: ", error);
+    // console.error("결재 처리 실패: ", error);
     showAlert("결재 처리 중 오류가 발생했습니다.");
   }
 }

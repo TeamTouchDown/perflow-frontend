@@ -19,7 +19,7 @@ dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
 const today = dayjs(); // 현재 날짜와 시간
-console.log(today.format("YYYY-MM-DD"));
+// console.log(today.format("YYYY-MM-DD"));
 
 /* ----------------------------
  * 연차 데이터 수정 모달 관련
@@ -105,7 +105,7 @@ const fetchAnnualData = async () => {
   try {
     store.showLoading();
     const response = await api.get("hr/annual/all");
-    console.log("API 응답 데이터:", response.data);
+    // console.log("API 응답 데이터:", response.data);
     store.hideLoading();
 
     // 데이터 변환 및 저장
@@ -127,14 +127,14 @@ const fetchAnnualData = async () => {
     // 필터 초기화 및 페이징 적용
     applyFilter(true);
   } catch (error) {
-    console.error("연차 데이터 조회 실패:", error);
+    // console.error("연차 데이터 조회 실패:", error);
     allDocs.value = [];
   }
 };
 
 // 필터 로직
 const applyFilter = (resetPage = true) => {
-  console.log("현재 검색 조건:", searchCriteria.value);
+  // console.log("현재 검색 조건:", searchCriteria.value);
 
   let filtered = [...allDocs.value];
 
@@ -166,7 +166,7 @@ const applyFilter = (resetPage = true) => {
 
   // 상태 필터(빈 문자열("") 제외)
   if (searchCriteria.value.status) {
-    console.log("상태 필터 조건:", searchCriteria.value.status);
+    // console.log("상태 필터 조건:", searchCriteria.value.status);
     filtered = filtered.filter(item => {
       const actualStatus = String(item.annualStatus).toUpperCase().trim();
       const selectedStatus = String(searchCriteria.value.status).toUpperCase().trim();
@@ -174,7 +174,7 @@ const applyFilter = (resetPage = true) => {
     });
   }
 
-  console.log("상태 필터 적용 후 데이터:", filtered);
+  // console.log("상태 필터 적용 후 데이터:", filtered);
 
   // 필터링 결과 적용
   filteredDocs.value = filtered;
@@ -191,7 +191,7 @@ const applyFilter = (resetPage = true) => {
 watch(
     () => searchCriteria.value.status,
     (newVal, oldVal) => {
-      console.log("연차 상태 변경:", oldVal, "→", newVal);
+      // console.log("연차 상태 변경:", oldVal, "→", newVal);
       applyFilter(true);
     }
 );

@@ -19,7 +19,7 @@ const recentYear = ref(''); // 최근 년
 const fetchThreeMonth = async () => {
   try {
     const response = await api.get(`/hr/payrolls/chart/last-three-months`);
-    console.log(response.data); // API 응답 확인
+    // console.log(response.data); // API 응답 확인
 
     const payrollChart = response.data;
 
@@ -30,12 +30,12 @@ const fetchThreeMonth = async () => {
         return item.createDatetime.substring(5, 7);  // 'MM' 형식
       });
 
-      console.log("labels : ", threeMonths.value.labels);
+      // console.log("labels : ", threeMonths.value.labels);
 
       // 급여 금액을 values에 저장
       threeMonths.value.values = payrollChart.map(item => item.totalAmount);
 
-      console.log("values : ",threeMonths.value.values);
+      // console.log("values : ",threeMonths.value.values);
 
       // 최근 년도 업데이트 (createDatetime에서 'YYYY' 추출)
       recentYear.value = payrollChart[payrollChart.length - 1].createDatetime.substring(0, 4);
@@ -50,9 +50,9 @@ const fetchThreeMonth = async () => {
         growthRate.value = 0; // 값이 없으면 0으로 설정
       }
 
-      console.log("currentMonth: " ,currentMonth, ", lastMonth: ", lastMonth);
-      console.log("growthRate : ", growthRate.value);
-      console.log("test : ", ((currentMonth - lastMonth) / lastMonth) * 100);
+      // console.log("currentMonth: " ,currentMonth, ", lastMonth: ", lastMonth);
+      // console.log("growthRate : ", growthRate.value);
+      // console.log("test : ", ((currentMonth - lastMonth) / lastMonth) * 100);
 
       // 차트 데이터 업데이트
       chartData.value = {
@@ -68,10 +68,10 @@ const fetchThreeMonth = async () => {
         ]
       };
     } else {
-      console.error('API 응답 데이터 형식이 예상과 다릅니다.');
+      // console.error('API 응답 데이터 형식이 예상과 다릅니다.');
     }
   } catch (error) {
-    console.error('3개월 간 급여 데이터 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.error('3개월 간 급여 데이터 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 

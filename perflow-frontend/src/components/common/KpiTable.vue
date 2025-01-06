@@ -242,7 +242,7 @@ async function openRejectModal(kpiId) {
     rejectReason.value = response.reason || "반려 사유를 불러올 수 없습니다.";
     emit("rejectKpi", kpiId);
   } catch (error) {
-    console.error("반려 사유 불러오기 실패:", error);
+    // console.error("반려 사유 불러오기 실패:", error);
   }
   isRejectModalOpen.value = true;
 }
@@ -263,7 +263,7 @@ function closeUpdateModal() {
 }
 
 function updateKPI() {
-  console.log("updateKPI():", KPIForm.value);
+  // console.log("updateKPI():", KPIForm.value);
   emit("updateKpi", {...KPIForm.value});
   closeUpdateModal();
 }
@@ -280,7 +280,7 @@ function closeDeleteModal() {
 }
 
 function confirmDelete() {
-  console.log("confirmDelete => kpiIdToDelete:", kpiIdToDelete.value);
+  // console.log("confirmDelete => kpiIdToDelete:", kpiIdToDelete.value);
   emit("deleteKpi", kpiIdToDelete.value);
   closeDeleteModal();
 }
@@ -296,7 +296,7 @@ function closeAddModal() {
 }
 
 function addKPI() {
-  console.log("addKPI():", KPIForm.value);
+  // console.log("addKPI():", KPIForm.value);
   emit("addKpi", {...KPIForm.value});
   closeAddModal();
 }

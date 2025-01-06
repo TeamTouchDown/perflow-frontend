@@ -52,7 +52,7 @@ const fetchEmp = async () => {
     const response = await api.get(`/employees`);
     employee.value = response.data;
   } catch (error) {
-    console.error('사원 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.error('사원 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -66,12 +66,12 @@ const fetchAttendance = async () => {
     if (Array.isArray(attendance.value) && attendance.value.length > 0) {
       // 가장 최근 주차 데이터 선택
       latest.value = attendance.value.sort((a, b) => b.period.localeCompare(a.period))[0];
-      console.log('가장 최근 주차 데이터:', latest);
+      // console.log('가장 최근 주차 데이터:', latest);
     } else {
-      console.warn('서버에서 유효한 데이터가 반환되지 않았습니다.', attendance.value);
+      // console.warn('서버에서 유효한 데이터가 반환되지 않았습니다.', attendance.value);
     }
   } catch (error) {
-    console.error('일주일 총 근무시간 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.error('일주일 총 근무시간 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -81,7 +81,7 @@ const fetchAnnual = async () => {
     const response = await api.get(`/emp/annual/balance`);
     annual.value = response.data;
   } catch (error) {
-    console.error('연차 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.error('연차 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -113,7 +113,7 @@ const fetchPayDate = async () => {
     diffDays.value = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;  // 결과를 diffDays에 저장
 
   } catch (error) {
-    console.error('회사 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.error('회사 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -123,7 +123,7 @@ const fetchVacation = async () => {
     const response = await api.get(`/emp/vacation/usage`);
     vacation.value = response.data;
   } catch (error) {
-    console.error('휴가 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.error('휴가 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -154,7 +154,7 @@ const fetchPreAnnual = async () => {
           };
         });
   } catch (error) {
-    console.error('예정 연차를 불러오는 중 에러가 발생했습니다: ', error);
+    // console.error('예정 연차를 불러오는 중 에러가 발생했습니다: ', error);
   }
 };
 
@@ -164,7 +164,7 @@ const fetchTeamKPI = async () => {
     const response = await api.get(`/perfomances/kpi/team/period/current/${empId}/${year.value}`);
     teamKPI.value = response.data.kpiLists;
   } catch (error) {
-    console.error('팀 kpi 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.error('팀 kpi 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -174,7 +174,7 @@ const fetchPersonalKPI = async () => {
     const response = await api.get(`perfomances/kpi/personal/period/current/${empId}/${year.value}`);
     personalKPI.value = response.data.kpiLists;
   } catch (error) {
-    console.error('개인 kpi 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.error('개인 kpi 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -208,7 +208,7 @@ const fetchAnnouncement = async () => {
     });
 
   } catch (error) {
-    console.error('공지사항 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.error('공지사항 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -220,7 +220,7 @@ const fetchWaitingApproval = async () => {
     // docId의 개수를 셈
     waitingApprovalCount.value = waitingApproval.value.filter(doc => doc.docId).length;
   } catch (error) {
-    console.error('대기 문서 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.error('대기 문서 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -232,7 +232,7 @@ const fetchProcessedApproval = async () => {
     // docId의 개수를 셈
     processedApprovalCount.value = processedApproval.value.filter(doc => doc.docId).length;
   } catch (error) {
-    console.error('처리 문서 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.error('처리 문서 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -330,7 +330,7 @@ const formattedCommuteTime = computed(() => {
   return `${hours}시간 ${minutes}분`;
 });
 
-console.log("formattedCommuteTime : ", formattedCommuteTime);
+// console.log("formattedCommuteTime : ", formattedCommuteTime);
 
 // 출근 시작 시간부터 현재 시간까지의 차이 계산
 const calculateCommuteTime = () => {
@@ -342,7 +342,7 @@ const calculateCommuteTime = () => {
 
 // 모달 열기
 const openModal = (type) => {
-  console.log('openModal 호출됨, type:', type);
+  // console.log('openModal 호출됨, type:', type);
   actionType.value = type; // 'on' 또는 'off'
   modalTitle.value = type === 'on' ? '출근 QR 인증 ' : '퇴근 QR 인증';
   isModalVisible.value = true;
@@ -358,28 +358,28 @@ let commuteInterval;
 const confirmAction = () => {
 
   if (actionType.value === 'on') {
-    console.log('출근 처리 시작');
+    // console.log('출근 처리 시작');
     commuteStatus.value = 'ON';
-    console.log("commuteStatus : ", commuteStatus.value);
+    // console.log("commuteStatus : ", commuteStatus.value);
     commuteStartTime.value = new Date(); // 출근 시간 기록
-    console.log('commuteStartTime:', commuteStartTime.value);
+    // console.log('commuteStartTime:', commuteStartTime.value);
 
     commuteInterval = setInterval(calculateCommuteTime, 60000); // 1분마다 출퇴근 시간 계산
 
-    console.log('출근 완료!');
+    // console.log('출근 완료!');
   } else if (actionType.value === 'off') {
-    console.log('퇴근 처리 시작');
+    // console.log('퇴근 처리 시작');
     commuteStatus.value = 'OFF';
-    console.log("commuteStatus : ", commuteStatus.value);
+    // console.log("commuteStatus : ", commuteStatus.value);
     commuteEndTime.value = new Date(); // 퇴근 시간 기록
     commuteTime.value = 0; // 시간 초기화
-    console.log('commuteEndTime:', commuteEndTime.value);
+    // console.log('commuteEndTime:', commuteEndTime.value);
 
     // 근무 시간 계산 (분 단위)
     const workMinutes = Math.floor(
         (commuteEndTime.value - commuteStartTime.value) / (1000 * 60)
     );
-    console.log(`퇴근 완료! 총 근무 시간: ${workMinutes}분`);
+    // console.log(`퇴근 완료! 총 근무 시간: ${workMinutes}분`);
 
     // 퇴근 시 interval을 중지
     clearInterval(commuteInterval);

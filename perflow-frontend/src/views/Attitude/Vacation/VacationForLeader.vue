@@ -78,7 +78,7 @@ const fetchVacationData = async () => {
   try {
     store.showLoading();
     const response = await api.get("/leader/vacation/team"); // 백엔드 API URL에 맞게 수정
-    console.log("API 응답 데이터:", response.data);
+    // console.log("API 응답 데이터:", response.data);
     store.hideLoading();
 
     // 데이터 변환 및 저장
@@ -103,7 +103,7 @@ const fetchVacationData = async () => {
     // 필터 초기화 및 페이징 적용
     applyFilter(true);
   } catch (error) {
-    console.error("휴가 데이터 조회 실패:", error);
+    // console.error("휴가 데이터 조회 실패:", error);
     allDocs.value = [];
     store.hideLoading();
   }
@@ -111,7 +111,7 @@ const fetchVacationData = async () => {
 
 // 필터 적용 및 데이터 갱신
 const applyFilter = (resetPage = true) => {
-  console.log("현재 검색 조건:", searchCriteria.value);
+  // console.log("현재 검색 조건:", searchCriteria.value);
 
   let filtered = [...allDocs.value];
 
@@ -164,7 +164,7 @@ const handlePageChange = (page) => {
 // 행 선택 함수
 const onRowSelected = (selectedRows) => {
   selectedVacations.value = selectedRows;  // 선택된 모든 항목을 배열로 저장
-  console.log("선택된 휴가 데이터:", selectedVacations.value);
+  // console.log("선택된 휴가 데이터:", selectedVacations.value);
 };
 
 // 승인 함수
@@ -198,7 +198,7 @@ const approveSelectedVacations = async () => {
     await fetchVacationData();  // 승인 후 휴가 데이터 새로고침
     resetSelection(); // 선택 초기화
   } catch (error) {
-    console.error("휴가 승인 실패:", error);
+    // console.error("휴가 승인 실패:", error);
     alert("휴가 승인에 실패했습니다.");
   }
 };
@@ -247,7 +247,7 @@ const submitReject = async () => {
     rejectReason.value = ""; // 반려 사유 초기화
     showRejectModal.value = false; // 반려 모달 닫기
   } catch (error) {
-    console.error("휴가 반려 실패:", error);
+    // console.error("휴가 반려 실패:", error);
     alert("휴가 반려에 실패했습니다.");
   }
 };

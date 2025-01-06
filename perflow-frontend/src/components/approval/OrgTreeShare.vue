@@ -22,7 +22,7 @@ const emit = defineEmits(["updateShareList", "closeModal"]);
 
 // 부모로 데이터 전달
 const saveSelection = () => {
-  console.log("[OrgTree] 선택된 데이터: ", selectedShareList.value);
+  // console.log("[OrgTree] 선택된 데이터: ", selectedShareList.value);
   emit("updateShareList", [...selectedShareList.value]);
   emit("closeModal");
 };

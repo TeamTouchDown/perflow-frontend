@@ -100,7 +100,7 @@ const fetchTravelData = async () => {
     const response = await api.get("hr/travels");
     store.hideLoading();
 
-    console.log("API 응답 데이터:", response.data);
+    // console.log("API 응답 데이터:", response.data);
 
     // 데이터 변환 및 저장 with defensive checks
     allDocs.value = response.data.map((item, index) => {
@@ -112,7 +112,7 @@ const fetchTravelData = async () => {
 
       // 필드 누락 시 경고 로그 출력
       if (!item.createDatetime || !item.travelStart || !item.travelEnd) {
-        console.warn(`Item at index ${index} is missing date fields:`, item);
+        // console.warn(`Item at index ${index} is missing date fields:`, item);
       }
 
       return {
@@ -127,19 +127,19 @@ const fetchTravelData = async () => {
       };
     });
 
-    console.log("변환된 데이터:", allDocs.value);
+    // console.log("변환된 데이터:", allDocs.value);
     // 필터 초기화 및 페이징 적용
     applyFilter(true);
 
   } catch (error) {
-    console.error("출장 데이터 조회 실패:", error);
+    // console.error("출장 데이터 조회 실패:", error);
     allDocs.value = [];
   }
 };
 
 // 필터 적용 및 데이터 갱신
 const applyFilter = (resetPage = true) => {
-  console.log("현재 검색 조건:", searchCriteria.value);
+  // console.log("현재 검색 조건:", searchCriteria.value);
 
   let filtered = [...allDocs.value];
 
@@ -169,11 +169,11 @@ const applyFilter = (resetPage = true) => {
 
   // 상태 필터(빈 문자열("") 제외)
   if (searchCriteria.value.status) {
-    console.log("상태 필터 조건:", searchCriteria.value.status);
+    // console.log("상태 필터 조건:", searchCriteria.value.status);
     filtered = filtered.filter(item => item.travelStatus === searchCriteria.value.status);
   }
 
-  console.log("필터 적용 후 데이터:", filtered);
+  // console.log("필터 적용 후 데이터:", filtered);
 
   // 필터링 결과 적용
   filteredDocs.value = filtered;
@@ -190,7 +190,7 @@ const applyFilter = (resetPage = true) => {
 watch(
     () => searchCriteria.value.status,
     (newVal, oldVal) => {
-      console.log("출장 상태 변경:", oldVal, "→", newVal);
+      // console.log("출장 상태 변경:", oldVal, "→", newVal);
       applyFilter(true);
     }
 );

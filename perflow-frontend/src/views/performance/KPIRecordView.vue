@@ -149,7 +149,7 @@ const yearDropdownOptions = computed(() => {
 ----------------------------------------- */
 // '년/분기/월' 옵션을 바꿀 때
 const handlePeriodChange = (value) => {
-  console.log(value);
+  // console.log(value);
   selectedPeriod.value = value;
   // 이전 선택값들 리셋
   selectedYear.value = null;
@@ -204,7 +204,7 @@ const fetchKpiData = async () => {
     );
     teamKPIs.value = teamResponse.data.kpiLists || [];
   } catch (error) {
-    console.error("KPI 데이터를 가져오는 중 오류가 발생했습니다.", error);
+    // console.error("KPI 데이터를 가져오는 중 오류가 발생했습니다.", error);
   }
 };
 
