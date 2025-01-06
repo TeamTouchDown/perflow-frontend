@@ -95,7 +95,7 @@ const dropdownOptions = [
 const handleDropdownSelect = (id) => {
   // console.log(`선택된 드롭다운 옵션 id: ${id}`);
   router.push({ name: id }).catch((error) => {
-    console.error("라우팅 에러: ", error);
+    // console.error("라우팅 에러: ", error);
   });
 }
 
@@ -145,7 +145,7 @@ const createNewDoc = async () => {
     goTo("/approval/outbox");
   } catch (error) {
     showAlert('결재 문서 생성에 실패했습니다.');
-    console.error(error);
+    // console.error(error);
   }
 };
 

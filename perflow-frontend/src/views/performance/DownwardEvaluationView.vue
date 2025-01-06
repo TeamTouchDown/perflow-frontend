@@ -275,7 +275,7 @@ async function checkAnswerExist(peerId) {
     }
     return false;
   } catch (error) {
-    console.error(`평가 존재 여부 확인 중 오류: ${error}`);
+    // console.error(`평가 존재 여부 확인 중 오류: ${error}`);
     return false;
   }
 }
@@ -311,7 +311,7 @@ async function loadAnswer(peerId) {
       userAnswers.value = resp.data;
     }
   } catch (error) {
-    console.error(`평가 존재 여부 확인 중 오류: ${error}`);
+    // console.error(`평가 존재 여부 확인 중 오류: ${error}`);
   }
 }
 
@@ -381,7 +381,7 @@ async function saveAnswers() {
     evaluationsExist.value[currentPeerId.value] = true;
     closeCreateModal();
   } catch (error) {
-    console.error("답변 저장 중 오류:", error);
+    // console.error("답변 저장 중 오류:", error);
     alert("평가 저장에 실패했습니다. 다시 시도해주세요.");
   }
 }
@@ -392,7 +392,7 @@ async function fetchMyEmployeeData() {
     const myinfoResponse = await api.get(`/employees`);
     MyInfo.value = myinfoResponse.data;
   } catch (error) {
-    console.error("MyInfo 데이터 로드 오류:", error);
+    // console.error("MyInfo 데이터 로드 오류:", error);
   }
 }
 
@@ -416,7 +416,7 @@ async function fetchPeerData() {
     // console.log(evaluationsExist.value);
 
   } catch (error) {
-    console.error("Peer 데이터 로드 오류:", error);
+    // console.error("Peer 데이터 로드 오류:", error);
   }
 }
 
@@ -438,7 +438,7 @@ async function fetchQuestionData() {
 
     allQuestions.value = [...multiData, ...subjData];
   } catch (error) {
-    console.error("질문 데이터 로드 오류:", error);
+    // console.error("질문 데이터 로드 오류:", error);
   }
 }
 

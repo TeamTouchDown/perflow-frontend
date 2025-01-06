@@ -239,11 +239,11 @@ const fetchOvertimeData = async () => {
       // 필터 초기화 및 페이징 적용
       applyFilter(true);
     } else {
-      console.error("필터링 가능한 데이터가 아닙니다:", response.data);
+      // console.error("필터링 가능한 데이터가 아닙니다:", response.data);
       allDocs.value = [];
     }
   } catch (error) {
-    console.error("초과근무 데이터 조회 실패:", error);
+    // console.error("초과근무 데이터 조회 실패:", error);
     allDocs.value = [];
     store.hideLoading();
   }

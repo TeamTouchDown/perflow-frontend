@@ -96,7 +96,7 @@ const generateQRCode = async () => {
       isTimerActive = true; // 타이머 활성화
     }
   } catch (error) {
-    console.error('QR 코드 생성 실패:', error);
+    // console.error('QR 코드 생성 실패:', error);
     alert('QR 코드 생성 실패: ' + error.message);
   }
 };
@@ -156,7 +156,7 @@ const handleSubmit = async () => {
       throw new Error('서버 응답 오류'); // 실패 처리 강제 실행
     }
   } catch (error) {
-    console.error('처리 실패:', error);
+    // console.error('처리 실패:', error);
     alert('처리 실패. 다시 시도하세요.');
   }
 };

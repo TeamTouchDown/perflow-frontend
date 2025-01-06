@@ -329,7 +329,7 @@ async function loadDepartments() {
       selectedDepartment.value = departmentList[0].departmentId;
     }
   } catch (err) {
-    console.error(`부서 로드 오류: ${err}`);
+    // console.error(`부서 로드 오류: ${err}`);
     showAlert("부서를 불러오는 중 오류가 발생했습니다.");
   }
 }
@@ -354,7 +354,7 @@ async function fetchEmployeesInDepartment() {
       teamKPIs.value = [];
     }
   } catch (err) {
-    console.error("사원 데이터를 가져오는 중 오류 발생:", err);
+    // console.error("사원 데이터를 가져오는 중 오류 발생:", err);
     showAlert("사원 데이터를 불러오는 중 오류가 발생했습니다.");
   }
 }
@@ -416,7 +416,7 @@ async function fetchKpiData() {
     ];
 
   } catch (err) {
-    console.error("KPI 데이터를 가져오는 중 오류 발생:", err);
+    // console.error("KPI 데이터를 가져오는 중 오류 발생:", err);
     error.value = "KPI 목록을 불러오는 데 실패했습니다.";
     showAlert("KPI 목록을 불러오는 중 오류가 발생했습니다.");
   } finally {
@@ -505,7 +505,7 @@ async function submitPass() {
     showAlert(passStatus.value === 'APPROVAL' ? "KPI가 승인되었습니다." : "KPI가 반려되었습니다.");
     await fetchKpiData(); // 승인/반려 후 KPI 데이터 갱신
   } catch (err) {
-    console.error(`KPI ${passStatus.value} 오류:`, err);
+    // console.error(`KPI ${passStatus.value} 오류:`, err);
     showAlert(`KPI ${passStatus.value === 'APPROVAL' ? '승인' : '반려'}에 실패했습니다.`);
   } finally {
     closePassModal();

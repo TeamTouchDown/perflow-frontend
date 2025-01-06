@@ -21,7 +21,7 @@ export async function initFCMToken(empId, deviceType, setFcmTokenCallback) {
             return null;
         }
     } catch (error) {
-        console.error('[FCM] 알림 권한 요청 실패:', error);
+        // console.error('[FCM] 알림 권한 요청 실패:', error);
         return null;
     }
 
@@ -44,7 +44,7 @@ export async function initFCMToken(empId, deviceType, setFcmTokenCallback) {
             console.warn('[FCM] FCM 토큰을 찾을 수 없습니다.');
         }
     } catch (error) {
-        console.error('[FCM] FCM 토큰 발급 실패:', error);
+        // console.error('[FCM] FCM 토큰 발급 실패:', error);
         return null;
     }
 
@@ -66,7 +66,7 @@ export async function initFCMToken(empId, deviceType, setFcmTokenCallback) {
                 // console.log('[FCM] 토큰 갱신 없음 또는 동일한 토큰');
             }
         } catch (error) {
-            console.error('[FCM] 주기적 토큰 확인 실패:', error);
+            // console.error('[FCM] 주기적 토큰 확인 실패:', error);
         }
     }, 60 * 60 * 1000); // 1시간
 }
@@ -87,7 +87,7 @@ export async function registerTokenToBackend(empId, token, deviceType) {
         });
         // console.log('토큰이 서버에 정상적으로 등록되었습니다.');
     } catch (error) {
-        console.error('서버로 토큰 전송 실패:', error);
+        // console.error('서버로 토큰 전송 실패:', error);
     }
 }
 
@@ -108,7 +108,7 @@ export async function deleteTokenFromBackend(empId, token, deviceType) {
         });
         // console.log('토큰이 서버에서 삭제되었습니다.');
     } catch (error) {
-        console.error('서버에서 토큰 삭제 실패:', error);
+        // console.error('서버에서 토큰 삭제 실패:', error);
     }
 }
 

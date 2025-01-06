@@ -248,7 +248,7 @@ const fetchOvertimeData = async () => {
     applyFilter(true);
 
   } catch (error) {
-    console.error("초과근무 데이터 조회 실패:", error);
+    // console.error("초과근무 데이터 조회 실패:", error);
     allDocs.value = [];
     store.hideLoading();
   }
@@ -356,7 +356,7 @@ const approveSelectedOvertimes = async () => {
     await fetchOvertimeData();  // 승인 후 데이터 새로고침
     resetSelection(); // 선택 초기화
   } catch (error) {
-    console.error("초과근무 승인 실패:", error);
+    // console.error("초과근무 승인 실패:", error);
     alert("초과근무 승인에 실패했습니다.");
   }
 };
@@ -404,7 +404,7 @@ const submitReject = async () => {
     rejectReason.value = ""; // 반려 사유 초기화
     showRejectModal.value = false; // 반려 모달 닫기
   } catch (error) {
-    console.error("초과근무 반려 실패:", error);
+    // console.error("초과근무 반려 실패:", error);
     alert("초과근무 반려에 실패했습니다.");
   }
 };

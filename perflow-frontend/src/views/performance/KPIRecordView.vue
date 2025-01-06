@@ -204,7 +204,7 @@ const fetchKpiData = async () => {
     );
     teamKPIs.value = teamResponse.data.kpiLists || [];
   } catch (error) {
-    console.error("KPI 데이터를 가져오는 중 오류가 발생했습니다.", error);
+    // console.error("KPI 데이터를 가져오는 중 오류가 발생했습니다.", error);
   }
 };
 

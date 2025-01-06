@@ -56,7 +56,7 @@ const fetchProcessedDocs = async (page = 1) => {
     totalItems.value = response.data.totalElements;
     currentPage.value = response.data.number + 1;
   } catch (error) {
-    console.error("처리 문서 목록 조회 실패: ", error);
+    // console.error("처리 문서 목록 조회 실패: ", error);
     processedDocs.value = [];
   }
 };
@@ -116,7 +116,7 @@ const fetchProcessedDocsWithCriteria = async(page = 1) => {
 
     // console.log("검색 결과: ", response.data.content);
   } catch (error) {
-    console.error("검색 실패: ", error);
+    // console.error("검색 실패: ", error);
     processedDocs.value = [];
   }
 };

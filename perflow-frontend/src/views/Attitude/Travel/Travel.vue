@@ -126,7 +126,7 @@ const fetchTravelData = async () => {
     applyFilter(true);
 
   } catch (error) {
-    console.error("출장 데이터 조회 실패:", error);
+    // console.error("출장 데이터 조회 실패:", error);
     allDocs.value = [];
   }
 };

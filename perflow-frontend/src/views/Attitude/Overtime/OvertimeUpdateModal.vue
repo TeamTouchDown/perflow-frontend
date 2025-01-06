@@ -167,7 +167,7 @@ const fetchEmpList = async () => {
       id: emp.empId,
     }));
   } catch (error) {
-    console.error("결재자 목록 조회 실패:", error);
+    // console.error("결재자 목록 조회 실패:", error);
     // 에러 처리 로직 추가 가능
   }
 };
@@ -278,7 +278,7 @@ const handleUpdate = async () => {
     emit("close");
   } catch (error) {
     // 에러 처리
-    console.error("초과근무 수정 실패:", error);
+    // console.error("초과근무 수정 실패:", error);
     store.hideLoading();
 
     if (error.response && error.response.data && error.response.data.message) {

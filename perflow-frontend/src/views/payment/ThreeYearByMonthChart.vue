@@ -59,7 +59,7 @@ const fetchThreeYearsByMonth = async () => {
     }
 
   } catch (error) {
-    console.error('3년간 급여 데이터를 불러오는 중 에러가 발생했습니다: ', error);
+    // console.error('3년간 급여 데이터를 불러오는 중 에러가 발생했습니다: ', error);
   }
 };
 

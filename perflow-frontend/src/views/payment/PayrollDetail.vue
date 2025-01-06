@@ -49,7 +49,7 @@ const fetchPayrollDetail = async () => {
       // // console.log(`해당 급여의 생성 월: ${month}`);
     });
   } catch (error) {
-    console.error('급여 상세 정보를 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.error('급여 상세 정보를 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -65,7 +65,7 @@ const fetchSearchPayroll = async (empId) =>{
     // // console.log("searchParams : ", empId);
     // // console.log('API 응답:', response.data);  // 응답 내용 확인
   } catch (error) {
-    console.error('검색 기능을 불러오는 중 에러가 발생했습니다. : ', error);
+    // console.error('검색 기능을 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 
@@ -99,7 +99,7 @@ const menuItem = [
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url); // URL 객체를 해제합니다.
       } catch (error) {
-        console.error('파일 다운로드 중 오류 발생:', error);
+        // console.error('파일 다운로드 중 오류 발생:', error);
         showAlert('파일 다운로드에 실패했습니다.');
       }
     }
@@ -140,7 +140,7 @@ const handleFileUpload = async () => {
     showAlert("파일이 성공적으로 업로드되었습니다.");
     isFileUploadVisible.value = false; // 모달 닫기
   } catch (error) {
-    console.error("업로드 실패:", error);
+    // console.error("업로드 실패:", error);
     showAlert("파일 업로드 중 오류가 발생했습니다.");
   }
 };

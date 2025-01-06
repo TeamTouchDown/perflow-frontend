@@ -233,7 +233,7 @@ async function loadDept() {
     // 모달 부서 선택 초기화
     modalDepartmentId.value = departmentList.length > 0 ? departmentList[0].departmentId : null;
   } catch (error) {
-    console.error(`부서 로드 오류: ${error}`);
+    // console.error(`부서 로드 오류: ${error}`);
     showAlert("부서를 불러오는 중 오류가 발생했습니다.");
   }
 }
@@ -259,7 +259,7 @@ const loadEvaQuestions = async () => {
     evaQuestions.value = resp.data;
     // console.log('동료 평가 문항 리스트:', evaQuestions.value);
   } catch (err) {
-    console.error('동료 평가 문항 리스트 조회 중 오류:', err);
+    // console.error('동료 평가 문항 리스트 조회 중 오류:', err);
     error.value = "동료 평가 문항을 불러오는 데 실패했습니다.";
   } finally {
     loading.value = false;
@@ -308,7 +308,7 @@ async function deleteQuestion(question) {
       await loadEvaQuestions();
       showAlert(`질문 "${question.questionContent}"이(가) 삭제되었습니다.`);
     } catch (error) {
-      console.error(`질문 삭제 오류: ${error}`);
+      // console.error(`질문 삭제 오류: ${error}`);
       showAlert("질문 삭제에 실패했습니다.");
     }
   }
@@ -366,7 +366,7 @@ async function onSubmit() {
       await loadEvaQuestions();
       showAlert("문항이 수정되었습니다.");
     } catch (error) {
-      console.error(`문항 수정 오류: ${error}`);
+      // console.error(`문항 수정 오류: ${error}`);
       showAlert("문항 수정에 실패했습니다.");
     }
   } else {
@@ -386,7 +386,7 @@ async function onSubmit() {
       await loadEvaQuestions();
       showAlert("문항이 추가되었습니다.");
     } catch (error) {
-      console.error(`문항 추가 오류: ${error}`);
+      // console.error(`문항 추가 오류: ${error}`);
       showAlert("문항 추가에 실패했습니다.");
     }
   }
