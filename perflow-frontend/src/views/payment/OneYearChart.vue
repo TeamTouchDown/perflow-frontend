@@ -18,7 +18,7 @@ const recentYear = ref(''); // 최근 년
 // 3개월 간 급여 데이터 정보를 가져오는 함수
 const fetchThreeMonth = async () => {
   try {
-    const response = await api.get(`/hr/payrolls/chart/last-three-months`);
+    const response = await api.get(`/hr/payrolls/chart/last-months`);
     console.log(response.data); // API 응답 확인
 
     const payrollChart = response.data;
@@ -30,12 +30,12 @@ const fetchThreeMonth = async () => {
         return item.createDatetime.substring(5, 7);  // 'MM' 형식
       });
 
-      console.log("labels : ", threeMonths.value.labels);
+      // console.log("labels : ", threeMonths.value.labels);
 
       // 급여 금액을 values에 저장
       threeMonths.value.values = payrollChart.map(item => item.totalAmount);
 
-      console.log("values : ",threeMonths.value.values);
+      // console.log("values : ",threeMonths.value.values);
 
       // 최근 년도 업데이트 (createDatetime에서 'YYYY' 추출)
       recentYear.value = payrollChart[payrollChart.length - 1].createDatetime.substring(0, 4);
@@ -50,9 +50,9 @@ const fetchThreeMonth = async () => {
         growthRate.value = 0; // 값이 없으면 0으로 설정
       }
 
-      console.log("currentMonth: " ,currentMonth, ", lastMonth: ", lastMonth);
-      console.log("growthRate : ", growthRate.value);
-      console.log("test : ", ((currentMonth - lastMonth) / lastMonth) * 100);
+      // console.log("currentMonth: " ,currentMonth, ", lastMonth: ", lastMonth);
+      // console.log("growthRate : ", growthRate.value);
+      // console.log("test : ", ((currentMonth - lastMonth) / lastMonth) * 100);
 
       // 차트 데이터 업데이트
       chartData.value = {

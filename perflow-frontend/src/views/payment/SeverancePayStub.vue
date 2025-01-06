@@ -14,6 +14,15 @@ const countingDateEnd = ref(null); // 집계 종료일
 const annualDateStart = ref(null); // 연차 수당 집계 시작일
 const annualDateEnd = ref(null); // 연차 수당 집계 종료일
 
+const alertVisible = ref(false);
+
+const alertMsg = ref('');
+
+const showAlert = (msg) => {
+  alertMsg.value = msg;
+  alertVisible.value = true;
+}
+
 // 퇴직 명세서를 가져오는 함수
 const fetchSeverancePayStub = async () => {
   try {
@@ -133,6 +142,15 @@ const printSection = () => {
     printWindow.print();  // 인쇄
     printWindow.close();   // 인쇄 후 창 닫기 (필요시)
   }, 1);  // 1초 대기 후 인쇄
+};
+
+const checkResigned = () => {
+  console.log("checkResigned 호출");
+
+  if (!employee || employee.status !== 'RESIGNED') {
+    showAlert('퇴직대상자가 아닙니다.');
+    history.back();
+  }
 };
 
 onMounted(() => {
@@ -416,5 +434,10 @@ onMounted(() => {
 .all p {
   color: #afa9a9;
   margin: 0 0 0 10px;
+}
+
+div h1 {
+  align-items: center;
+  justify-content: center;
 }
 </style>

@@ -55,7 +55,7 @@ const fetchSeverancePays = async (page = 1) => {
     state.totalItems = response.data.totalItems;
     state.pageSize = response.data.pageSize;
   } catch (error) {
-    console.error('급여대장 목록을 불러오는 중 에러가 발생했습니다. : ', error);
+    console.error('퇴직금 목록을 불러오는 중 에러가 발생했습니다. : ', error);
   }
 };
 

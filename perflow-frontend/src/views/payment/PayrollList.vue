@@ -59,6 +59,26 @@ const closeModal = () => {
   isModalVisible.value = false;
 };
 
+const validateForm = () => {
+  let isValid = true;
+
+  // 각 보험료가 빈 값이 아닌지 확인
+  if (!insuranceRates.value.nationalPensionRate || isNaN(insuranceRates.value.nationalPensionRate)) {
+    isValid = false;
+  }
+  if (!insuranceRates.value.healthInsuranceRate || isNaN(insuranceRates.value.healthInsuranceRate)) {
+    isValid = false;
+  }
+  if (!insuranceRates.value.hireInsuranceRate || isNaN(insuranceRates.value.hireInsuranceRate)) {
+    isValid = false;
+  }
+  if (!insuranceRates.value.longTermCareInsuranceRate || isNaN(insuranceRates.value.longTermCareInsuranceRate)) {
+    isValid = false;
+  }
+
+  return isValid;
+};
+
 // 급여대장 목록을 가져오는 함수
 const fetchPayrolls = async (page = 1) => {
   try {
@@ -86,12 +106,20 @@ const fetchPayrolls = async (page = 1) => {
 
 // 보험료율을 등록하는 함수
 const submitInsuranceRates = async () => {
+  // 유효성 검사
+  if (!validateForm()) {
+    showAlert('유효성 검사에 실패했습니다. 모든 필드를 올바르게 입력해 주세요.');
+    return;
+  }
+
   try {
-    const response = await api.post(`/hr/insurance-rate`, insuranceRates.value)
+    const response = await api.post(`/hr/insurance-rate`, insuranceRates.value);
     insuranceRates.value = response.data;
     closeModal();
+    showAlert('보험료가 성공적으로 설정되었습니다.');
   } catch (error) {
     console.log("보험료율을 등록하는 중 에러가 발생했습니다. : ", error);
+    showAlert('보험료율 등록 중 오류가 발생했습니다.');
   }
 };
 

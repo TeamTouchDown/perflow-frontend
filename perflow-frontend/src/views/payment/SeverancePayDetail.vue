@@ -30,7 +30,7 @@ const showAlert = (msg) => {
   alertVisible.value = true;
 }
 
-console.log("severancePayId : ",severancePayId);
+// console.log("severancePayId : ",severancePayId);
 
 // 금액 포맷 함수
 const formatCurrency = (value) => {
@@ -46,7 +46,7 @@ const fetchPayrollDetail = async () => {
 
     severancePays.value.forEach((severancePay) => {
       month.value = severancePay.createDatetime.slice(5, 7);
-      console.log(`해당 급여의 생성 월: ${month}`);
+      // console.log(`해당 급여의 생성 월: ${month}`);
     });
   } catch (error) {
     console.error('퇴직금 상세 정보를 불러오는 중 에러가 발생했습니다. : ', error)

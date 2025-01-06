@@ -46,7 +46,7 @@ const fetchPayrollDetail = async () => {
     // createDatetime에서 월(Month) 추출
     payrolls.value.forEach((payroll) => {
       month.value = payroll.createDatetime.slice(5, 7);
-      console.log(`해당 급여의 생성 월: ${month}`);
+      // console.log(`해당 급여의 생성 월: ${month}`);
     });
   } catch (error) {
     console.error('급여 상세 정보를 불러오는 중 에러가 발생했습니다. : ', error);
@@ -62,8 +62,8 @@ const fetchSearchPayroll = async (empId) =>{
       }
     });
     payrolls.value = response.data.payrolls;
-    console.log("searchParams : ", empId);
-    console.log('API 응답:', response.data);  // 응답 내용 확인
+    // console.log("searchParams : ", empId);
+    // console.log('API 응답:', response.data);  // 응답 내용 확인
   } catch (error) {
     console.error('검색 기능을 불러오는 중 에러가 발생했습니다. : ', error);
   }
