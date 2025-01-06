@@ -14,7 +14,7 @@ const refreshLogoutModal = ref(false);
 const updateLogoutModalVisible = (value) => {
   logoutModalVisible.value = value;
   if(!value) {
-    goTo("/login")
+    router.push("/login");
   }
 }
 const updateExtendModalVisible = (value) => {
@@ -24,9 +24,10 @@ const updateRefreshLogoutModal = (value) => {
   refreshLogoutModal.value = value;
   if(!value) {
     logout();
-    goTo("/login");
   }
 }
+
+const isLogout = ref();
 
 // 상태 관리
 const msTime = computed(() => authStore.$state.remainingTime);
@@ -69,8 +70,9 @@ function getRandomColor() {
 
 // 로그아웃
 const logout = async () => {
+  isLogout.value = true;
   await api.post(`/logout`);
-  authStore.logout();
+  await authStore.logout();
 
   updateLogoutModalVisible(true);
 }
@@ -175,7 +177,7 @@ const startPolling = () => {
 };
 
 watch(msTime, (newVal) => {
-  if (newVal <= 1) {
+  if (newVal <= 1 && !isLogout) {
     updateRefreshLogoutModal(true);
   }
 });
