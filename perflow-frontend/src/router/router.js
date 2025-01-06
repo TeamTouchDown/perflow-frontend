@@ -56,12 +56,20 @@ import Inbox from "@/views/approval/Inbox.vue";
 import EmpDetailPage from "@/views/hr/employee/EmpDetailPage.vue";
 import AnnDetail from "@/views/announcement/AnnDetail.vue";
 import AnnUpdate from "@/views/announcement/AnnUpdate.vue";
+import {useAuthStore} from "@/store/authStore.js";
 
 
 const routes = [
     // { path: '/', name: 'Home', component: Home },
 
-    {path: '/', name: 'LoginPage', component: EmpLogin},
+    {path: '/', name: 'LoginPage', component: EmpLogin, beforeEnter: (to, from, next) => {
+            const authStore = useAuthStore();
+            if (authStore.isLogin) {
+                next('/main-page'); // 로그인 상태라면 /main-page로 리다이렉트
+            } else {
+                next(); // 로그인하지 않았다면 /로 이동
+            }
+        }},
     {path: '/login', name: 'Login', component: EmpLogin},
     {path: '/hr/my-page', name: 'MyPage', component: EmpMyPage},
     {path: '/main-page', name: 'MainPage', component: MainPage},

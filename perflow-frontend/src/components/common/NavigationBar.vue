@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import { useAuthStore } from "@/store/authStore.js";
 import api from "@/config/axios.js";
 import router from "@/router/router.js";
@@ -9,6 +9,7 @@ const authStore = useAuthStore();
 
 const logoutModalVisible = ref(false);
 const extendModalVisible = ref(false);
+const refreshLogoutModal = ref(false);
 
 const updateLogoutModalVisible = (value) => {
   logoutModalVisible.value = value;
@@ -18,6 +19,13 @@ const updateLogoutModalVisible = (value) => {
 }
 const updateExtendModalVisible = (value) => {
   extendModalVisible.value = value;
+}
+const updateRefreshLogoutModal = (value) => {
+  refreshLogoutModal.value = value;
+  if(!value) {
+    logout();
+    goTo("/login");
+  }
 }
 
 // 상태 관리
@@ -166,6 +174,12 @@ const startPolling = () => {
   }, 5000); // 5초마다 알림 갱신
 };
 
+watch(msTime, (newVal) => {
+  if (newVal <= 1) {
+    updateRefreshLogoutModal(true);
+  }
+});
+
 onMounted(() => {
   fetchTimer();
   startPolling();
@@ -179,6 +193,7 @@ onMounted(() => {
 <template>
   <Alert :model-value=logoutModalVisible message="로그아웃 되었습니다." @update:modelValue="updateLogoutModalVisible"/>
   <Alert :model-value=extendModalVisible message="로그인 시간이 연장되었습니다." @update:modelValue="updateExtendModalVisible"/>
+  <Alert :model-value=refreshLogoutModal message="유효기간이 지나 로그아웃 됩니다.." @update:modelValue="updateRefreshLogoutModal"/>
   <div id="nav">
     <div id="nav-logo">
       <img src="@/assets/image/logo.png" alt="로고" id="logo-image" @click="goTo('/main-page')" />
@@ -230,20 +245,25 @@ onMounted(() => {
 /* 네비게이션 스타일 */
 #nav {
   display: flex;
-  height: 81px;
+  justify-content: center; /* 모든 내용을 가운데로 정렬 */
   align-items: center;
-  justify-content: center;
+  position: relative; /* 로고를 중앙에 위치시키기 위해 relative 설정 */
+  top: 0;
+  left: 0;
   width: 100%;
+  height: 81px;
+  background-color: #ffffff;
+  padding: 0 20px;
   border-bottom: 1px solid #817F7F;
 }
 
 #nav-logo {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  overflow: hidden;
   display: flex;
   align-items: center;
+  justify-content: center;
+  position: absolute; /* 로고를 네비게이션 바의 중앙에 배치 */
+  left: 50%; /* 부모 요소의 정중앙 기준 */
+  transform: translateX(-50%); /* 로고를 정확히 가운데 정렬 */
 }
 
 #logo-image {
@@ -262,14 +282,11 @@ onMounted(() => {
 }
 
 .nav-right {
-  position: absolute;
-  right: 0;
-  text-align: right;
-  padding-right: 30px;
-  align-items: center;
   display: flex;
+  align-items: center;
   gap: 20px;
-  margin: 0 auto;
+  position: absolute;
+  right: 20px; /* 네비게이션 바의 오른쪽에 고정 */
 }
 
 #timer {
@@ -400,5 +417,12 @@ onMounted(() => {
   width: 30px;
   height: 30px;
   cursor: pointer;
+}
+/* 미디어 쿼리: 화면이 작아질 때 숨김 */
+@media (max-width: 900px) {
+  #nav-logo {
+    flex-grow: 0;
+    visibility: hidden; /* 로고 숨김 */
+  }
 }
 </style>
