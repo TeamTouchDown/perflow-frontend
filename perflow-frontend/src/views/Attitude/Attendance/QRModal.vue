@@ -1,6 +1,14 @@
 <script setup>
 import {ref, onMounted, watch, onUnmounted} from 'vue';
 import api from "@/config/axios.js";
+import Alert from "@/components/common/Alert.vue";
+
+const alertVisible = ref(false);
+const alertMsg = ref('');
+const showAlert = (msg) => {
+  alertMsg.value = msg;
+  alertVisible.value = true;
+}
 
 let timerInterval = null;
 let isTimerActive = false;
@@ -97,7 +105,7 @@ const generateQRCode = async () => {
     }
   } catch (error) {
     // console.error('QR 코드 생성 실패:', error);
-    alert('QR 코드 생성 실패: ' + error.message);
+    showAlert('QR 코드 생성 실패: ' + error.message);
   }
 };
 
@@ -146,7 +154,7 @@ const handleSubmit = async () => {
       commuteStatus.value = 'OFF'; // 상태 변경
     }*/
     if (response.status >= 200 && response.status < 300) {
-      alert(`${props.type === 'on' ? '출근' : '퇴근'} 처리 완료`);
+      showAlert(`${props.type === 'on' ? '출근' : '퇴근'} 처리 완료`);
       clearInterval(timerInterval);
       closeModal();
 
@@ -157,7 +165,7 @@ const handleSubmit = async () => {
     }
   } catch (error) {
     // console.error('처리 실패:', error);
-    alert('처리 실패. 다시 시도하세요.');
+    showAlert('처리 실패. 다시 시도하세요.');
   }
 };
 
@@ -193,6 +201,10 @@ onMounted(() => {
 </script>
 
 <template>
+  <Alert
+      v-model="alertVisible"
+      :message="alertMsg"
+  />
   <!-- 모달 배경 -->
   <div v-if="isOpen" class="modal-overlay" @click.self="closeModal">
     <!-- 모달 컨테이너 -->
