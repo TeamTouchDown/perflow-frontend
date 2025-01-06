@@ -163,6 +163,7 @@ onMounted(() => {
       <!-- 알림 팝업 -->
       <div v-if="isNotificationVisible" class="notification-popup">
         <h3>알림</h3>
+        <!-- 알림 목록 -->
         <div class="notification-list">
           <div
               v-for="notification in notifications"
@@ -170,7 +171,10 @@ onMounted(() => {
               class="notification-item"
               @click="handleNotificationClick(notification.url)"
           >
-            <p>{{ notification.content }}</p>
+            <div class="notification-content">
+              <h4 class="notification-title">{{ notification.title }}</h4>
+              <p class="notification-message">{{ notification.content }}</p>
+            </div>
             <span class="notification-time">{{ formatTimeDifference(notification.createDatetime) }}</span>
           </div>
         </div>
@@ -229,7 +233,6 @@ onMounted(() => {
   display: flex;
   gap: 20px;
   margin: 0 auto;
-  overflow: hidden;
 }
 
 #timer {
@@ -297,6 +300,27 @@ onMounted(() => {
 .notification-time {
   font-size: 12px;
   color: #888;
+}
+
+.notification-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* 왼쪽 정렬 */
+}
+
+.notification-title {
+  font-size: 14px;
+  font-weight: bold;
+  margin: 0;
+  color: #333;
+  text-align: left; /* 왼쪽 정렬 */
+}
+
+.notification-message {
+  font-size: 12px;
+  margin: 4px 0 0;
+  color: #555;
+  text-align: left; /* 왼쪽 정렬 */
 }
 
 .user-icon {
