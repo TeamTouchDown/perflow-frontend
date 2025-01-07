@@ -1,5 +1,9 @@
 <template>
   <div v-if="isOpen" class="modal-wrapper">
+    <Alert
+        v-model="alertVisible"
+        :message="alertMsg"
+    />
     <ModalBasic
         :isOpen="isOpen"
         title="초과근무 수정하기"
@@ -108,6 +112,14 @@ import api from "@/config/axios.js";
 import { useStore } from "@/store/store.js";
 import dayjs from "dayjs";
 import { useAuthStore } from "@/store/authStore.js";
+import Alert from "@/components/common/Alert.vue";
+
+const alertVisible = ref(false);
+const alertMsg = ref('');
+const showAlert = (msg) => {
+  alertMsg.value = msg;
+  alertVisible.value = true;
+}
 
 // ----------------------------
 // [1] 부모 컴포넌트에서 전달받는 props
@@ -273,7 +285,7 @@ const handleUpdate = async () => {
 
     // 성공 처리
     // console.log("초과근무 수정 성공:", response.data);
-    alert("초과근무 정보가 수정되었습니다.");
+    showAlert("초과근무 정보가 수정되었습니다.");
     emit("update-success");
     emit("close");
   } catch (error) {
