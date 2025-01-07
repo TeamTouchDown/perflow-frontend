@@ -193,7 +193,7 @@ const fetchAnnouncement = async () => {
     const response = await api.get(`/announcements`, {
       params: {
         page: lastPage,  // 마지막 페이지
-        size: 5         // 한 페이지에 표시할 데이터 수
+        size: 9999         // 한 페이지에 표시할 데이터 수
       }
     });
 
