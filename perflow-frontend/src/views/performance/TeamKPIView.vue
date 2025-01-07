@@ -206,7 +206,7 @@ async function handleUpdateKpi(kpiData) {
     period : kpiData.period
   }
   try {
-    const response = await api.put(`/leader/perfomances/kpi/team/${kpi.kpiId}`, kpi);
+    const response = await api.put(`/leader/perfomances/kpi/team/${kpiData.kpiId}`, kpi);
     // console.log("KPI 수정 성공:", response.data);
     fetchKpiList();
   } catch (error) {
