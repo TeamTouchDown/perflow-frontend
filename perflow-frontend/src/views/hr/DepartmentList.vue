@@ -71,5 +71,6 @@ function hideSidebar() {
   border: 1px solid #3c4651;
   border-radius: 10px;
   height: 600px;
+  overflow-y: auto;
 }
 </style>
