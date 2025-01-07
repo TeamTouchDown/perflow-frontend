@@ -1,9 +1,10 @@
 <script setup>
-import { ref } from "vue";
+import {ref, watch} from "vue";
 import api from "@/config/axios.js";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/store/authStore.js";
-import FileUpload from "@/components/common/FileUpload.vue"; // FileUpload 컴포넌트 추가
+import FileUpload from "@/components/common/FileUpload.vue";
+import Alert from "@/components/common/Alert.vue";
 
 const router = useRouter();
 
@@ -15,6 +16,34 @@ const announcement = ref({
 
 const files = ref([]); // 파일 업로드 관리
 const departments = ref([]); // 부서 목록 관리
+
+const alertVisibleField = ref(false);
+const alertMsgField = ref('');
+const showAlertField = (msg) => {
+  alertMsgField.value = msg;
+  alertVisibleField.value = true;
+}
+
+const alertVisibleDept = ref(false);
+const alertMsgDept = ref('');
+const showAlertDept = (msg) => {
+  alertMsgDept.value = msg;
+  alertVisibleDept.value = true;
+}
+
+const alertVisibleSuccess = ref(false);
+const alertMsgSuccess = ref('');
+const showAlertSuccess = (msg) => {
+  alertMsgSuccess.value = msg;
+  alertVisibleSuccess.value = true;
+}
+
+const alertVisibleFail = ref(false);
+const alertMsgFail = ref('');
+const showAlertFail = (msg) => {
+  alertMsgFail.value = msg;
+  alertVisibleFail.value = true;
+}
 
 const fetchDepartments = async () => {
   try {
@@ -35,7 +64,7 @@ const handleFilesSelected = (uploadedFiles) => {
 
 const saveAnnouncement = async () => {
   if (!announcement.value.title || !announcement.value.deptName || !announcement.value.content) {
-    alert("모든 필드를 입력해주세요.");
+    showAlertField("모든 필드를 입력해주세요.");
     return;
   }
 
@@ -47,7 +76,7 @@ const saveAnnouncement = async () => {
     const deptId = selectedDept ? selectedDept.id : null;
 
     if (!deptId) {
-      alert("유효하지 않은 부서를 선택했습니다.");
+      showAlertDept("유효하지 않은 부서를 선택했습니다.");
       return;
     }
 
@@ -74,19 +103,30 @@ const saveAnnouncement = async () => {
 
     await api.post("/announcements", formData);
 
-    alert("공지사항이 성공적으로 생성되었습니다.");
-    await router.push("/announcements");
+    showAlertSuccess("공지사항이 성공적으로 생성되었습니다.");
   } catch (error) {
     // console.error("공지사항 생성 실패", error);
-    alert("공지사항 생성 중 문제가 발생했습니다.");
+    showAlertFail("공지사항 생성에 실패했습니다.");
   }
 };
+
+watch(alertVisibleSuccess, async (newValue) => {
+  if (!newValue) {
+    // 모달이 닫히면 라우팅 실행
+    await router.push("/announcements");
+  }
+});
 
 fetchDepartments();
 </script>
 
 <template>
   <div id="announcement-create-container">
+    <Alert v-model="alertVisibleField" :message="alertMsgField"/>
+    <Alert v-model="alertVisibleDept" :message="alertMsgDept"/>
+    <Alert v-model="alertVisibleSuccess" :message="alertMsgSuccess"/>
+    <Alert v-model="alertVisibleFail" :message="alertMsgFail"/>
+
     <h1>공지사항</h1>
 
     <div class="form-group">

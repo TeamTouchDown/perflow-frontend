@@ -3,6 +3,7 @@ import { ref, onMounted, computed, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import api from "@/config/axios.js";
 import { useAuthStore } from "@/store/authStore.js";
+import Alert from "@/components/common/Alert.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -14,6 +15,41 @@ const files = ref([]); // 파일 데이터
 const prevAnnouncement = ref(null); // 이전 글
 const nextAnnouncement = ref(null); // 다음 글
 const announcementsList = ref([]); // 전체 공지사항 리스트
+
+const alertVisibleDel = ref(false);
+const alertMsgDel = ref('');
+const showAlertDel = (msg) => {
+  alertMsgDel.value = msg;
+  alertVisibleDel.value = true;
+}
+
+const alertVisibleGrant = ref(false);
+const alertMsgGrant = ref('');
+const showAlertGrant = (msg) => {
+  alertMsgGrant.value = msg;
+  alertVisibleGrant.value = true;
+}
+
+const alertVisibleFail = ref(false);
+const alertMsgFail = ref('');
+const showAlertFail = (msg) => {
+  alertMsgFail.value = msg;
+  alertVisibleFail.value = true;
+}
+
+const alertVisibleLogout = ref(false);
+const alertMsgLogout = ref('');
+const showAlertLogout = (msg) => {
+  alertMsgLogout.value = msg;
+  alertVisibleLogout.value = true;
+}
+
+const alertVisibleDownload = ref(false);
+const alertMsgDownload = ref('');
+const showAlertDownload = (msg) => {
+  alertMsgDownload.value = msg;
+  alertVisibleDownload.value = true;
+}
 
 // 공지사항 데이터 가져오기
 const fetchAnnouncement = async () => {
@@ -111,20 +147,18 @@ const deleteAnnouncement = async () => {
           Authorization: `Bearer ${authStore.accessToken}`, // 현재 로그인 사용자의 토큰
         },
       });
-
-      alert("삭제되었습니다.");
-      goToList(); // 삭제 후 목록으로 이동
+      showAlertDel("삭제되었습니다.");
     } catch (error) {
       // console.error("공지사항 삭제 실패:", error);
 
       // 토큰 만료나 인증 관련 에러 처리
       if (error.response?.status === 401) {
-        alert("로그인이 만료되었습니다. 다시 로그인 해주세요.");
+        showAlertLogout("로그인이 만료되었습니다. 다시 로그인 해주세요.");
         authStore.logout(); // 로그아웃 처리
       } else if (error.response?.status === 403) {
-        alert("삭제 권한이 없습니다.");
+        showAlertGrant("삭제 권한이 없습니다.");
       } else {
-        alert("공지사항 삭제에 실패했습니다.");
+        showAlertFail("공지사항 삭제에 실패했습니다.");
       }
     }
   }
@@ -146,7 +180,7 @@ const downloadFile = async (fileId, fileName) => {
     document.body.removeChild(link);
   } catch (error) {
     // console.error("파일 다운로드 실패:", error);
-    alert("파일 다운로드 중 문제가 발생했습니다.");
+    showAlertDownload("파일 다운로드 중 문제가 발생했습니다.");
   }
 };
 
@@ -160,6 +194,13 @@ watch(
       await fetchFiles(); // 새 파일 데이터 가져오기
     }
 );
+
+watch(alertVisibleDel, async (newValue) => {
+  if (!newValue) {
+    // 모달이 닫히면 라우팅 실행
+    await router.push('/announcements');
+  }
+});
 
 const goToUpdatePage = () => {
   router.push(`/announcements/update/${annId.value}`);
@@ -181,6 +222,12 @@ const formatDate = (datetime) => {
 
 <template>
   <div class="announcement-detail-container">
+    <Alert v-model="alertVisibleDel" :message="alertMsgDel"/>
+    <Alert v-model="alertVisibleGrant" :message="alertMsgGrant"/>
+    <Alert v-model="alertVisibleFail" :message="alertMsgFail"/>
+    <Alert v-model="alertVisibleLogout" :message="alertMsgLogout"/>
+    <Alert v-model="alertVisibleDownload" :message="alertMsgDownload"/>
+
     <!-- 공지사항 타이틀 -->
     <div class="title">
       <h1>공지사항</h1>

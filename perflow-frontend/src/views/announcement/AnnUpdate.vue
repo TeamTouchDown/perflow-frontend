@@ -1,8 +1,9 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import {ref, onMounted, watch} from "vue";
 import api from "@/config/axios.js";
 import { useRoute, useRouter } from "vue-router";
 import FileUpload from "@/components/common/FileUpload.vue";
+import Alert from "@/components/common/Alert.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -17,6 +18,41 @@ const files = ref([]); // 현재 파일 목록
 const newFiles = ref([]); // 새로 추가된 파일 목록
 const deletedFileIds = ref([]); // 삭제된 파일 ID
 const departments = ref([]); // 부서 목록
+
+const alertVisibleLoad = ref(false);
+const alertMsgLoad = ref('');
+const showAlertLoad = (msg) => {
+  alertMsgLoad.value = msg;
+  alertVisibleLoad.value = true;
+}
+
+const alertVisibleField = ref(false);
+const alertMsgField = ref('');
+const showAlertField = (msg) => {
+  alertMsgField.value = msg;
+  alertVisibleField.value = true;
+}
+
+const alertVisibleDept = ref(false);
+const alertMsgDept = ref('');
+const showAlertDept = (msg) => {
+  alertMsgDept.value = msg;
+  alertVisibleDept.value = true;
+}
+
+const alertVisibleSuccess = ref(false);
+const alertMsgSuccess = ref('');
+const showAlertSuccess = (msg) => {
+  alertMsgSuccess.value = msg;
+  alertVisibleSuccess.value = true;
+}
+
+const alertVisibleFail = ref(false);
+const alertMsgFail = ref('');
+const showAlertFail = (msg) => {
+  alertMsgFail.value = msg;
+  alertVisibleFail.value = true;
+}
 
 // 부서 목록 가져오기
 const fetchDepartments = async () => {
@@ -44,7 +80,7 @@ const fetchAnnouncement = async () => {
     };
   } catch (error) {
     // console.error("공지사항 데이터 조회 실패", error);
-    alert("공지사항 데이터를 불러오는 데 실패했습니다.");
+    showAlertLoad("공지사항 데이터를 불러오는 데 실패했습니다.");
     router.push("/announcements");
   }
 };
@@ -96,7 +132,7 @@ const removeFile = (fileId) => {
 // 공지사항 수정 요청
 const updateAnnouncement = async () => {
   if (!announcement.value.title || !announcement.value.deptName || !announcement.value.content) {
-    alert("모든 필드를 입력해주세요.");
+    showAlertField("모든 필드를 입력해주세요.");
     return;
   }
 
@@ -105,7 +141,7 @@ const updateAnnouncement = async () => {
     const deptId = selectedDept ? selectedDept.id : null;
 
     if (!deptId) {
-      alert("유효하지 않은 부서를 선택했습니다.");
+      showAlertDept("유효하지 않은 부서를 선택했습니다.");
       return;
     }
 
@@ -137,11 +173,10 @@ const updateAnnouncement = async () => {
       headers: { "Content-Type": "multipart/form-data" },
     });
 
-    alert("공지사항이 성공적으로 수정되었습니다.");
-    router.push("/announcements");
+    showAlertSuccess("공지사항이 성공적으로 수정되었습니다.");
   } catch (error) {
     // console.error("공지사항 수정 실패:", error);
-    alert("공지사항 수정 중 문제가 발생했습니다.");
+    showAlertFail("공지사항 수정에 실패했습니다.");
   }
 };
 
@@ -149,6 +184,13 @@ const updateAnnouncement = async () => {
 const cancelUpdate = () => {
   router.push("/announcements");
 };
+
+watch(alertVisibleSuccess, async (newValue) => {
+  if (!newValue) {
+    // 모달이 닫히면 라우팅 실행
+    await router.push("/announcements");
+  }
+});
 
 // 초기 데이터 로드
 onMounted(() => {
@@ -160,6 +202,12 @@ onMounted(() => {
 
 <template>
   <div id="announcement-edit-container">
+    <Alert v-model="alertVisibleLoad" :message="alertMsgLoad"/>
+    <Alert v-model="alertVisibleField" :message="alertMsgField"/>
+    <Alert v-model="alertVisibleDept" :message="alertMsgDept"/>
+    <Alert v-model="alertVisibleSuccess" :message="alertMsgSuccess"/>
+    <Alert v-model="alertVisibleFail" :message="alertMsgFail"/>
+
     <h1>공지사항 수정</h1>
 
     <div class="form-group">
