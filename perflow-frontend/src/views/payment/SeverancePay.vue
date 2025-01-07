@@ -62,7 +62,7 @@ const fetchSeverancePays = async (page = 1) => {
 const menuItem = [
   {
     label: '다운로드',
-    icon: { src: '/src/assets/image/download_2.png' },
+    // icon: { src: '/src/assets/image/download_2.png' },
     action: async () => {
       try {
         // 서버에서 파일을 바이너리 형식으로 받아옵니다.
@@ -96,7 +96,7 @@ const menuItem = [
   },
   {
     label: "업로드",
-    icon: { src: "/src/assets/image/upload_2.png" },
+    // icon: { src: "/src/assets/image/upload_2.png" },
     action: () => (isFileUploadVisible.value = true), // 업로드 창 표시
   },
 ];
