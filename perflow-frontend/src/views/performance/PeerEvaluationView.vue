@@ -361,7 +361,7 @@ async function saveAnswers() {
   try {
     // 서버에 전송할 requestBody 형식
     const payload = {
-      perfoedEmpId: currentPeerId.value,
+      perfoedEmpId: MyInfo.value.empId,
       answers: userAnswers.value.map((item) => ({
         questionId: item.questionId,
         answer: String(item.answer),
@@ -370,15 +370,15 @@ async function saveAnswers() {
     // 서버 API 호출
     // console.log(payload);
     if (savetype.value === "post"){
-      await api.post(`/perfomances/col/perfo/${MyInfo.value.empId}`, payload);
+      await api.post(`/perfomances/col/perfo/${currentPeerId.value}`, payload);
 
     } else {
-      await api.put(`/perfomances/col/perfo/${MyInfo.value.empId}`, payload);
+      await api.put(`/perfomances/col/perfo/${currentPeerId.value}`, payload);
 
     }
 
     alert("평가가 성공적으로 저장되었습니다!");
-    evaluationsExist.value[currentPeerId.value] = true;
+    evaluationsExist.value[MyInfo.value.empId] = true;
     closeCreateModal();
   } catch (error) {
     // console.error("답변 저장 중 오류:", error);
