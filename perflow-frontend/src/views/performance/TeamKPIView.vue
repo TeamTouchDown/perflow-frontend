@@ -85,7 +85,8 @@ function getNextPeriod(periodType) {
     month = 1;
     year++;
   }
-  return {year, quarter, month};
+  const year2 = year+1;
+  return {year,year2, quarter, month};
 }
 
 const nextPeriod = getNextPeriod(selectedPeriod.value);
@@ -132,8 +133,12 @@ const selected = computed(() => ({
 
 // 선택된 기간 watch
 watch(selectedPeriod, (newVal) => {
-  const {year, quarter, month} = getNextPeriod(newVal);
-  selectedYear.value = year;
+  const {year, year2, quarter, month} = getNextPeriod(newVal);
+  if(selectedPeriod.value === "YEAR"){
+    selectedYear.value = year2;
+  }else{
+    selectedYear.value = year;
+  }
   selectedQuarter.value = quarter;
   selectedMonth.value = month;
   day.value.expiredays = calculateDaysLeft(newVal);

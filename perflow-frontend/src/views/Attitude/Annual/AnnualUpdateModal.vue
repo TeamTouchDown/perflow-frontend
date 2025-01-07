@@ -6,6 +6,14 @@ import ModalBasic from "@/components/common/ModalBasic.vue";
 import SearchGroupBar from "@/components/common/SearchGroupBar.vue";
 import ButtonDropDown from "@/components/common/ButtonDropDown.vue";
 import api from "@/config/axios.js";
+import Alert from "@/components/common/Alert.vue";
+
+const alertVisible = ref(false);
+const alertMsg = ref('');
+const showAlert = (msg) => {
+  alertMsg.value = msg;
+  alertVisible.value = true;
+}
 
 // ----------------------------
 // [1] 부모 컴포넌트에서 전달받는 props
@@ -80,7 +88,7 @@ const formatDate = (date, time = "09:00:00") => {
 const handleUpdate = async () => {
   try {
     if (!props.annualData) {
-      alert("수정할 연차 정보가 없습니다.");
+      showAlert("수정할 연차 정보가 없습니다.");
       return;
     }
 
@@ -103,15 +111,15 @@ const handleUpdate = async () => {
     // console.log("연차 수정 성공:", response.data);
 
     // 수정 완료 후 모달 닫기
-    alert("연차 정보가 수정되었습니다.");
+    showAlert("연차 정보가 수정되었습니다.");
     emit("update-success");
     emit("close");
   } catch (error) {
     // console.error("연차 수정 실패:", error);
     if (error.response) {
-      alert(`연차 수정 실패: ${error.response.data.message || "알 수 없는 오류"}`);
+      showAlert(`연차 수정 실패: ${error.response.data.message || "알 수 없는 오류"}`);
     } else {
-      alert("연차 수정 실패: 올바르지 않은 값이 입력되었습니다.");
+      showAlert("연차 수정 실패: 올바르지 않은 값이 입력되었습니다.");
     }
   }
 };
@@ -125,6 +133,10 @@ const closeModal = () => {
 </script>
 
 <template>
+  <Alert
+      v-model="alertVisible"
+      :message="alertMsg"
+  />
   <div v-if="isOpen" class="modal-wrapper">
     <ModalBasic
         :isOpen="isOpen"
