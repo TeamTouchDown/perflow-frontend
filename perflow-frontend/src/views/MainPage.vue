@@ -183,7 +183,7 @@ const fetchAnnouncement = async () => {
   try {
     // 1. 첫 번째 요청으로 페이지 정보만 가져옵니다 (페이지 번호와 전체 데이터 수)
     const pageResponse = await api.get(`/announcements`, {
-      params: { size: 5 }  // 한 페이지에 표시할 데이터 수
+      params: { size: 9999 }  // 한 페이지에 표시할 데이터 수
     });
 
     // 2. 마지막 페이지 번호 가져오기

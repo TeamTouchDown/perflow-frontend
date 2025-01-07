@@ -27,6 +27,9 @@ const handleRest = () => {
   resignDate.value = "";
   annualAllowance.value = 0;
   salaryData.value = [];
+  dailyAveragePay.value = 0;
+  monthlyAveragePay.value = 0;
+  totalSeverance.value = 0;
 };
 
 // 계산 함수

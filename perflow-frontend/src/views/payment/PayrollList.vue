@@ -199,6 +199,7 @@ const handleFileUpload = async () => {
     // console.log("업로드 성공:", response.data);
     showAlert("파일이 성공적으로 업로드되었습니다.");
     isFileUploadVisible.value = false; // 모달 닫기
+    location.reload();
   } catch (error) {
     // console.error("업로드 실패:", error);
     showAlert("파일 업로드 중 오류가 발생했습니다.");

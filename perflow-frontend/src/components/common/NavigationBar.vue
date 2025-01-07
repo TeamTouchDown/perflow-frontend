@@ -348,6 +348,10 @@ onMounted(() => {
   align-items: center;
   padding: 8px 10px;
   border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+.notification-item:hover {
+  background-color: #d9d9d9;
 }
 
 .notification-item:last-child {
