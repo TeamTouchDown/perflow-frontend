@@ -195,7 +195,7 @@ const approveSelectedVacations = async () => {
     }));
 
     alert("선택된 휴가가 모두 승인되었습니다.");
-    await fetchVacationData();  // 승인 후 휴가 데이터 새로고침
+    location.reload();  // 승인 후 휴가 데이터 새로고침
     resetSelection(); // 선택 초기화
   } catch (error) {
     // console.error("휴가 승인 실패:", error);
@@ -242,7 +242,7 @@ const submitReject = async () => {
     }));
 
     alert("선택된 휴가가 모두 반려되었습니다.");
-    await fetchVacationData();  // 반려 후 휴가 데이터 새로고침
+    location.reload();  // 반려 후 휴가 데이터 새로고침
     resetSelection(); // 선택 초기화
     rejectReason.value = ""; // 반려 사유 초기화
     showRejectModal.value = false; // 반려 모달 닫기

@@ -117,6 +117,7 @@ const handleUpdate = async () => {
     showAlert("연차 정보가 수정되었습니다.");
     emit("update-success");
     emit("close");
+    location.reload();
   } catch (error) {
     // console.error("연차 수정 실패:", error);
     if (error.response) {

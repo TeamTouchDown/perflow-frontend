@@ -288,6 +288,7 @@ const handleUpdate = async () => {
     showAlert("초과근무 정보가 수정되었습니다.");
     emit("update-success");
     emit("close");
+    location.reload();
   } catch (error) {
     // 에러 처리
     // console.error("초과근무 수정 실패:", error);
