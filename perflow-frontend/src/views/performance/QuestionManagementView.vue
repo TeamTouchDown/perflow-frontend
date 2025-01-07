@@ -101,7 +101,7 @@
         <!-- 평가 특성과 부서 필드를 추가 모드에서만 표시 -->
         <div class="form-section" v-if="!isEditing">
           <label class="section-label">평가 특성</label>
-          <select v-model="modalEvaluationType" class="select-box">
+          <select v-model="modalEvaluationType" class="select-box" @change="onEvaluationTypeChange">
             <option value="COL">동료</option>
             <option value="DOWN">하향</option>
           </select>
@@ -117,7 +117,7 @@
 
         <div class="form-section" v-if="!isEditing">
           <label class="section-label">부서</label>
-          <select v-model="modalDepartmentId" class="select-box">
+          <select v-model="modalDepartmentId" class="select-box" @change="onDepartmentChange">
             <option
                 v-for="department in dept"
                 :key="department.departmentId"
@@ -153,6 +153,7 @@
     />
   </div>
 </template>
+
 
 <script setup>
 import { ref, onMounted, watch } from 'vue';
@@ -225,6 +226,8 @@ async function loadDept() {
     extractDepartments(data);
     dept.value = departmentList;
 
+    console.log('Loaded Departments:', dept.value); // 추가
+
     // 부서가 하나 이상일 경우 첫 번째 부서를 선택
     if (departmentList.length > 0) {
       selectedDepartment.value = departmentList[0].departmentId;
@@ -257,7 +260,7 @@ const loadEvaQuestions = async () => {
       },
     });
     evaQuestions.value = resp.data;
-    // console.log('동료 평가 문항 리스트:', evaQuestions.value);
+    console.log('동료 평가 문항 리스트:', evaQuestions.value); // 추가
   } catch (err) {
     // console.error('동료 평가 문항 리스트 조회 중 오류:', err);
     error.value = "동료 평가 문항을 불러오는 데 실패했습니다.";
@@ -287,6 +290,16 @@ function setQuestionType(type) {
   questionType.value = type;
 }
 
+// 부서 변경 시 로그 출력 함수
+function onDepartmentChange(event) {
+  console.log('모달 내 부서 선택 변경:', modalDepartmentId.value);
+}
+
+// 평가 특성 변경 시 로그 출력 함수
+function onEvaluationTypeChange(event) {
+  console.log('모달 내 평가 특성 변경:', modalEvaluationType.value);
+}
+
 // 질문 수정 함수
 function modifyQuestion(question) {
   isEditing.value = true;
@@ -308,7 +321,6 @@ async function deleteQuestion(question) {
       await loadEvaQuestions();
       showAlert(`질문 "${question.questionContent}"이(가) 삭제되었습니다.`);
     } catch (error) {
-      // console.error(`질문 삭제 오류: ${error}`);
       showAlert("질문 삭제에 실패했습니다.");
     }
   }
@@ -322,6 +334,7 @@ function openAddModal() {
   modalQuestionType.value = 'MULTIPLE';
   modalQuestionText.value = '';
   modalDepartmentId.value = selectedDepartment.value; // 현재 선택된 부서로 설정
+  console.log('Modal Department ID (추가 모드 초기화):', modalDepartmentId.value); // 추가
   isModalOpen.value = true;
 }
 
@@ -358,6 +371,8 @@ async function onSubmit() {
       questionType: modalQuestionType.value,
     };
 
+    console.log('수정 모드 페이로드:', payload); // 추가
+
     try {
       // PUT /hr/perfomances/col/perfo/question/{empId}/{perfoQuestionId}
       await api.put(`/hr/perfomances/col/perfo/question/${empId}/${currentQuestion.value.questionId}`, payload);
@@ -366,7 +381,6 @@ async function onSubmit() {
       await loadEvaQuestions();
       showAlert("문항이 수정되었습니다.");
     } catch (error) {
-      // console.error(`문항 수정 오류: ${error}`);
       showAlert("문항 수정에 실패했습니다.");
     }
   } else {
@@ -378,6 +392,8 @@ async function onSubmit() {
       perfoType: modalEvaluationType.value,
     };
 
+    console.log('추가 모드 페이로드:', payload); // 추가
+
     try {
       // POST /hr/perfomances/col/perfo/question/{empId}
       const resp = await api.post(`/hr/perfomances/col/perfo/question/${empId}`, payload);
@@ -386,7 +402,6 @@ async function onSubmit() {
       await loadEvaQuestions();
       showAlert("문항이 추가되었습니다.");
     } catch (error) {
-      // console.error(`문항 추가 오류: ${error}`);
       showAlert("문항 추가에 실패했습니다.");
     }
   }
@@ -395,6 +410,7 @@ async function onSubmit() {
   isModalOpen.value = false;
 }
 </script>
+
 
 <style scoped>
 .question-management {
