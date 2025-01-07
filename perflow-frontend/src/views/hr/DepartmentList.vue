@@ -7,6 +7,7 @@ import DepartmentSelectedEmp from "@/components/hr/department/DepartmentSelected
 import {ref} from "vue";
 import DepartmentRegisterSideBar from "@/components/hr/sideBar/DepartmentRegisterSideBar.vue";
 
+
 const isSidebarOpen = ref(false)
 
 function showSidebar() {
@@ -26,7 +27,6 @@ function hideSidebar() {
         <ButtonBasic class="button-item" label="추가" @click="showSidebar"/>
         <ButtonBasic class="button-item" label="삭제" color="gray"/>
       </div>
-      <p>10명</p>
     </div>
     <div id="main-container">
       <div id="dept-tree">
