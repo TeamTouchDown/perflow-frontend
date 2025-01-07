@@ -267,7 +267,7 @@ const kpiRows = computed(() => {
 
     return {
       category: category,
-      goal: item.goal,
+      goal: truncateGoal(item.goal),
       targetValue: `${item.goalValue}${item.goalValueUnit}`,
       progress: `${Math.round(progress)}%`,
     };
@@ -304,6 +304,10 @@ const annRows = computed(() => {
 // title이 10자 이상일 경우 ... 추가하는 함수
 const truncateTitle = (title) => {
   return title.length > 8 ? title.substring(0, 8) + '...' : title;
+};
+
+const truncateGoal = (title) => {
+  return title.length > 5 ? title.substring(0, 5) + '...' : title;
 };
 
 // 날짜 포맷팅 함수
