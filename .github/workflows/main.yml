@@ -1,0 +1,68 @@
+name: vue-deploy
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '21'
+
+      - name: Create .env.production file
+        run: |
+          echo "VITE_API_BASE_URL=${{ secrets.VITE_API_BASE_URL }}" > ./perflow-frontend/.env
+          echo "VITE_FCM_APIKEY=${{ secrets.VITE_FCM_APIKEY }}" >> ./perflow-frontend/.env
+          echo "VITE_FCM_AUTHDOMAIN=${{ secrets.VITE_FCM_AUTHDOMAIN }}" >> ./perflow-frontend/.env
+          echo "VITE_FCM_PROJECTID=${{ secrets.VITE_FCM_PROJECTID }}" >> ./perflow-frontend/.env
+          echo "VITE_FCM_STORAGEBUCKET=${{ secrets.VITE_FCM_STORAGEBUCKET }}" >> ./perflow-frontend/.env
+          echo "VITE_FCM_MESSAGINGSENDERID=${{ secrets.VITE_FCM_MESSAGINGSENDERID }}" >> ./perflow-frontend/.env
+          echo "VITE_FCM_APPID=${{ secrets.VITE_FCM_APPID }}" >> ./perflow-frontend/.env
+          echo "VITE_FCM_VAPID_KEY=${{ secrets.VITE_FCM_VAPID_KEY }}" >> ./perflow-frontend/.env
+      
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./perflow-frontend
+
+      - name: Build
+        run: npm run build
+        working-directory: ./perflow-frontend
+
+      - name: SHOW AWS CLI VERSION
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_EC2_METADATA_DISABLED: true
+        run: |
+          aws --version
+
+      - name: Sync Bucket
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_EC2_METADATA_DISABLED: true
+        run: |
+          aws s3 sync \
+            --region ap-northeast-2 \
+            ./perflow-frontend/dist s3://perflow-frontend-bucket \
+            --delete
+
+      - name: Invalidate CloudFront Cache # 캐시 무효화 추가
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.DISTRIBUTION_ID }} \
+            --paths "/*"
