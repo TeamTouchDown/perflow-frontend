@@ -32,7 +32,7 @@ const approveAnnualLeave = async () => {
     const annualId = selectedAnnual.value.annualId;
     const response = await api.put(`/leader/annual/${annualId}/approve`);
     alert("연차가 승인되었습니다.");
-    await fetchAnnualData();  // 승인 후 연차 데이터 새로고침
+    location.reload();  // 승인 후 연차 데이터 새로고침
   } catch (error) {
     // console.error("연차 승인 실패:", error);
     alert("연차 승인에 실패했습니다.");
@@ -49,7 +49,7 @@ const rejectAnnualLeave = async () => {
     const reason = "";
     const response = await api.put(`/leader/annual/${annualId}/reject`,{reason});
     alert("연차가 반려되었습니다.");
-    await fetchAnnualData();  // 반려 후 연차 데이터 새로고침
+    location.reload();  // 반려 후 연차 데이터 새로고침
   } catch (error) {
     // console.error("연차 반려 실패:", error);
     alert("연차 반려에 실패했습니다.");

@@ -7,7 +7,16 @@ import ButtonDropDown from "@/components/common/ButtonDropDown.vue";
 import api from "@/config/axios.js";
 import {useAuthStore} from "@/store/authStore.js";
 import SearchButtonDropDown from "@/components/common/SearchButtonDropDown.vue";
+import Alert from "@/components/common/Alert.vue";
 
+
+
+const alertVisible = ref(false);
+const alertMsg = ref('');
+const showAlert = (msg) => {
+  alertMsg.value = msg;
+  alertVisible.value = true;
+}
 // 부모에서 전달된 props 정의
 defineProps({
   isOpen: Boolean // 모달 열림 여부
@@ -42,7 +51,7 @@ const formatDate = (date, time) => {
 
 const handleApply = async () => {
   if (!annualType.value) { // 연차 유형 미선택 시 에러 처리
-    alert("연차 구분을 선택해 주세요.");
+    showAlert("연차 구분을 선택해 주세요.");
     return;
   }
   try {
@@ -63,16 +72,17 @@ const handleApply = async () => {
 
     // 3. 성공 처리
     // console.log('연차 신청 성공:', response);
-    alert('연차 신청이 완료되었습니다!');
+    showAlert('연차 신청이 완료되었습니다!');
+    location.reload();
   } catch (error) {
     // 4. 에러 처리
     // console.error('연차 신청 실패:', error);
 
     if (error.response) {
       // console.error('서버 응답 데이터:', error.response.data); // 서버 에러 메시지 출력
-      alert(`연차 신청 실패: ${error.response.data.message || '알 수 없는 오류'}`);
+      showAlert(`연차 신청 실패: ${error.response.data.message || '알 수 없는 오류'}`);
     } else {
-      alert('올바르지 않은 값이 입력되었습니다.');
+      showAlert('올바르지 않은 값이 입력되었습니다.');
     }
   }
 };
@@ -113,6 +123,10 @@ onMounted(async () => {
 </script>
 
 <template>
+  <Alert
+      v-model="alertVisible"
+      :message="alertMsg"
+  />
   <div v-if="isOpen" class="modal-wrapper">
     <ModalBasic
         :isOpen="isOpen"

@@ -208,6 +208,7 @@ const handleUpdate = async () => {
 
     // 수정 완료 후 모달 닫기 및 부모에게 성공 이벤트 전달
     showAlert("출장 정보가 수정되었습니다.");
+    location.reload();
     emit("update-success");
     emit("close");
   } catch (error) {

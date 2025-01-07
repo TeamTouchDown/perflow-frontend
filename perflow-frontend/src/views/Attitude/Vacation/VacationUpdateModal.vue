@@ -121,6 +121,7 @@ const handleUpdate = async () => {
     showAlert("휴가 정보가 수정되었습니다.");
     emit("update-success");
     emit("close");
+    location.reload();
   } catch (error) {
     // console.error("휴가 수정 실패:", error);
     if (error.response) {

@@ -1,5 +1,9 @@
 <!-- src/views/OvertimeManagePage.vue -->
 <template>
+  <Alert
+      v-model="alertVisible"
+      :message="alertMsg"
+  />
   <div id="header-div">
     <!-- 헤더 섹션 -->
     <div id="header-top" class="flex-between">
@@ -144,6 +148,14 @@ import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import { useStore } from "@/store/store.js";
+import Alert from "@/components/common/Alert.vue";
+
+const alertVisible = ref(false);
+const alertMsg = ref('');
+const showAlert = (msg) => {
+  alertMsg.value = msg;
+  alertVisible.value = true;
+}
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
@@ -329,7 +341,7 @@ const onRowSelected = (selectedRows) => {
 // 승인 함수
 const approveSelectedOvertimes = async () => {
   if (selectedOvertimes.value.length === 0) {
-    alert("승인할 초과근무를 선택해주세요.");
+    showAlert("승인할 초과근무를 선택해주세요.");
     return;
   }
 
@@ -351,19 +363,19 @@ const approveSelectedOvertimes = async () => {
       return api.put(`/leader/overtimes/${overtimeId}/approve`, requestData); // 백엔드 URL에 맞게 수정
     }));
 
-    alert("선택된 초과근무가 모두 승인되었습니다.");
-    await fetchOvertimeData();  // 승인 후 데이터 새로고침
+    showAlert("선택된 초과근무가 모두 승인되었습니다.");
+    location.reload();  // 승인 후 데이터 새로고침
     resetSelection(); // 선택 초기화
   } catch (error) {
     // console.error("초과근무 승인 실패:", error);
-    alert("초과근무 승인에 실패했습니다.");
+    showAlert("초과근무 승인에 실패했습니다.");
   }
 };
 
 // 반려 함수
 const rejectSelectedOvertimes = async () => {
   if (selectedOvertimes.value.length === 0) {
-    alert("반려할 초과근무를 선택해주세요.");
+    showAlert("반려할 초과근무를 선택해주세요.");
     return;
   }
 
@@ -374,7 +386,7 @@ const rejectSelectedOvertimes = async () => {
 // 반려 사유 제출 함수
 const submitReject = async () => {
   if (!rejectReason.value.trim()) {
-    alert("반려 사유를 입력해주세요.");
+    showAlert("반려 사유를 입력해주세요.");
     return;
   }
 
@@ -398,7 +410,7 @@ const submitReject = async () => {
     }));
 
     alert("선택된 초과근무가 모두 반려되었습니다.");
-    await fetchOvertimeData();  // 반려 후 데이터 새로고침
+    location.reload();  // 반려 후 데이터 새로고침
     resetSelection(); // 선택 초기화
     rejectReason.value = ""; // 반려 사유 초기화
     showRejectModal.value = false; // 반려 모달 닫기

@@ -10,6 +10,7 @@ import dayjs from "dayjs";
 import {useAuthStore} from "@/store/authStore.js";
 import HRButtonDropDown from "@/components/hr/HRButtonDropDown.vue";
 import SearchButtonDropDown from "@/components/common/SearchButtonDropDown.vue";
+import Alert from "@/components/common/Alert.vue";
 
 // ----------------------------
 // [1] 부모 컴포넌트에서 전달받는 props
@@ -20,6 +21,12 @@ const props = defineProps({
     required: true,
   },
 });
+const alertVisible = ref(false);
+const alertMsg = ref('');
+const showAlert = (msg) => {
+  alertMsg.value = msg;
+  alertVisible.value = true;
+}
 
 // ----------------------------
 // [2] 부모로 이벤트 전달
@@ -176,9 +183,10 @@ const handleApply = async () => {
     store.hideLoading();
 
     // 성공 처리
-    alert('초과근무 신청이 완료되었습니다!');
+    showAlert('초과근무 신청이 완료되었습니다!');
     emit('overtime-success');
     emit('close');
+    location.reload();
   } catch (error) {
     store.hideLoading();
     errorMessage.value = error.response?.data?.message || "초과근무 신청에 실패했습니다.";
@@ -199,6 +207,10 @@ onMounted(async () => {
 })
 </script>
 <template>
+  <Alert
+      v-model="alertVisible"
+      :message="alertMsg"
+  />
   <div v-if="isOpen" class="modal-wrapper">
     <ModalBasic
         :isOpen="isOpen"

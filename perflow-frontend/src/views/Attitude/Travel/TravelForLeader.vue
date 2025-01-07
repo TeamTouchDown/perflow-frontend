@@ -219,7 +219,7 @@ const approveSelectedTravels = async () => {
     }));
 
     alert("선택된 출장이 모두 승인되었습니다.");
-    await fetchTravelData();  // 승인 후 출장 데이터 새로고침
+    location.reload();  // 승인 후 출장 데이터 새로고침
     resetSelection(); // 선택 초기화
   } catch (error) {
     // console.error("출장 승인 실패:", error);
@@ -266,7 +266,7 @@ const submitReject = async () => {
     }));
 
     alert("선택된 출장이 모두 반려되었습니다.");
-    await fetchTravelData();  // 반려 후 출장 데이터 새로고침
+    location.reload();  // 반려 후 출장 데이터 새로고침
     resetSelection(); // 선택 초기화
     rejectReason.value = ""; // 반려 사유 초기화
     showRejectModal.value = false; // 반려 모달 닫기

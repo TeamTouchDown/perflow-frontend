@@ -79,6 +79,7 @@ const handleApply = async () => {
     // 3. 성공 처리
     // console.log('휴가 신청 성공:', response);
     alert('휴가 신청이 완료되었습니다!');
+    location.reload();
   } catch (error) {
     // 4. 에러 처리
     // console.error('휴가 신청 실패:', error);
