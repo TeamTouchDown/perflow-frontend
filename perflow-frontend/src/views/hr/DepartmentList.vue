@@ -25,7 +25,6 @@ function hideSidebar() {
     <div id="item-container">
       <div id="buttons">
         <ButtonBasic class="button-item" label="추가" @click="showSidebar"/>
-        <ButtonBasic class="button-item" label="삭제" color="gray"/>
       </div>
     </div>
     <div id="main-container">
