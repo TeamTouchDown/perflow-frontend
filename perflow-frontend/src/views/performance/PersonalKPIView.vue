@@ -13,9 +13,9 @@
     </div>
     <div id="header-top" class="flex-between">
       <p id="title">
-        {{ selectedYear }}년
-        <span v-if="selectedPeriod === 'QUARTER'">{{ selectedQuarter }}분기</span>
-        <span v-if="selectedPeriod === 'MONTH'">{{ selectedMonth }}월</span>
+        <span v-if="selectedPeriod === 'YEAR'">{{ selectedYear }}년</span>
+        <span v-if="selectedPeriod === 'QUARTER'">{{ selectedYear }}년 {{ selectedQuarter }}분기</span>
+        <span v-if="selectedPeriod === 'MONTH'">{{ selectedYear }}년 {{ selectedMonth }}월</span>
         개인 KPI 제출
       </p>
       <p id="expiredays">개인 KPI 제출 기한이 {{ day.expiredays }}일 남았습니다.</p>
