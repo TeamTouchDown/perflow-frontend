@@ -74,6 +74,9 @@ const updateSuccessModalVisible = (value) => {
     router.push("/hr/employees");
   }
 }
+const goBack = () => {
+  window.history.back();
+}
 const updateFailModalVisible = (value) => {
 
   failModalVisible.value = value;
@@ -201,6 +204,7 @@ onMounted(async ()=>{
             size="large"
             color="gray"
             label="취소하기"
+            @click="goBack"
         />
         <ButtonBasic
             size="large"
