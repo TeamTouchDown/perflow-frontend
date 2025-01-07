@@ -193,10 +193,18 @@ async function handleAddKpi(kpiData) {
   }
 }
 
-async function handleUpdateKpi(kpi) {
+async function handleUpdateKpi(kpiData) {
   // console.log("Update KPI:", kpi);
   // 수정 로직
   // ... API put -> 성공 시 fetchKpiList()
+  const kpi ={
+    status : "WAIT",
+    goal : kpiData.goal,
+    goalValue : kpiData.goalValue,
+    goalValueUnit : kpiData.goalValueUnit,
+    goalDetail : kpiData.goalDetail,
+    period : kpiData.period
+  }
   try {
     const response = await api.put(`/leader/perfomances/kpi/team/${kpi.kpiId}`, kpi);
     // console.log("KPI 수정 성공:", response.data);
