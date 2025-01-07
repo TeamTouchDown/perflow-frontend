@@ -172,6 +172,7 @@ export const useAuthStore = defineStore('auth', {
                 localStorage.setItem("refreshToken", null);
                 localStorage.setItem("isLogin", "false");
                 clearInterval(this.timerInterval);
+                await router.push("/");
             }
         },
     },
