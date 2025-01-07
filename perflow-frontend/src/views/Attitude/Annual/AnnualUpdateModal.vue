@@ -81,8 +81,11 @@ const handleAnnualTypeSelect = (selectedLabel) => {
 // 날짜 포맷 (예: "YYYY-MM-DDT09:00:00" 형태)
 const formatDate = (date, time = "09:00:00") => {
   if (!date) return "";
-  const isoDate = new Date(date).toISOString().split("T")[0];
-  return `${isoDate}T${time}`;
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}T${time}`;
 };
 
 const handleUpdate = async () => {
