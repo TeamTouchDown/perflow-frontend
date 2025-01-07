@@ -155,9 +155,7 @@ const checkResigned = () => {
 
 onMounted(() => {
   fetchEmp();
-  if(employee && employee.status === 'RESIGNED') {
-    fetchSeverancePayStub();
-  }
+  fetchSeverancePayStub();
   fetchPayDate();
   // fetchOverTime();
 });
