@@ -66,7 +66,7 @@ import {useAuthStore} from "@/store/authStore.js";
 import AnnDetail from "@/views/announcement/AnnDetail.vue";
 import AnnUpdate from "@/views/announcement/AnnUpdate.vue";
 import PerformanceView from "@/views/performance/PerformanceView.vue";
-
+import {computed} from "vue";
 
 const routes = [
     // { path: '/', name: 'Home', component: Home },
@@ -130,7 +130,19 @@ const routes = [
     {path: '/payment/pay-stub', name: 'PayStub', component: PayStub},
     {path: '/severance/severance-pay', name: 'SeverancePay', component: SeverancePay},
     {path: '/severance/severance-pay-detail/:severancePayId', name: 'SeverancePayDetail', component: SeverancePayDetail},
-    {path: '/severance/severance-stub', name: 'SeverancePayStub', component: SeverancePayStub},
+    {path: '/severance/severance-stub', name: 'SeverancePayStub', component: SeverancePayStub, beforeEnter: (to, from, next) => {
+
+            const authStore = useAuthStore();
+
+            const authorities = computed(()=> {
+                return authStore.authorities;
+            });
+            if (!authorities.value.includes(99)) {
+                next('/severance/calculator');
+            } else {
+                next(); // 로그인하지 않았다면 /로 이동
+            }
+        }},
     {path: '/severance/calculator', name: Calculator, component: Calculator},
 
     // 근태

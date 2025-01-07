@@ -127,7 +127,7 @@ const printSection = () => {
   printWindow.document.write('<html><head><title>급여명세서 인쇄</title>');
 
   // 페이지 스타일을 현재 문서에서 복사하여 인쇄 창에 적용
-  const styles = document.querySelectorAll('style, link[rel="stylesheet"]');
+  const styles = document.querySelectorAll('style');
   styles.forEach(style => {
     printWindow.document.write(style.outerHTML);  // 스타일 복사
   });
