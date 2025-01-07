@@ -13,7 +13,7 @@
     </div>
     <div id="header-top" class="flex-between">
       <p id="title">
-        <span v-if="selectedPeriod === 'YEAR'">{{ selectedYear }}년</span>
+        {{ selectedYear }}년
         <span v-if="selectedPeriod === 'QUARTER'">{{ selectedYear }}년 {{ selectedQuarter }}분기</span>
         <span v-if="selectedPeriod === 'MONTH'">{{ selectedYear }}년 {{ selectedMonth }}월</span>
         개인 KPI 제출
