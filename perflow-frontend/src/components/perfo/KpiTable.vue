@@ -226,7 +226,7 @@ const kpiIdToDelete = ref(null);
 
 // 드롭다운 옵션
 const periodOptions = [
-  {label: `${props.selected.year}년`, value: `${props.selected.year}_YEAR`},
+  {label: `${props.selected.year}년`, value: `${props.selected.year}_Year`},
   {
     label: `${props.selected.year-1}년 ${props.selected.quarter}분기`,
     value: `${props.selected.year-1}_QUARTER${props.selected.quarter}`
